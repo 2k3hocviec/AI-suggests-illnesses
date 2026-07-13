@@ -10,11 +10,15 @@ export async function apiRequest<T>(
   options: ApiRequestOptions = {},
 ): Promise<T> {
   const { json, headers, ...requestOptions } = options;
+  const accessToken =
+    typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...requestOptions,
     credentials: 'include',
     headers: {
       ...(json ? { 'Content-Type': 'application/json' } : {}),
+      ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
       ...headers,
     },
     body: json ? JSON.stringify(json) : requestOptions.body,

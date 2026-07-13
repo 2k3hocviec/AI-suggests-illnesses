@@ -8,6 +8,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { PlatformStatsModule } from './platform-stats/platform-stats.module';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { PlatformStatsModule } from './platform-stats/platform-stats.module';
     AuthModule,
     UsersModule,
     PlatformStatsModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

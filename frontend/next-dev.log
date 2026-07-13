@@ -1,0 +1,40 @@
+
+> medical-consultation-frontend@0.1.0 dev
+> next dev -p 3001
+
+   ▲ Next.js 15.5.20
+   - Local:        http://localhost:3001
+   - Network:      http://192.168.223.1:3001
+
+ ✓ Starting...
+ ✓ Ready in 2.2s
+ ○ Compiling /login ...
+ ✓ Compiled /login in 1046ms (698 modules)
+ GET /login 200 in 1507ms
+ ✓ Compiled in 379ms (268 modules)
+ ✓ Compiled in 1885ms (282 modules)
+ ✓ Compiled in 91ms (282 modules)
+ ✓ Compiled in 376ms (282 modules)
+ ✓ Compiled in 1084ms (282 modules)
+ ✓ Compiled in 394ms (282 modules)
+ ✓ Compiled in 1810ms (282 modules)
+ ✓ Compiled in 176ms (282 modules)
+ ✓ Compiled in 2.6s (282 modules)
+ ✓ Compiled in 1855ms (282 modules)
+ ✓ Compiled in 309ms (282 modules)
+ ✓ Compiled in 741ms (282 modules)
+ ✓ Compiled in 196ms (282 modules)
+ ✓ Compiled in 150ms (282 modules)
+ ✓ Compiled in 252ms (282 modules)
+ ✓ Compiled in 218ms (282 modules)
+ ✓ Compiled in 247ms (282 modules)
+ ✓ Compiled in 156ms (282 modules)
+ ✓ Compiled in 109ms (282 modules)
+ ✓ Compiled in 1614ms (282 modules)
+ ✓ Compiled in 152ms (282 modules)
+ ✓ Compiled in 872ms (282 modules)
+ ✓ Compiled in 1466ms (282 modules)
+ ✓ Compiled in 1505ms (282 modules)
+ ✓ Compiled in 825ms (282 modules)
+ ✓ Compiled in 352ms (282 modules)
+ ✓ Compiled in 237ms (282 modules)

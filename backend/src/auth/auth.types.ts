@@ -1,0 +1,29 @@
+import { UserGender, UserRole } from '@prisma/client';
+
+export interface JwtUserPayload {
+  sub: number;
+  email: string;
+}
+
+export interface RequestContext {
+  userAgent?: string;
+  ipAddress?: string;
+}
+
+export interface AuthenticatedUser {
+  id: number;
+  email: string;
+}
+
+export interface PublicUser {
+  id: number;
+  fullName: string;
+  email: string;
+  phoneNumber: string | null;
+  address: string | null;
+  gender: UserGender;
+  role: UserRole;
+  dateOfBirth: Date | null;
+  createdAt: Date;
+  updatedAt: Date;
+}

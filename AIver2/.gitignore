@@ -1,0 +1,61 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+
+# Training outputs / model artifacts
+output/
+models/
+weights/
+checkpoints/
+runs/
+logs/
+*.ckpt
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.onnx
+*.pkl
+*.joblib
+*.h5
+
+# Large or private datasets
+datasets/
+raw_data/
+data/raw/
+data/cache/
+data/train_processed.json
+data/val_processed.json
+
+# Keep the source dataset trackable so the project can be retrained.
+!data/dataset.json
+
+# IDE / editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+tempCodeRunnerFile.py
+
+# OS files
+.DS_Store
+Thumbs.db

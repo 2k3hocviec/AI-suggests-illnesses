@@ -1,0 +1,207 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserGender {
+  MALE
+  FEMALE
+  OTHER
+  UNKNOWN
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+enum DoctorStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum ConsultationType {
+  OFFLINE
+  ONLINE
+}
+
+enum UrgencyLevel {
+  NORMAL
+  URGENT
+  EMERGENCY
+}
+
+enum ChatRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+model User {
+  id                    Int        @id @default(autoincrement())
+  fullName              String     @map("full_name")
+  dateOfBirth           DateTime?  @map("date_of_birth") @db.Date
+  gender                UserGender @default(UNKNOWN)
+  role                  UserRole   @default(USER)
+  email                 String     @unique
+  phoneNumber           String?    @map("phone_number")
+  address               String?
+  password              String?
+  passwordResetOtpHash  String?    @map("password_reset_otp_hash")
+  passwordResetExpires  DateTime?  @map("password_reset_expires")
+  passwordResetAttempts Int        @default(0) @map("password_reset_attempts")
+  createdAt             DateTime   @default(now()) @map("created_at")
+  updatedAt             DateTime   @default(now()) @updatedAt @map("updated_at")
+
+  consultationHistories ConsultationHistory[]
+  chatSessions          ChatSession[]
+  chatMessages          ChatMessage[]
+  authSessions          AuthSession[]
+
+  @@map("users")
+}
+
+model AuthSession {
+  id               Int       @id @default(autoincrement())
+  userId           Int       @map("user_id")
+  refreshTokenHash String    @map("refresh_token_hash")
+  userAgent        String?   @map("user_agent")
+  ipAddress        String?   @map("ip_address")
+  expiresAt        DateTime  @map("expires_at")
+  revokedAt        DateTime? @map("revoked_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @default(now()) @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("auth_sessions")
+}
+
+model Symptom {
+  id             Int     @id @default(autoincrement())
+  name           String  @unique
+  normalizedName String  @unique @map("normalized_name")
+  description    String?
+
+  doctorExpertises DoctorExpertise[]
+
+  @@map("symptoms")
+}
+
+model Specialty {
+  id          Int     @id @default(autoincrement())
+  code        String  @unique
+  name        String
+  description String?
+
+  doctors       Doctor[]
+  consultations ConsultationHistory[]
+
+  @@map("specialties")
+}
+
+model Doctor {
+  id               Int                @id @default(autoincrement())
+  fullName         String             @map("full_name")
+  academicTitle    String?            @map("academic_title")
+  specialtyId      Int                @map("specialty_id")
+  experienceYears  Int                @default(0) @map("experience_years")
+  description      String?
+  phoneNumber      String?            @map("phone_number")
+  email            String?
+  workplace        String?
+  address          String?
+  city             String?
+  workingTime      String?            @map("working_time")
+  consultationType ConsultationType[] @default([]) @map("consultation_type")
+  imageUrl         String?            @map("image_url")
+  rating           Decimal?           @db.Decimal(3, 2)
+  status           DoctorStatus       @default(ACTIVE)
+  createdAt        DateTime           @default(now()) @map("created_at")
+  updatedAt        DateTime           @updatedAt @map("updated_at")
+
+  specialty  Specialty         @relation(fields: [specialtyId], references: [id])
+  expertises DoctorExpertise[]
+
+  @@index([specialtyId])
+  @@index([city])
+  @@map("doctors")
+}
+
+model DoctorExpertise {
+  doctorId       Int     @map("doctor_id")
+  symptomId      Int     @map("symptom_id")
+  expertiseScore Decimal @default(1.0) @map("expertise_score") @db.Decimal(4, 3)
+
+  doctor  Doctor  @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  symptom Symptom @relation(fields: [symptomId], references: [id], onDelete: Cascade)
+
+  @@id([doctorId, symptomId])
+  @@map("doctor_expertise")
+}
+
+model ChatSession {
+  id        Int       @id @default(autoincrement())
+  userId    Int?      @map("user_id")
+  title     String?
+  summary   String?
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+  closedAt  DateTime? @map("closed_at")
+
+  user                  User?                 @relation(fields: [userId], references: [id], onDelete: SetNull)
+  messages              ChatMessage[]
+  consultationHistories ConsultationHistory[]
+
+  @@index([userId])
+  @@map("chat_sessions")
+}
+
+model ChatMessage {
+  id        Int      @id @default(autoincrement())
+  sessionId Int      @map("session_id")
+  userId    Int?     @map("user_id")
+  role      ChatRole
+  content   String
+  metadata  Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  session               ChatSession           @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  user                  User?                 @relation(fields: [userId], references: [id], onDelete: SetNull)
+  consultationHistories ConsultationHistory[]
+
+  @@index([sessionId])
+  @@index([userId])
+  @@map("chat_messages")
+}
+
+model ConsultationHistory {
+  id                     Int          @id @default(autoincrement())
+  userId                 Int?         @map("user_id")
+  chatSessionId          Int?         @map("chat_session_id")
+  userMessageId          Int?         @map("user_message_id")
+  originalMessage        String       @map("original_message")
+  extractedSymptoms      Json         @map("extracted_symptoms")
+  recommendedSpecialtyId Int?         @map("recommended_specialty_id")
+  emergency              Boolean      @default(false)
+  emergencyLevel         UrgencyLevel @default(NORMAL) @map("emergency_level")
+  emergencyReasons       Json?        @map("emergency_reasons")
+  createdAt              DateTime     @default(now()) @map("created_at")
+
+  user                 User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  chatSession          ChatSession? @relation(fields: [chatSessionId], references: [id], onDelete: SetNull)
+  userMessage          ChatMessage? @relation(fields: [userMessageId], references: [id], onDelete: SetNull)
+  recommendedSpecialty Specialty?   @relation(fields: [recommendedSpecialtyId], references: [id], onDelete: SetNull)
+
+  @@index([userId])
+  @@index([chatSessionId])
+  @@index([userMessageId])
+  @@index([recommendedSpecialtyId])
+  @@map("consultation_history")
+}

@@ -15,3 +15,9 @@ export interface SpecialtyHint {
   name: string;
   keywords: string[];
 }
+
+export interface RecommendedSpecialty {
+  id: number | null;
+  code: string;
+  name: string;
+}

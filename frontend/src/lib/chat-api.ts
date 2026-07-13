@@ -32,6 +32,7 @@ export interface SendChatMessageResponse {
     specialties: string[];
     message: string;
     recommendedSpecialty: ChatSpecialty | null;
+    recommendedSpecialties: ChatSpecialty[];
   };
 }
 

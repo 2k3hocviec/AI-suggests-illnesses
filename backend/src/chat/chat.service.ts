@@ -8,7 +8,11 @@ import { ConfigService } from "@nestjs/config";
 import { ChatRole, Prisma } from "@prisma/client";
 import { PrismaService } from "../prisma/prisma.service";
 import { SendChatMessageDto } from "./dto/send-chat-message.dto";
-import { ModelAnalyzeResponse, SpecialtyHint } from "./chat.types";
+import {
+  ModelAnalyzeResponse,
+  RecommendedSpecialty,
+  SpecialtyHint,
+} from "./chat.types";
 
 const SPECIALTY_HINTS: SpecialtyHint[] = [
   {
@@ -85,11 +89,13 @@ export class ChatService {
     });
 
     const analysis = await this.analyze(content);
-    const recommendedSpecialty = await this.findRecommendedSpecialty(analysis);
+    const recommendedSpecialties =
+      await this.findRecommendedSpecialties(analysis);
     const assistantContent = this.buildAssistantReply(
       analysis,
-      recommendedSpecialty,
+      recommendedSpecialties,
     );
+    const [primarySpecialty] = recommendedSpecialties;
 
     const assistantMessage = await this.prisma.chatMessage.create({
       data: {
@@ -108,7 +114,7 @@ export class ChatService {
         originalMessage: content,
         extractedSymptoms:
           analysis.symptoms as unknown as Prisma.InputJsonValue,
-        recommendedSpecialtyId: recommendedSpecialty?.id,
+        recommendedSpecialtyId: primarySpecialty?.id,
         emergency: this.isEmergency(content),
         emergencyLevel: this.isEmergency(content) ? "EMERGENCY" : "NORMAL",
         emergencyReasons: this.getEmergencyReasons(
@@ -126,7 +132,8 @@ export class ChatService {
       assistantMessage,
       analysis: {
         ...analysis,
-        recommendedSpecialty,
+        recommendedSpecialty: primarySpecialty ?? null,
+        recommendedSpecialties,
       },
     };
   }
@@ -190,6 +197,9 @@ export class ChatService {
     return session;
   }
 
+  /*
+  Gọi đến model NER
+  */
   private async analyze(content: string): Promise<ModelAnalyzeResponse> {
     const modelUrl =
       this.config.get<string>("aiServiceUrl") ??
@@ -216,13 +226,20 @@ export class ChatService {
       if (!response.ok) {
         throw new ServiceUnavailableException("Model chưa sẵn sàng");
       }
+      const analysis = (await response.json()) as ModelAnalyzeResponse;
+      console.log("Đã gửi sang model:", content);
+      console.log("Model trả về:", analysis);
 
-      return (await response.json()) as ModelAnalyzeResponse;
-    } catch {
+      return analysis;
+    } catch (error) {
+      console.error("Không gọi được model, dùng fallback:", error);
       return this.fallbackAnalyze(content);
     }
   }
 
+  /*
+  Chạy khi model chết, sẽ phát triển thêm lên khi gọi model trả về độ tin tưởng còn quá thấp.
+  */
   private fallbackAnalyze(content: string): ModelAnalyzeResponse {
     const normalized = this.normalize(content);
     const symptoms = SPECIALTY_HINTS.flatMap((hint) =>
@@ -247,16 +264,21 @@ export class ChatService {
     };
   }
 
-  private async findRecommendedSpecialty(analysis: ModelAnalyzeResponse) {
-    const [code] = analysis.specialties;
-    if (!code) {
-      return null;
+  /*
+  So triệu chứng với database.
+  */
+  private async findRecommendedSpecialties(
+    analysis: ModelAnalyzeResponse,
+  ): Promise<RecommendedSpecialty[]> {
+    if (!analysis.specialties.length) {
+      return [];
     }
 
-    const fallback = SPECIALTY_HINTS.find((hint) => hint.code === code);
-    const specialty = await this.prisma.specialty.findUnique({
+    const specialties = await this.prisma.specialty.findMany({
       where: {
-        code,
+        code: {
+          in: analysis.specialties,
+        },
       },
       select: {
         id: true,
@@ -265,33 +287,50 @@ export class ChatService {
       },
     });
 
-    return (
-      specialty ??
-      (fallback
-        ? {
-            id: null,
-            code: fallback.code,
-            name: fallback.name,
-          }
-        : null)
-    );
+    return analysis.specialties
+      .map((code) => {
+        const specialty = specialties.find((item) => item.code === code);
+        if (specialty) {
+          return specialty;
+        }
+
+        const fallback = SPECIALTY_HINTS.find((hint) => hint.code === code);
+        return fallback
+          ? {
+              id: null,
+              code: fallback.code,
+              name: fallback.name,
+            }
+          : null;
+      })
+      .filter((item): item is RecommendedSpecialty => item !== null);
   }
 
+  /*
+  Nhóm các triệu chứng cùng chuyên khoa lại với nhau
+  */
   private buildAssistantReply(
     analysis: ModelAnalyzeResponse,
-    recommendedSpecialty: { code: string; name: string } | null,
+    recommendedSpecialties: RecommendedSpecialty[],
   ) {
-    if (recommendedSpecialty) {
-      const symptomText = analysis.symptoms.length
-        ? `Mình ghi nhận các triệu chứng: ${analysis.symptoms
-            .map((item) => item.name)
-            .join(", ")}.`
-        : analysis.message;
+    if (recommendedSpecialties.length) {
+      const groupedSymptoms = recommendedSpecialties.map((specialty) => {
+        const symptoms = analysis.symptoms
+          .filter((item) => item.specialty_code === specialty.code)
+          .map((item) => item.name);
+        const symptomText = symptoms.length
+          ? [...new Set(symptoms)].join(", ")
+          : "cần mô tả thêm triệu chứng";
 
-      return `${symptomText} Gợi ý chuyên khoa phù hợp để tham khảo là ${recommendedSpecialty.name}. Thông tin này chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ. Nếu triệu chứng nặng lên, xuất hiện đau dữ dội, khó thở, ngất hoặc sốt cao kéo dài, bạn nên liên hệ cơ sở y tế gần nhất.`;
+        return `- ${specialty.name}: ${symptomText}.`;
+      });
+
+      return `Mình ghi nhận các nhóm chuyên khoa phù hợp:\n${groupedSymptoms.join(
+        "\n",
+      )}\n\nThông tin này chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ.`;
     }
 
-    return `${analysis.message} Bạn hãy mô tả thêm triệu chứng chính, vị trí, thời gian xuất hiện và mức độ đau để mình gợi ý chuyên khoa chính xác hơn.`;
+    return `${analysis.message}`;
   }
 
   private isEmergency(content: string) {

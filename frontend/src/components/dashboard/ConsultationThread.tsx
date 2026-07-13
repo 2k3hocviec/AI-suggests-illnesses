@@ -1,4 +1,7 @@
+'use client';
+
 import { Bot, UserCircle } from 'lucide-react';
+import { useEffect, useRef } from 'react';
 
 export interface ThreadMessage {
   id: number | string;
@@ -16,6 +19,15 @@ export function ConsultationThread({
   messages,
   isThinking = false,
 }: ConsultationThreadProps) {
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+    });
+  }, [messages, isThinking]);
+
   return (
     <section className="min-h-0 flex-1 overflow-y-auto px-4 py-5 lg:px-10">
       <div className="mx-auto flex max-w-5xl flex-col gap-5">
@@ -46,7 +58,7 @@ export function ConsultationThread({
                 <Bot className="h-4 w-4" />
               </div>
               <div className="max-w-[76%]">
-                <div className="rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-sm leading-6 shadow-sm lg:text-[15px]">
+                <div className="whitespace-pre-line rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-sm leading-6 shadow-sm lg:text-[15px]">
                   <p>{message.content}</p>
                 </div>
                 <p className="mt-2 text-xs text-slate-600">{time}</p>
@@ -65,6 +77,7 @@ export function ConsultationThread({
             </div>
           </div>
         ) : null}
+        <div ref={bottomRef} />
       </div>
     </section>
   );

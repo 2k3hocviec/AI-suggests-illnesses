@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { ChatMessage, sendChatMessage } from '@/lib/chat-api';
+import { useMemo } from 'react';
+import { ChatMessage } from '@/lib/chat-api';
 import { ChatComposer } from './ChatComposer';
 import { ConsultationThread, ThreadMessage } from './ConsultationThread';
 
@@ -13,15 +13,24 @@ const welcomeMessage: ThreadMessage = {
   createdAt: new Date().toISOString(),
 };
 
-export function ConsultationChat() {
-  const [sessionId, setSessionId] = useState<number>();
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [error, setError] = useState<string | null>(null);
-  const [isSending, setIsSending] = useState(false);
+interface ConsultationChatProps {
+  messages: ChatMessage[];
+  error?: string | null;
+  isSending?: boolean;
+  isLoadingMessages?: boolean;
+  onSend: (message: string) => Promise<void> | void;
+}
 
+export function ConsultationChat({
+  messages,
+  error,
+  isSending = false,
+  isLoadingMessages = false,
+  onSend,
+}: ConsultationChatProps) {
   const threadMessages = useMemo<ThreadMessage[]>(
     () => [
-      welcomeMessage,
+      ...(messages.length === 0 ? [welcomeMessage] : []),
       ...messages.map((message) => ({
         id: message.id,
         role: message.role,
@@ -32,37 +41,19 @@ export function ConsultationChat() {
     [messages],
   );
 
-  async function handleSend(content: string) {
-    setError(null);
-    setIsSending(true);
-    try {
-      const response = await sendChatMessage(content, sessionId);
-      setSessionId(response.session.id);
-      setMessages((current) => [
-        ...current,
-        response.userMessage,
-        response.assistantMessage,
-      ]);
-    } catch (requestError) {
-      setError(
-        requestError instanceof Error
-          ? requestError.message
-          : 'Không thể gửi tin nhắn. Vui lòng thử lại.',
-      );
-    } finally {
-      setIsSending(false);
-    }
-  }
-
   return (
     <>
-      <ConsultationThread messages={threadMessages} isThinking={isSending} />
+      <ConsultationThread
+        messages={threadMessages}
+        isThinking={isSending}
+        isLoadingMessages={isLoadingMessages}
+      />
       {error ? (
         <p className="mx-auto w-full max-w-5xl px-4 pb-2 text-sm text-red-600 lg:px-10">
           {error}
         </p>
       ) : null}
-      <ChatComposer onSend={handleSend} disabled={isSending} />
+      <ChatComposer onSend={onSend} disabled={isSending || isLoadingMessages} />
     </>
   );
 }

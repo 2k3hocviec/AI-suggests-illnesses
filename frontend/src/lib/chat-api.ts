@@ -16,6 +16,18 @@ export interface ChatSpecialty {
   name: string;
 }
 
+export interface ChatSession {
+  id: number;
+  title: string | null;
+  summary: string | null;
+  createdAt: string;
+  updatedAt: string;
+  closedAt: string | null;
+  _count: {
+    messages: number;
+  };
+}
+
 export interface SendChatMessageResponse {
   session: {
     id: number;
@@ -44,6 +56,10 @@ export function sendChatMessage(message: string, sessionId?: number) {
       sessionId,
     },
   });
+}
+
+export function listChatSessions() {
+  return apiRequest<ChatSession[]>('/chat/sessions');
 }
 
 export function listChatMessages(sessionId: number) {

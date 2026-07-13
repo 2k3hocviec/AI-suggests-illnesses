@@ -13,11 +13,13 @@ export interface ThreadMessage {
 interface ConsultationThreadProps {
   messages: ThreadMessage[];
   isThinking?: boolean;
+  isLoadingMessages?: boolean;
 }
 
 export function ConsultationThread({
   messages,
   isThinking = false,
+  isLoadingMessages = false,
 }: ConsultationThreadProps) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -31,6 +33,12 @@ export function ConsultationThread({
   return (
     <section className="min-h-0 flex-1 overflow-y-auto px-4 py-5 lg:px-10">
       <div className="mx-auto flex max-w-5xl flex-col gap-5">
+        {isLoadingMessages ? (
+          <div className="rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-sm text-slate-600 shadow-sm">
+            Đang tải phiên chat...
+          </div>
+        ) : null}
+
         {messages.map((message) => {
           const time = formatTime(message.createdAt);
 

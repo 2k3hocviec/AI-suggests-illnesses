@@ -106,6 +106,15 @@ export class ChatService {
       },
     });
 
+    await this.prisma.chatSession.update({
+      where: {
+        id: session.id,
+      },
+      data: {
+        updatedAt: new Date(),
+      },
+    });
+
     await this.prisma.consultationHistory.create({
       data: {
         userId,
@@ -141,6 +150,30 @@ export class ChatService {
   /*
   Lấy danh sách message của một phiên chat.
   */
+  async listSessions(userId: number) {
+    return this.prisma.chatSession.findMany({
+      where: {
+        userId,
+      },
+      select: {
+        id: true,
+        title: true,
+        summary: true,
+        createdAt: true,
+        updatedAt: true,
+        closedAt: true,
+        _count: {
+          select: {
+            messages: true,
+          },
+        },
+      },
+      orderBy: {
+        updatedAt: "desc",
+      },
+    });
+  }
+
   async listMessages(userId: number, sessionId: number) {
     const session = await this.prisma.chatSession.findFirst({
       where: {
@@ -327,7 +360,7 @@ export class ChatService {
 
       return `Mình ghi nhận các nhóm chuyên khoa phù hợp:\n${groupedSymptoms.join(
         "\n",
-      )}\n\nThông tin này chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ.`;
+      )}\n\nThông tin này chỉ mang tính tham khảo`;
     }
 
     return `${analysis.message}`;

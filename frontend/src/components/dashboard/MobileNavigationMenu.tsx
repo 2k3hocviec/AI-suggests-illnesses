@@ -3,8 +3,26 @@
 import { History, Menu, MessageSquareText } from "lucide-react";
 import { useState } from "react";
 
-export function MobileNavigationMenu() {
+interface MobileNavigationMenuProps {
+  onNewChat?: () => void;
+  onOpenHistory?: () => void;
+}
+
+export function MobileNavigationMenu({
+  onNewChat,
+  onOpenHistory,
+}: MobileNavigationMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+
+  function handleNewChat() {
+    onNewChat?.();
+    setIsOpen(false);
+  }
+
+  function handleOpenHistory() {
+    onOpenHistory?.();
+    setIsOpen(false);
+  }
 
   return (
     <div className="relative lg:hidden">
@@ -19,21 +37,23 @@ export function MobileNavigationMenu() {
       </button>
 
       {isOpen ? (
-        <div className="absolute left-0 top-11 z-30 w-44 rounded-lg border border-slate-200 bg-white py-2 shadow-lg">
-          <a
-            href="/dashboard"
-            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+        <div className="absolute left-0 top-11 z-30 w-56 rounded-lg border border-slate-200 bg-white py-2 shadow-lg">
+          <button
+            type="button"
+            onClick={handleNewChat}
+            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-slate-100"
           >
             <MessageSquareText className="h-4 w-4" />
             Đoạn chat mới
-          </a>
-          <a
-            href="/dashboard"
-            className="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          </button>
+          <button
+            type="button"
+            onClick={handleOpenHistory}
+            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-slate-100"
           >
             <History className="h-4 w-4" />
             Lịch sử chat
-          </a>
+          </button>
         </div>
       ) : null}
     </div>

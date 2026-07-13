@@ -26,6 +26,11 @@ export class ChatController {
     return this.chatService.sendMessage(user.id, dto);
   }
 
+  @Get('sessions')
+  listSessions(@CurrentUser() user: AuthenticatedUser) {
+    return this.chatService.listSessions(user.id);
+  }
+
   @Get('sessions/:sessionId/messages')
   listMessages(
     @CurrentUser() user: AuthenticatedUser,

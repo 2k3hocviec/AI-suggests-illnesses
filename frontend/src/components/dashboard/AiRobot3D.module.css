@@ -1,0 +1,38 @@
+.robotShell {
+  margin-top: 28px;
+  display: flex;
+  flex: 1;
+  min-height: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.robotStage {
+  position: relative;
+  width: 100%;
+  max-width: 230px;
+  aspect-ratio: 1 / 1.15;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.robotStage canvas {
+  display: block;
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.robotHint {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  width: max-content;
+  max-width: calc(100% - 24px);
+  transform: translateX(-50%);
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.4;
+  pointer-events: none;
+  user-select: none;
+}

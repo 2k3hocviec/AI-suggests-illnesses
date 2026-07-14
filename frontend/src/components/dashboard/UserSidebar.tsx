@@ -1,6 +1,7 @@
 "use client";
 
 import { History, MessageSquareText, Stethoscope } from "lucide-react";
+import { AiRobot3D } from "./AiRobot3D";
 
 interface UserSidebarProps {
   onNewChat?: () => void;
@@ -40,6 +41,8 @@ export function UserSidebar({ onNewChat, onOpenHistory }: UserSidebarProps) {
           Lịch sử chat
         </button>
       </nav>
+
+      <AiRobot3D />
     </aside>
   );
 }

@@ -16,6 +16,25 @@ export interface ChatSpecialty {
   name: string;
 }
 
+export interface ChatDoctor {
+  id: number;
+  fullName: string;
+  academicTitle: string | null;
+  experienceYears: number;
+  workplace: string | null;
+  address: string | null;
+  city: string | null;
+  phoneNumber: string | null;
+  email: string | null;
+  workingTime: string | null;
+  consultationType: string[];
+  rating: string | null;
+}
+
+export interface ChatSpecialtyWithDoctors extends ChatSpecialty {
+  doctors: ChatDoctor[];
+}
+
 export interface ChatSession {
   id: number;
   title: string | null;
@@ -44,7 +63,7 @@ export interface SendChatMessageResponse {
     specialties: string[];
     message: string;
     recommendedSpecialty: ChatSpecialty | null;
-    recommendedSpecialties: ChatSpecialty[];
+    recommendedSpecialties: ChatSpecialtyWithDoctors[];
   };
 }
 

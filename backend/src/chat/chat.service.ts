@@ -10,7 +10,9 @@ import { PrismaService } from "../prisma/prisma.service";
 import { SendChatMessageDto } from "./dto/send-chat-message.dto";
 import {
   ModelAnalyzeResponse,
+  RecommendedDoctor,
   RecommendedSpecialty,
+  RecommendedSpecialtyWithDoctors,
   SpecialtyHint,
 } from "./chat.types";
 
@@ -52,16 +54,6 @@ const SPECIALTY_HINTS: SpecialtyHint[] = [
   },
 ];
 
-const EMERGENCY_KEYWORDS = [
-  "đau ngực dữ dội",
-  "khó thở nặng",
-  "ngất",
-  "liệt",
-  "co giật",
-  "chảy máu nhiều",
-  "mất ý thức",
-];
-
 @Injectable()
 export class ChatService {
   constructor(
@@ -89,13 +81,17 @@ export class ChatService {
     });
 
     const analysis = await this.analyze(content);
+    const hasEmergencySpecialty = this.hasEmergencySpecialty(analysis);
     const recommendedSpecialties =
       await this.findRecommendedSpecialties(analysis);
+    const recommendedSpecialtiesWithDoctors = hasEmergencySpecialty
+      ? this.withoutDoctorSuggestions(recommendedSpecialties)
+      : await this.attachDoctorsToSpecialties(recommendedSpecialties);
     const assistantContent = this.buildAssistantReply(
       analysis,
-      recommendedSpecialties,
+      recommendedSpecialtiesWithDoctors,
     );
-    const [primarySpecialty] = recommendedSpecialties;
+    const [primarySpecialty] = recommendedSpecialtiesWithDoctors;
 
     const assistantMessage = await this.prisma.chatMessage.create({
       data: {
@@ -124,11 +120,11 @@ export class ChatService {
         extractedSymptoms:
           analysis.symptoms as unknown as Prisma.InputJsonValue,
         recommendedSpecialtyId: primarySpecialty?.id,
-        emergency: this.isEmergency(content),
-        emergencyLevel: this.isEmergency(content) ? "EMERGENCY" : "NORMAL",
-        emergencyReasons: this.getEmergencyReasons(
-          content,
-        ) as Prisma.InputJsonValue,
+        emergency: hasEmergencySpecialty,
+        emergencyLevel: hasEmergencySpecialty ? "EMERGENCY" : "NORMAL",
+        emergencyReasons: hasEmergencySpecialty
+          ? (analysis.symptoms as unknown as Prisma.InputJsonValue)
+          : undefined,
       },
     });
 
@@ -142,7 +138,7 @@ export class ChatService {
       analysis: {
         ...analysis,
         recommendedSpecialty: primarySpecialty ?? null,
-        recommendedSpecialties,
+        recommendedSpecialties: recommendedSpecialtiesWithDoctors,
       },
     };
   }
@@ -339,12 +335,98 @@ export class ChatService {
       .filter((item): item is RecommendedSpecialty => item !== null);
   }
 
+  private hasEmergencySpecialty(analysis: ModelAnalyzeResponse) {
+    return (
+      analysis.specialties.includes("EMERGENCY") ||
+      analysis.symptoms.some((symptom) => symptom.specialty_code === "EMERGENCY")
+    );
+  }
+
+  private withoutDoctorSuggestions(
+    specialties: RecommendedSpecialty[],
+  ): RecommendedSpecialtyWithDoctors[] {
+    return specialties.map((specialty) => ({
+      ...specialty,
+      doctors: [],
+    }));
+  }
+
+  /*
+  Map chuyên khoa để lấy các bác sĩ tương ứng mà người nhập triệu chứng vào.
+  */
+  private async attachDoctorsToSpecialties(
+    specialties: RecommendedSpecialty[],
+  ): Promise<RecommendedSpecialtyWithDoctors[]> {
+    if (!specialties.length) {
+      return [];
+    }
+
+    const doctors = await this.prisma.doctor.findMany({
+      where: {
+        status: "ACTIVE",
+        specialty: {
+          code: {
+            in: specialties.map((specialty) => specialty.code),
+          },
+        },
+      },
+      select: {
+        id: true,
+        fullName: true,
+        academicTitle: true,
+        experienceYears: true,
+        workplace: true,
+        address: true,
+        city: true,
+        phoneNumber: true,
+        email: true,
+        workingTime: true,
+        consultationType: true,
+        rating: true,
+        specialty: {
+          select: {
+            code: true,
+          },
+        },
+      },
+      orderBy: [
+        {
+          rating: "desc",
+        },
+        {
+          experienceYears: "desc",
+        },
+      ],
+    });
+
+    return specialties.map((specialty) => ({
+      ...specialty,
+      doctors: doctors
+        .filter((doctor) => doctor.specialty.code === specialty.code)
+        .slice(0, 3)
+        .map((doctor): RecommendedDoctor => ({
+          id: doctor.id,
+          fullName: doctor.fullName,
+          academicTitle: doctor.academicTitle,
+          experienceYears: doctor.experienceYears,
+          workplace: doctor.workplace,
+          address: doctor.address,
+          city: doctor.city,
+          phoneNumber: doctor.phoneNumber,
+          email: doctor.email,
+          workingTime: doctor.workingTime,
+          consultationType: doctor.consultationType,
+          rating: doctor.rating?.toString() ?? null,
+        })),
+    }));
+  }
+
   /*
   Nhóm các triệu chứng cùng chuyên khoa lại với nhau
   */
   private buildAssistantReply(
     analysis: ModelAnalyzeResponse,
-    recommendedSpecialties: RecommendedSpecialty[],
+    recommendedSpecialties: RecommendedSpecialtyWithDoctors[],
   ) {
     if (recommendedSpecialties.length) {
       const groupedSymptoms = recommendedSpecialties.map((specialty) => {
@@ -355,29 +437,53 @@ export class ChatService {
           ? [...new Set(symptoms)].join(", ")
           : "cần mô tả thêm triệu chứng";
 
-        return `- ${specialty.name}: ${symptomText}.`;
+        return `o   ${specialty.name}: ${symptomText}`;
       });
 
-      return `Mình ghi nhận các nhóm chuyên khoa phù hợp:\n${groupedSymptoms.join(
+      if (
+        recommendedSpecialties.some(
+          (specialty) => specialty.code === "EMERGENCY",
+        )
+      ) {
+        return `Mình ghi nhận có dấu hiệu thuộc nhóm cấp cứu:\n\n${groupedSymptoms.join(
+          "\n",
+        )}\n\nVới các triệu chứng cấp cứu, bạn không nên chờ gợi ý bác sĩ trên hệ thống. Hãy đến cơ sở y tế gần nhất hoặc gọi cấp cứu để được thăm khám và điều trị kịp thời.\n\nThông tin này chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ.`;
+      }
+
+      const doctorSuggestions = recommendedSpecialties.map((specialty) => {
+        if (!specialty.doctors.length) {
+          return `Chuyên khoa: ${specialty.name}\nChưa có bác sĩ phù hợp trong hệ thống.`;
+        }
+
+        const doctors = specialty.doctors
+          .map((doctor, index) => {
+            const title = doctor.academicTitle
+              ? `${doctor.academicTitle} ${doctor.fullName}`
+              : doctor.fullName;
+            const consultationType = doctor.consultationType.length
+              ? doctor.consultationType
+                  .map((type) =>
+                    type === "ONLINE" ? "Tư vấn online" : "Khám trực tiếp",
+                  )
+                  .join(", ")
+              : "chưa cập nhật";
+            const rating = doctor.rating ? ` · Đánh giá: ${doctor.rating}` : "";
+
+            return `${index + 1}. ${title}\n   o   Kinh nghiệm: ${doctor.experienceYears} năm${rating}\n   o   Nơi làm việc: ${doctor.workplace ?? "chưa cập nhật"}\n   o   Địa chỉ: ${doctor.address ?? doctor.city ?? "chưa cập nhật"}\n   o   Lịch làm việc: ${doctor.workingTime ?? "chưa cập nhật"}\n   o   Hình thức: ${consultationType}\n   o   Liên hệ: ${doctor.phoneNumber ?? "chưa cập nhật"}${doctor.email ? ` · ${doctor.email}` : ""}`;
+          })
+          .join("\n\n");
+
+        return `Chuyên khoa: ${specialty.name}\n\n${doctors}`;
+      });
+
+      return `Mình ghi nhận các nhóm chuyên khoa phù hợp với triệu chứng của bạn:\n\n${groupedSymptoms.join(
         "\n",
-      )}\n\nThông tin này chỉ mang tính tham khảo`;
+      )}\n\nDanh sách bác sĩ chuyên khoa phù hợp\n\n${doctorSuggestions.join(
+        "\n\n",
+      )}\n\nThông tin này chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ.`;
     }
 
     return `${analysis.message}`;
-  }
-
-  private isEmergency(content: string) {
-    const normalized = this.normalize(content);
-    return EMERGENCY_KEYWORDS.some((keyword) =>
-      normalized.includes(this.normalize(keyword)),
-    );
-  }
-
-  private getEmergencyReasons(content: string) {
-    const normalized = this.normalize(content);
-    return EMERGENCY_KEYWORDS.filter((keyword) =>
-      normalized.includes(this.normalize(keyword)),
-    );
   }
 
   private normalize(value: string) {

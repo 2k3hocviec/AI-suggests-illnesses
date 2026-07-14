@@ -353,6 +353,252 @@ const doctors = [
   },
 ] as const;
 
+const doctorLocations = [
+  {
+    city: 'DaNang',
+    cityLabel: 'Đà Nẵng',
+    districts: ['Hải Châu', 'Thanh Khê', 'Sơn Trà'],
+  },
+  {
+    city: 'HaNoi',
+    cityLabel: 'Hà Nội',
+    districts: ['Ba Đình', 'Cầu Giấy', 'Đống Đa'],
+  },
+  {
+    city: 'Hue',
+    cityLabel: 'Huế',
+    districts: ['Phú Hội', 'Vỹ Dạ', 'Thuận Hóa'],
+  },
+  {
+    city: 'HoChiMinh',
+    cityLabel: 'TP.HCM',
+    districts: ['Quận 1', 'Quận 3', 'Quận 7'],
+  },
+] as const;
+
+const specialtyDoctorProfiles = [
+  {
+    code: 'GENERAL_MEDICINE',
+    label: 'Nội tổng quát',
+    symptoms: [
+      ['sot', '0.88'],
+      ['met moi', '0.84'],
+      ['sot cao', '0.78'],
+    ],
+  },
+  {
+    code: 'CARDIOLOGY',
+    label: 'Tim mạch',
+    symptoms: [
+      ['dau nguc', '0.95'],
+      ['hoi hop', '0.9'],
+      ['tim dap nhanh', '0.88'],
+    ],
+  },
+  {
+    code: 'RESPIRATORY',
+    label: 'Hô hấp',
+    symptoms: [
+      ['ho', '0.9'],
+      ['ho co dom', '0.9'],
+      ['kho tho', '0.86'],
+    ],
+  },
+  {
+    code: 'PEDIATRICS',
+    label: 'Nhi khoa',
+    symptoms: [
+      ['sot', '0.78'],
+      ['sot cao', '0.84'],
+      ['tho rut lom long nguc', '0.9'],
+    ],
+  },
+  {
+    code: 'DERMATOLOGY',
+    label: 'Da liễu',
+    symptoms: [
+      ['phat ban', '0.9'],
+      ['ngua', '0.88'],
+      ['noi me day', '0.86'],
+    ],
+  },
+  {
+    code: 'NEUROLOGY',
+    label: 'Nội Thần kinh',
+    symptoms: [
+      ['dau dau', '0.95'],
+      ['chong mat', '0.88'],
+      ['te tay chan', '0.84'],
+    ],
+  },
+  {
+    code: 'ENT',
+    label: 'Tai Mũi Họng',
+    symptoms: [
+      ['dau tai', '0.9'],
+      ['u tai', '0.86'],
+      ['dau hong', '0.88'],
+    ],
+  },
+  {
+    code: 'OB_GYN',
+    label: 'Sản phụ khoa',
+    symptoms: [
+      ['dau vung chau', '0.9'],
+      ['roi loan kinh nguyet', '0.92'],
+      ['buon non', '0.58'],
+    ],
+  },
+  {
+    code: 'ORTHOPEDICS',
+    label: 'Cơ xương khớp',
+    symptoms: [
+      ['dau khop', '0.92'],
+      ['dau lung duoi', '0.88'],
+      ['han che van dong', '0.86'],
+    ],
+  },
+  {
+    code: 'OPHTHALMOLOGY',
+    label: 'Mắt',
+    symptoms: [
+      ['dau mat', '0.9'],
+      ['do mat', '0.86'],
+      ['nhin mo', '0.88'],
+    ],
+  },
+  {
+    code: 'GASTROENTEROLOGY',
+    label: 'Tiêu hóa',
+    symptoms: [
+      ['dau bung', '0.94'],
+      ['tieu chay', '0.88'],
+      ['buon non', '0.86'],
+    ],
+  },
+  {
+    code: 'DENTISTRY',
+    label: 'Răng Hàm Mặt',
+    symptoms: [
+      ['dau rang', '0.92'],
+      ['sung nuou', '0.9'],
+    ],
+  },
+  {
+    code: 'UROLOGY',
+    label: 'Tiết niệu',
+    symptoms: [
+      ['tieu buot', '0.92'],
+      ['tieu rat', '0.9'],
+      ['dau vung than', '0.88'],
+    ],
+  },
+  {
+    code: 'ENDOCRINOLOGY',
+    label: 'Nội tiết',
+    symptoms: [
+      ['khat nhieu', '0.86'],
+      ['sut can', '0.78'],
+      ['met moi', '0.66'],
+    ],
+  },
+  {
+    code: 'PSYCHIATRY',
+    label: 'Tâm thần',
+    symptoms: [
+      ['lo au', '0.92'],
+      ['cang thang', '0.88'],
+      ['mat ngu', '0.84'],
+    ],
+  },
+  {
+    code: 'ONCOLOGY',
+    label: 'Ung bướu',
+    symptoms: [
+      ['giam can khong ro nguyen nhan', '0.84'],
+      ['noi hach', '0.86'],
+      ['met moi', '0.58'],
+    ],
+  },
+  {
+    code: 'EMERGENCY',
+    label: 'Cấp cứu',
+    symptoms: [
+      ['mat y thuc', '0.95'],
+      ['co giat', '0.92'],
+      ['moi tim tai', '0.9'],
+    ],
+  },
+] as const;
+
+const doctorGivenNames = [
+  'An',
+  'Bình',
+  'Chi',
+  'Dũng',
+  'Giang',
+  'Hạnh',
+  'Khải',
+  'Linh',
+  'Minh',
+  'Ngọc',
+  'Phong',
+  'Trang',
+] as const;
+
+const doctorFamilyNames = [
+  'Nguyễn',
+  'Trần',
+  'Lê',
+  'Phạm',
+  'Hoàng',
+  'Võ',
+  'Đặng',
+  'Bùi',
+  'Đỗ',
+  'Mai',
+  'Vũ',
+  'Huỳnh',
+] as const;
+
+const generatedDoctors = specialtyDoctorProfiles.flatMap(
+  (specialty, specialtyIndex) =>
+    doctorLocations.flatMap((location, locationIndex) =>
+      location.districts.map((district, districtIndex) => {
+        const doctorIndex = locationIndex * location.districts.length + districtIndex;
+        const nameIndex = (specialtyIndex + doctorIndex) % doctorGivenNames.length;
+        const rating = (4.35 + ((specialtyIndex + doctorIndex) % 7) * 0.07).toFixed(1);
+
+        return {
+          email: `bs.${specialty.code.toLowerCase()}.${location.city.toLowerCase()}.${districtIndex + 1}@example.com`,
+          fullName: `Bác sĩ ${doctorFamilyNames[nameIndex]} ${doctorGivenNames[nameIndex]}`,
+          academicTitle:
+            doctorIndex % 3 === 0
+              ? 'Bác sĩ Chuyên khoa II'
+              : doctorIndex % 3 === 1
+                ? 'Thạc sĩ Bác sĩ'
+                : 'Bác sĩ Chuyên khoa I',
+          specialtyCode: specialty.code,
+          experienceYears: 6 + ((specialtyIndex + doctorIndex) % 18),
+          workplace: `${doctorIndex % 2 === 0 ? 'Bệnh viện' : 'Phòng khám'} ${specialty.label} ${location.cityLabel}`,
+          address: `${district}, ${location.cityLabel}`,
+          city: location.city,
+          phoneNumber: `09${String(20000000 + specialtyIndex * 1000 + doctorIndex).padStart(8, '0')}`,
+          workingTime:
+            doctorIndex % 2 === 0
+              ? 'Mon-Fri 08:00-17:00'
+              : 'Mon-Sat 09:00-18:00',
+          consultationType:
+            doctorIndex % 2 === 0
+              ? [ConsultationType.OFFLINE, ConsultationType.ONLINE]
+              : [ConsultationType.OFFLINE],
+          rating,
+          symptoms: specialty.symptoms,
+        };
+      }),
+    ),
+);
+
 async function seedUsers() {
   const password = await bcrypt.hash('Password123!', 12);
   await prisma.user.upsert({
@@ -417,7 +663,7 @@ async function seedSymptoms() {
 }
 
 async function seedDoctors() {
-  for (const doctor of doctors) {
+  for (const doctor of [...doctors, ...generatedDoctors]) {
     const specialty = await prisma.specialty.findUniqueOrThrow({
       where: { code: doctor.specialtyCode },
     });

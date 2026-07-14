@@ -21,3 +21,23 @@ export interface RecommendedSpecialty {
   code: string;
   name: string;
 }
+
+export interface RecommendedDoctor {
+  id: number;
+  fullName: string;
+  academicTitle: string | null;
+  experienceYears: number;
+  workplace: string | null;
+  address: string | null;
+  city: string | null;
+  phoneNumber: string | null;
+  email: string | null;
+  workingTime: string | null;
+  consultationType: string[];
+  rating: string | null;
+}
+
+export interface RecommendedSpecialtyWithDoctors
+  extends RecommendedSpecialty {
+  doctors: RecommendedDoctor[];
+}

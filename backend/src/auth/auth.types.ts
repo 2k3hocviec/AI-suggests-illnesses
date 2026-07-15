@@ -20,6 +20,7 @@ export interface PublicUser {
   fullName: string;
   email: string;
   phoneNumber: string | null;
+  streetAddress: string | null;
   address: string | null;
   gender: UserGender;
   role: UserRole;

@@ -18,6 +18,7 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { MailService } from './mail.service';
+import { AdministrativeUnitsService } from '../administrative-units/administrative-units.service';
 
 @Injectable()
 export class AuthService {
@@ -26,6 +27,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly config: ConfigService,
     private readonly mailService: MailService,
+    private readonly administrativeUnits: AdministrativeUnitsService,
   ) {}
 
   async register(dto: RegisterDto) {
@@ -37,6 +39,7 @@ export class AuthService {
     }
 
     const password = await this.hashValue(dto.password);
+    const address = await this.resolveRegisterAddress(dto);
     const user = await this.prisma.user.create({
       data: {
         fullName: dto.fullName.trim(),
@@ -45,13 +48,46 @@ export class AuthService {
         dateOfBirth: dto.dateOfBirth ? new Date(dto.dateOfBirth) : undefined,
         gender: dto.gender,
         phoneNumber: dto.phoneNumber?.trim() || undefined,
-        address: dto.address?.trim() || undefined,
+        streetAddress: address.streetAddress,
+        address: address.address,
+        provinceCode: address.provinceCode,
+        districtCode: address.districtCode,
+        wardCode: address.wardCode,
       },
     });
 
     return {
       message: 'Account registered successfully',
       user: this.toPublicUser(user),
+    };
+  }
+
+  private async resolveRegisterAddress(dto: RegisterDto) {
+    const [districts, wards] = await Promise.all([
+      this.administrativeUnits.listDistricts(dto.provinceCode),
+      this.administrativeUnits.listWards(dto.districtCode),
+    ]);
+    const district = districts.find((item) => item.code === dto.districtCode);
+    const ward = wards.find((item) => item.code === dto.wardCode);
+
+    if (!district || !ward || ward.provinceCode !== dto.provinceCode) {
+      throw new BadRequestException('Địa chỉ hành chính không hợp lệ');
+    }
+
+    const province = (await this.administrativeUnits.listProvinces()).find(
+      (item) => item.code === dto.provinceCode,
+    );
+
+    if (!province) {
+      throw new BadRequestException('Tỉnh/thành không hợp lệ');
+    }
+
+    return {
+      streetAddress: dto.streetAddress.trim(),
+      address: `${dto.streetAddress.trim()}, ${ward.name}, ${district.name}, ${province.name}`,
+      provinceCode: province.code,
+      districtCode: district.code,
+      wardCode: ward.code,
     };
   }
 
@@ -317,6 +353,7 @@ export class AuthService {
       fullName: user.fullName,
       email: user.email,
       phoneNumber: user.phoneNumber,
+      streetAddress: user.streetAddress,
       address: user.address,
       gender: user.gender,
       role: user.role,

@@ -13,6 +13,7 @@ export class UsersService {
         fullName: true,
         email: true,
         phoneNumber: true,
+        streetAddress: true,
         address: true,
         gender: true,
         role: true,

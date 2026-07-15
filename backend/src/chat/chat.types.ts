@@ -28,13 +28,22 @@ export interface RecommendedDoctor {
   academicTitle: string | null;
   experienceYears: number;
   workplace: string | null;
+  streetAddress: string | null;
   address: string | null;
   city: string | null;
+  provinceCode: number | null;
+  districtCode: number | null;
+  wardCode: number | null;
   phoneNumber: string | null;
   email: string | null;
   workingTime: string | null;
   consultationType: string[];
   rating: string | null;
+  distanceText: string | null;
+  distanceMeters: number | null;
+  durationText: string | null;
+  durationSeconds: number | null;
+  locationScore: number | null;
 }
 
 export interface RecommendedSpecialtyWithDoctors

@@ -22,6 +22,12 @@ AI_SERVICE_URL=http://localhost:5678
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/medical_consultation?schema=public
 ```
 
+Doctor location recommendations use Vietnamese administrative address matching
+to prioritize doctors in the same ward, district, or city as the user's saved
+address. This does not require an external maps API.
+The local seed data in `prisma/data/vietnam-admin-units-v1.json` is based on
+Province Open API v1 administrative units with 63 provinces/cities.
+
 ## Database
 
 Start PostgreSQL with Docker:

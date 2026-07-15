@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { PlatformStatsModule } from './platform-stats/platform-stats.module';
 import { ChatModule } from './chat/chat.module';
+import { AdministrativeUnitsModule } from './administrative-units/administrative-units.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { ChatModule } from './chat/chat.module';
     HealthModule,
     AuthModule,
     UsersModule,
+    AdministrativeUnitsModule,
     PlatformStatsModule,
     ChatModule,
   ],

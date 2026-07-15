@@ -54,6 +54,29 @@ const SPECIALTY_HINTS: SpecialtyHint[] = [
   },
 ];
 
+const ADMINISTRATIVE_MATCH_LABELS = {
+  SAME_STREET: "Cùng số nhà/tên đường",
+  SAME_WARD: "Cùng phường/xã",
+  SAME_DISTRICT: "Cùng quận/huyện",
+  SAME_CITY: "Cùng tỉnh/thành phố",
+  DIFFERENT_AREA: "Khác khu vực",
+} as const;
+
+interface AdministrativeLocation {
+  streetAddress: string | null;
+  provinceCode: number | null;
+  districtCode: number | null;
+  wardCode: number | null;
+}
+
+interface DoctorDistance {
+  distanceText: string | null;
+  distanceMeters: number | null;
+  durationText: string | null;
+  durationSeconds: number | null;
+  locationScore: number;
+}
+
 @Injectable()
 export class ChatService {
   constructor(
@@ -86,7 +109,7 @@ export class ChatService {
       await this.findRecommendedSpecialties(analysis);
     const recommendedSpecialtiesWithDoctors = hasEmergencySpecialty
       ? this.withoutDoctorSuggestions(recommendedSpecialties)
-      : await this.attachDoctorsToSpecialties(recommendedSpecialties);
+      : await this.attachDoctorsToSpecialties(userId, recommendedSpecialties);
     const assistantContent = this.buildAssistantReply(
       analysis,
       recommendedSpecialtiesWithDoctors,
@@ -256,8 +279,6 @@ export class ChatService {
         throw new ServiceUnavailableException("Model chưa sẵn sàng");
       }
       const analysis = (await response.json()) as ModelAnalyzeResponse;
-      console.log("Đã gửi sang model:", content);
-      console.log("Model trả về:", analysis);
 
       return analysis;
     } catch (error) {
@@ -338,7 +359,9 @@ export class ChatService {
   private hasEmergencySpecialty(analysis: ModelAnalyzeResponse) {
     return (
       analysis.specialties.includes("EMERGENCY") ||
-      analysis.symptoms.some((symptom) => symptom.specialty_code === "EMERGENCY")
+      analysis.symptoms.some(
+        (symptom) => symptom.specialty_code === "EMERGENCY",
+      )
     );
   }
 
@@ -355,6 +378,7 @@ export class ChatService {
   Map chuyên khoa để lấy các bác sĩ tương ứng mà người nhập triệu chứng vào.
   */
   private async attachDoctorsToSpecialties(
+    userId: number,
     specialties: RecommendedSpecialty[],
   ): Promise<RecommendedSpecialtyWithDoctors[]> {
     if (!specialties.length) {
@@ -376,8 +400,12 @@ export class ChatService {
         academicTitle: true,
         experienceYears: true,
         workplace: true,
+        streetAddress: true,
         address: true,
         city: true,
+        provinceCode: true,
+        districtCode: true,
+        wardCode: true,
         phoneNumber: true,
         email: true,
         workingTime: true,
@@ -398,27 +426,230 @@ export class ChatService {
         },
       ],
     });
+    const userLocation = await this.findUserLocation(userId);
+    const doctorDistances = await this.findDoctorDistances(
+      userLocation,
+      doctors,
+    );
 
     return specialties.map((specialty) => ({
       ...specialty,
       doctors: doctors
         .filter((doctor) => doctor.specialty.code === specialty.code)
-        .slice(0, 3)
-        .map((doctor): RecommendedDoctor => ({
-          id: doctor.id,
-          fullName: doctor.fullName,
-          academicTitle: doctor.academicTitle,
-          experienceYears: doctor.experienceYears,
-          workplace: doctor.workplace,
-          address: doctor.address,
-          city: doctor.city,
-          phoneNumber: doctor.phoneNumber,
-          email: doctor.email,
-          workingTime: doctor.workingTime,
-          consultationType: doctor.consultationType,
-          rating: doctor.rating?.toString() ?? null,
-        })),
+        .map((doctor): RecommendedDoctor => {
+          const distance = doctorDistances.get(doctor.id);
+
+          return {
+            id: doctor.id,
+            fullName: doctor.fullName,
+            academicTitle: doctor.academicTitle,
+            experienceYears: doctor.experienceYears,
+            workplace: doctor.workplace,
+            streetAddress: doctor.streetAddress,
+            address: doctor.address,
+            city: doctor.city,
+            provinceCode: doctor.provinceCode,
+            districtCode: doctor.districtCode,
+            wardCode: doctor.wardCode,
+            phoneNumber: doctor.phoneNumber,
+            email: doctor.email,
+            workingTime: doctor.workingTime,
+            consultationType: doctor.consultationType,
+            rating: doctor.rating?.toString() ?? null,
+            distanceText: distance?.distanceText ?? null,
+            distanceMeters: distance?.distanceMeters ?? null,
+            durationText: distance?.durationText ?? null,
+            durationSeconds: distance?.durationSeconds ?? null,
+            locationScore: distance?.locationScore ?? null,
+          };
+        })
+        .sort((firstDoctor, secondDoctor) => {
+          const firstScore = firstDoctor.locationScore ?? 0;
+          const secondScore = secondDoctor.locationScore ?? 0;
+
+          if (firstScore !== secondScore) {
+            return secondScore - firstScore;
+          }
+
+          if (firstDoctor.rating !== secondDoctor.rating) {
+            return (
+              Number(secondDoctor.rating ?? 0) - Number(firstDoctor.rating ?? 0)
+            );
+          }
+
+          if (firstDoctor.experienceYears !== secondDoctor.experienceYears) {
+            return secondDoctor.experienceYears - firstDoctor.experienceYears;
+          }
+
+          if (
+            firstDoctor.distanceMeters === null &&
+            secondDoctor.distanceMeters === null
+          ) {
+            return 0;
+          }
+
+          if (firstDoctor.distanceMeters === null) {
+            return 1;
+          }
+
+          if (secondDoctor.distanceMeters === null) {
+            return -1;
+          }
+
+          return firstDoctor.distanceMeters - secondDoctor.distanceMeters;
+        }),
     }));
+  }
+
+  private async findUserLocation(userId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+      select: {
+        provinceCode: true,
+        districtCode: true,
+        wardCode: true,
+        streetAddress: true,
+      },
+    });
+
+    if (!user) {
+      return null;
+    }
+
+    return {
+      provinceCode: user.provinceCode,
+      districtCode: user.districtCode,
+      wardCode: user.wardCode,
+      streetAddress: user.streetAddress,
+    };
+  }
+
+  private async findDoctorDistances(
+    userLocation: AdministrativeLocation | null,
+    doctors: Array<{
+      id: number;
+      streetAddress: string | null;
+      address: string | null;
+      city: string | null;
+      provinceCode: number | null;
+      districtCode: number | null;
+      wardCode: number | null;
+    }>,
+  ) {
+    const result = new Map<number, DoctorDistance>();
+    if (!userLocation) {
+      return result;
+    }
+
+    for (const doctor of doctors) {
+      result.set(
+        doctor.id,
+        this.calculateAdministrativeDistance(userLocation, {
+          streetAddress: doctor.streetAddress,
+          provinceCode: doctor.provinceCode,
+          districtCode: doctor.districtCode,
+          wardCode: doctor.wardCode,
+        }),
+      );
+    }
+
+    return result;
+  }
+
+  private calculateAdministrativeDistance(
+    userLocation: AdministrativeLocation,
+    doctorLocation: AdministrativeLocation,
+  ): DoctorDistance {
+    const sameProvince = Boolean(
+      userLocation.provinceCode &&
+        doctorLocation.provinceCode &&
+        userLocation.provinceCode === doctorLocation.provinceCode,
+    );
+    const sameDistrict = Boolean(
+      sameProvince &&
+        userLocation.districtCode &&
+        doctorLocation.districtCode &&
+        userLocation.districtCode === doctorLocation.districtCode,
+    );
+    const sameWard = Boolean(
+      sameDistrict &&
+        userLocation.wardCode &&
+        doctorLocation.wardCode &&
+        userLocation.wardCode === doctorLocation.wardCode,
+    );
+
+    if (
+      sameWard &&
+      this.isSameStreetAddress(
+        userLocation.streetAddress,
+        doctorLocation.streetAddress,
+      )
+    ) {
+      return this.buildAdministrativeDistance(
+        ADMINISTRATIVE_MATCH_LABELS.SAME_STREET,
+        1,
+      );
+    }
+
+    if (sameWard) {
+      return this.buildAdministrativeDistance(
+        ADMINISTRATIVE_MATCH_LABELS.SAME_WARD,
+        0.65,
+      );
+    }
+
+    if (sameDistrict) {
+      return this.buildAdministrativeDistance(
+        ADMINISTRATIVE_MATCH_LABELS.SAME_DISTRICT,
+        0.4,
+      );
+    }
+
+    if (sameProvince) {
+      return this.buildAdministrativeDistance(
+        ADMINISTRATIVE_MATCH_LABELS.SAME_CITY,
+        0.2,
+      );
+    }
+
+    return this.buildAdministrativeDistance(
+      ADMINISTRATIVE_MATCH_LABELS.DIFFERENT_AREA,
+      0,
+    );
+  }
+
+  private buildAdministrativeDistance(label: string, locationScore: number) {
+    return {
+      distanceText: label,
+      distanceMeters: null,
+      durationText: null,
+      durationSeconds: null,
+      locationScore,
+    };
+  }
+
+  private isSameStreetAddress(
+    firstAddress: string | null,
+    secondAddress: string | null,
+  ) {
+    const first = this.normalizeStreetAddress(firstAddress);
+    const second = this.normalizeStreetAddress(secondAddress);
+
+    return Boolean(first && second && first === second);
+  }
+
+  private normalizeStreetAddress(address: string | null) {
+    if (!address) {
+      return "";
+    }
+
+    return this.normalize(address)
+      .replace(/\bso\b/g, "")
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim()
+      .replace(/\s+/g, " ");
   }
 
   /*
@@ -468,8 +699,15 @@ export class ChatService {
                   .join(", ")
               : "chưa cập nhật";
             const rating = doctor.rating ? ` · Đánh giá: ${doctor.rating}` : "";
+            const distance = doctor.distanceText
+              ? `\n   o   Khu vực: ${doctor.distanceText}`
+              : "";
+            const locationScore =
+              doctor.locationScore !== null
+                ? `\n   o   Điểm khu vực: ${doctor.locationScore.toFixed(2)}/1.0`
+                : "";
 
-            return `${index + 1}. ${title}\n   o   Kinh nghiệm: ${doctor.experienceYears} năm${rating}\n   o   Nơi làm việc: ${doctor.workplace ?? "chưa cập nhật"}\n   o   Địa chỉ: ${doctor.address ?? doctor.city ?? "chưa cập nhật"}\n   o   Lịch làm việc: ${doctor.workingTime ?? "chưa cập nhật"}\n   o   Hình thức: ${consultationType}\n   o   Liên hệ: ${doctor.phoneNumber ?? "chưa cập nhật"}${doctor.email ? ` · ${doctor.email}` : ""}`;
+            return `${index + 1}. ${title}\n   o   Kinh nghiệm: ${doctor.experienceYears} năm${rating}\n   o   Nơi làm việc: ${doctor.workplace ?? "chưa cập nhật"}\n   o   Địa chỉ: ${doctor.address ?? doctor.city ?? "chưa cập nhật"}${distance}${locationScore}\n   o   Lịch làm việc: ${doctor.workingTime ?? "chưa cập nhật"}\n   o   Hình thức: ${consultationType}\n   o   Liên hệ: ${doctor.phoneNumber ?? "chưa cập nhật"}${doctor.email ? ` · ${doctor.email}` : ""}`;
           })
           .join("\n\n");
 

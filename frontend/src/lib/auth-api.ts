@@ -5,6 +5,7 @@ export interface AuthUser {
   fullName: string;
   email: string;
   phoneNumber: string | null;
+  streetAddress: string | null;
   address: string | null;
   gender: string;
   role: 'ADMIN' | 'USER';
@@ -40,7 +41,10 @@ export interface RegisterRequest {
   phoneNumber?: string;
   dateOfBirth?: string;
   gender?: 'MALE' | 'FEMALE' | 'OTHER' | 'UNKNOWN';
-  address?: string;
+  streetAddress: string;
+  provinceCode: number;
+  districtCode: number;
+  wardCode: number;
 }
 
 export interface ForgotPasswordRequest {

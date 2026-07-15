@@ -1,22 +1,22 @@
-'use client';
+"use client";
 
-import { useEffect, useRef, useState } from 'react';
-import type { Material, Texture } from 'three';
-import styles from './AiRobot3D.module.css';
+import { useEffect, useRef, useState } from "react";
+import type { Material, Texture } from "three";
+import styles from "./AiRobot3D.module.css";
 
 export function AiRobot3D() {
   const mountRef = useRef<HTMLDivElement>(null);
   const [isDesktop, setIsDesktop] = useState(false);
 
   useEffect(() => {
-    const mediaQuery = window.matchMedia('(min-width: 1024px)');
+    const mediaQuery = window.matchMedia("(min-width: 1024px)");
     const updateDesktopState = () => setIsDesktop(mediaQuery.matches);
 
     updateDesktopState();
-    mediaQuery.addEventListener('change', updateDesktopState);
+    mediaQuery.addEventListener("change", updateDesktopState);
 
     return () => {
-      mediaQuery.removeEventListener('change', updateDesktopState);
+      mediaQuery.removeEventListener("change", updateDesktopState);
     };
   }, []);
 
@@ -29,10 +29,9 @@ export function AiRobot3D() {
     let isMounted = true;
 
     async function initRobot() {
-      const THREE = await import('three');
-      const { OrbitControls } = await import(
-        'three/examples/jsm/controls/OrbitControls.js'
-      );
+      const THREE = await import("three");
+      const { OrbitControls } =
+        await import("three/examples/jsm/controls/OrbitControls.js");
 
       if (!isMounted || !mountRef.current) {
         return;
@@ -198,7 +197,10 @@ export function AiRobot3D() {
 
         const badge = new THREE.Group();
         badge.position.set(0, -0.12, -0.035);
-        const disc = new THREE.Mesh(new THREE.CircleGeometry(0.24, 32), capeMat);
+        const disc = new THREE.Mesh(
+          new THREE.CircleGeometry(0.24, 32),
+          capeMat,
+        );
         badge.add(disc);
         badge.add(
           new THREE.Mesh(new THREE.BoxGeometry(0.075, 0.3, 0.025), crossMat),
@@ -239,32 +241,32 @@ export function AiRobot3D() {
       }
 
       function makeMedicalLogo() {
-        const canvas = document.createElement('canvas');
+        const canvas = document.createElement("canvas");
         canvas.width = 512;
         canvas.height = 512;
-        const context = canvas.getContext('2d');
+        const context = canvas.getContext("2d");
 
         if (!context) {
           return new THREE.Group();
         }
 
         context.clearRect(0, 0, canvas.width, canvas.height);
-        context.fillStyle = '#FFFFFF';
-        context.strokeStyle = '#36B8B3';
+        context.fillStyle = "#FFFFFF";
+        context.strokeStyle = "#36B8B3";
         context.lineWidth = 16;
         roundRect(context, 42, 42, 428, 428, 88);
         context.fill();
         context.stroke();
 
-        context.fillStyle = '#E84D5B';
+        context.fillStyle = "#E84D5B";
         context.fillRect(228, 112, 56, 164);
         context.fillRect(174, 166, 164, 56);
 
-        context.fillStyle = '#073F87';
-        context.font = 'bold 92px Segoe UI, Arial, sans-serif';
-        context.textAlign = 'center';
-        context.textBaseline = 'middle';
-        context.fillText('AI', 256, 360);
+        context.fillStyle = "#073F87";
+        context.font = "bold 92px Segoe UI, Arial, sans-serif";
+        context.textAlign = "center";
+        context.textBaseline = "middle";
+        context.fillText("KHOA", 256, 360);
 
         const texture = new THREE.CanvasTexture(canvas);
         texture.colorSpace = THREE.SRGBColorSpace;
@@ -272,7 +274,10 @@ export function AiRobot3D() {
           map: texture,
           transparent: true,
         });
-        const logo = new THREE.Mesh(new THREE.PlaneGeometry(0.62, 0.62), material);
+        const logo = new THREE.Mesh(
+          new THREE.PlaneGeometry(0.62, 0.62),
+          material,
+        );
         logo.position.set(0, -0.08, 0.62);
         return logo;
       }
@@ -352,7 +357,10 @@ export function AiRobot3D() {
       headGroup.position.y = 2.15;
       robot.add(headGroup);
 
-      const head = new THREE.Mesh(new THREE.SphereGeometry(0.95, 32, 32), headMat);
+      const head = new THREE.Mesh(
+        new THREE.SphereGeometry(0.95, 32, 32),
+        headMat,
+      );
       head.castShadow = true;
       head.receiveShadow = true;
       headGroup.add(head);
@@ -363,7 +371,9 @@ export function AiRobot3D() {
 
       function makeEye(x: number) {
         const eye = new THREE.Group();
-        eye.add(new THREE.Mesh(new THREE.SphereGeometry(0.15, 20, 20), eyeWhiteMat));
+        eye.add(
+          new THREE.Mesh(new THREE.SphereGeometry(0.15, 20, 20), eyeWhiteMat),
+        );
         const pupil = new THREE.Mesh(
           new THREE.SphereGeometry(0.085, 16, 16),
           eyePupilMat,
@@ -423,16 +433,20 @@ export function AiRobot3D() {
         const canvasCenterX = rect.left + rect.width / 2;
         const canvasCenterY = rect.top + rect.height / 2;
         const normalizedX = (event.clientX - canvasCenterX) / (rect.width / 2);
-        const normalizedY = -(event.clientY - canvasCenterY) / (rect.height / 2);
+        const normalizedY =
+          -(event.clientY - canvasCenterY) / (rect.height / 2);
 
         resetViewToInitialPosition();
         setEyeGaze(normalizedX, normalizedY);
       }
 
-      document.addEventListener('pointerdown', handlePointerDown);
-      document.addEventListener('pointerup', handlePointerUp);
+      document.addEventListener("pointerdown", handlePointerDown);
+      document.addEventListener("pointerup", handlePointerUp);
 
-      const cheekL = new THREE.Mesh(new THREE.SphereGeometry(0.14, 16, 16), cheekMat);
+      const cheekL = new THREE.Mesh(
+        new THREE.SphereGeometry(0.14, 16, 16),
+        cheekMat,
+      );
       cheekL.scale.set(1, 0.7, 0.3);
       cheekL.position.set(-0.62, -0.18, 0.72);
       headGroup.add(cheekL);
@@ -475,8 +489,10 @@ export function AiRobot3D() {
         time += 0.04;
         robot.position.y = Math.sin(time) * 0.06;
         headGroup.rotation.z = Math.sin(time * 0.8) * 0.03;
-        armL.rotation.z = armL.userData.baseRotation + Math.sin(time * 1.3) * 0.08;
-        armR.rotation.z = armR.userData.baseRotation - Math.sin(time * 1.3) * 0.08;
+        armL.rotation.z =
+          armL.userData.baseRotation + Math.sin(time * 1.3) * 0.08;
+        armR.rotation.z =
+          armR.userData.baseRotation - Math.sin(time * 1.3) * 0.08;
         cape.position.z = -0.72 - Math.max(0, Math.sin(time * 1.15)) * 0.03;
         cape.rotation.x = 0.18 + Math.sin(time * 1.15) * 0.025;
         cape.rotation.z = Math.sin(time * 0.9) * 0.025;
@@ -497,8 +513,8 @@ export function AiRobot3D() {
       cleanup = () => {
         cancelAnimationFrame(animationFrame);
         resizeObserver.disconnect();
-        document.removeEventListener('pointerdown', handlePointerDown);
-        document.removeEventListener('pointerup', handlePointerUp);
+        document.removeEventListener("pointerdown", handlePointerDown);
+        document.removeEventListener("pointerup", handlePointerUp);
         controls.dispose();
         renderer.dispose();
         scene.traverse((object) => {

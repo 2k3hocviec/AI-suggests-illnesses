@@ -49,7 +49,11 @@ model User {
   role                  UserRole   @default(USER)
   email                 String     @unique
   phoneNumber           String?    @map("phone_number")
+  streetAddress         String?    @map("street_address")
   address               String?
+  provinceCode          Int?       @map("province_code")
+  districtCode          Int?       @map("district_code")
+  wardCode              Int?       @map("ward_code")
   password              String?
   passwordResetOtpHash  String?    @map("password_reset_otp_hash")
   passwordResetExpires  DateTime?  @map("password_reset_expires")
@@ -61,7 +65,13 @@ model User {
   chatSessions          ChatSession[]
   chatMessages          ChatMessage[]
   authSessions          AuthSession[]
+  province              Province?             @relation("UserProvince", fields: [provinceCode], references: [code])
+  district              District?             @relation("UserDistrict", fields: [districtCode], references: [code])
+  ward                  Ward?                 @relation("UserWard", fields: [wardCode], references: [code])
 
+  @@index([provinceCode])
+  @@index([districtCode])
+  @@index([wardCode])
   @@map("users")
 }
 
@@ -106,6 +116,55 @@ model Specialty {
   @@map("specialties")
 }
 
+model Province {
+  code         Int    @id
+  name         String
+  divisionType String @map("division_type")
+  codename     String
+  phoneCode    Int?   @map("phone_code")
+
+  districts District[]
+  wards     Ward[]
+  users     User[]     @relation("UserProvince")
+  doctors   Doctor[]   @relation("DoctorProvince")
+
+  @@map("provinces")
+}
+
+model District {
+  code         Int    @id
+  name         String
+  divisionType String @map("division_type")
+  codename     String
+  provinceCode Int    @map("province_code")
+
+  province Province @relation(fields: [provinceCode], references: [code], onDelete: Cascade)
+  wards    Ward[]
+  users    User[]   @relation("UserDistrict")
+  doctors  Doctor[] @relation("DoctorDistrict")
+
+  @@index([provinceCode])
+  @@map("districts")
+}
+
+model Ward {
+  code         Int    @id
+  name         String
+  divisionType String @map("division_type")
+  codename     String @unique
+  districtCode Int    @map("district_code")
+  provinceCode Int    @map("province_code")
+
+  district District @relation(fields: [districtCode], references: [code], onDelete: Cascade)
+  province Province @relation(fields: [provinceCode], references: [code], onDelete: Cascade)
+  users    User[]   @relation("UserWard")
+  doctors  Doctor[] @relation("DoctorWard")
+
+  @@index([districtCode])
+  @@index([provinceCode])
+  @@map("wards")
+}
+
 model Doctor {
   id               Int                @id @default(autoincrement())
   fullName         String             @map("full_name")
@@ -116,8 +175,12 @@ model Doctor {
   phoneNumber      String?            @map("phone_number")
   email            String?
   workplace        String?
+  streetAddress    String?            @map("street_address")
   address          String?
   city             String?
+  provinceCode     Int?               @map("province_code")
+  districtCode     Int?               @map("district_code")
+  wardCode         Int?               @map("ward_code")
   workingTime      String?            @map("working_time")
   consultationType ConsultationType[] @default([]) @map("consultation_type")
   imageUrl         String?            @map("image_url")
@@ -127,10 +190,16 @@ model Doctor {
   updatedAt        DateTime           @updatedAt @map("updated_at")
 
   specialty  Specialty         @relation(fields: [specialtyId], references: [id])
+  province   Province?         @relation("DoctorProvince", fields: [provinceCode], references: [code])
+  district   District?         @relation("DoctorDistrict", fields: [districtCode], references: [code])
+  ward       Ward?             @relation("DoctorWard", fields: [wardCode], references: [code])
   expertises DoctorExpertise[]
 
   @@index([specialtyId])
   @@index([city])
+  @@index([provinceCode])
+  @@index([districtCode])
+  @@index([wardCode])
   @@map("doctors")
 }
 

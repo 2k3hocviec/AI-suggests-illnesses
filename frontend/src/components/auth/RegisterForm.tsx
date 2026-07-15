@@ -4,9 +4,17 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { CalendarDays, MapPin, Mail, Phone, UserRound } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import {
+  District,
+  listDistricts,
+  listProvinces,
+  listWards,
+  Province,
+  Ward,
+} from '@/lib/administrative-units-api';
 import { register as registerAccount } from '@/lib/auth-api';
 import { AuthCard } from './AuthCard';
 import { FormField } from './FormField';
@@ -21,7 +29,10 @@ const registerSchema = z
     gender: z.enum(['MALE', 'FEMALE'], {
       required_error: 'Vui lòng chọn giới tính',
     }),
-    address: z.string().min(5, 'Vui lòng nhập địa chỉ'),
+    streetAddress: z.string().min(3, 'Vui lòng nhập số nhà và tên đường'),
+    provinceCode: z.coerce.number().int().positive('Vui lòng chọn tỉnh/thành'),
+    districtCode: z.coerce.number().int().positive('Vui lòng chọn quận/huyện'),
+    wardCode: z.coerce.number().int().positive('Vui lòng chọn xã/phường'),
     password: z.string().min(6, 'Mật khẩu tối thiểu 6 ký tự'),
     confirmPassword: z.string().min(6, 'Vui lòng xác nhận mật khẩu'),
   })
@@ -36,9 +47,14 @@ export function RegisterForm() {
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [districts, setDistricts] = useState<District[]>([]);
+  const [wards, setWards] = useState<Ward[]>([]);
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors },
   } = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
@@ -48,11 +64,50 @@ export function RegisterForm() {
       phoneNumber: '',
       dateOfBirth: '',
       gender: 'MALE',
-      address: '',
+      streetAddress: '',
+      provinceCode: 0,
+      districtCode: 0,
+      wardCode: 0,
       password: '',
       confirmPassword: '',
     },
   });
+  const provinceCode = watch('provinceCode');
+  const districtCode = watch('districtCode');
+
+  useEffect(() => {
+    listProvinces()
+      .then(setProvinces)
+      .catch(() => setServerError('Không thể tải danh sách tỉnh/thành.'));
+  }, []);
+
+  useEffect(() => {
+    setDistricts([]);
+    setWards([]);
+    setValue('districtCode', 0);
+    setValue('wardCode', 0);
+
+    if (!provinceCode) {
+      return;
+    }
+
+    listDistricts(provinceCode)
+      .then(setDistricts)
+      .catch(() => setServerError('Không thể tải danh sách quận/huyện.'));
+  }, [provinceCode, setValue]);
+
+  useEffect(() => {
+    setWards([]);
+    setValue('wardCode', 0);
+
+    if (!districtCode) {
+      return;
+    }
+
+    listWards(districtCode)
+      .then(setWards)
+      .catch(() => setServerError('Không thể tải danh sách xã/phường.'));
+  }, [districtCode, setValue]);
 
   async function onSubmit(values: RegisterFormValues) {
     setServerError(null);
@@ -64,7 +119,10 @@ export function RegisterForm() {
         phoneNumber: values.phoneNumber,
         dateOfBirth: values.dateOfBirth,
         gender: values.gender,
-        address: values.address,
+        streetAddress: values.streetAddress,
+        provinceCode: values.provinceCode,
+        districtCode: values.districtCode,
+        wardCode: values.wardCode,
         password: values.password,
       });
       router.push('/login?registered=1');
@@ -156,15 +214,83 @@ export function RegisterForm() {
             </label>
           </div>
 
-          <FormField
-            label="Địa chỉ"
-            icon={MapPin}
-            type="text"
-            autoComplete="street-address"
-            placeholder="Nhập địa chỉ của bạn"
-            error={errors.address?.message}
-            {...register('address')}
-          />
+          <div>
+            <div className="mb-1.5 flex items-center gap-1.5 text-xs font-medium text-slate-600">
+              <MapPin className="h-3.5 w-3.5" />
+              Địa chỉ
+            </div>
+            <div className="mb-3">
+              <FormField
+                label="Số nhà và tên đường"
+                icon={MapPin}
+                type="text"
+                autoComplete="street-address"
+                placeholder="Ví dụ: Số 12 Nguyễn Trãi"
+                error={errors.streetAddress?.message}
+                {...register('streetAddress')}
+              />
+            </div>
+            <div className="grid gap-3 lg:grid-cols-3">
+              <label className="block">
+                <select
+                  className="h-9 w-full rounded-md border border-slate-200 bg-white px-3 text-xs text-slate-800 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100 lg:h-11 lg:text-sm"
+                  {...register('provinceCode', { valueAsNumber: true })}
+                >
+                  <option value={0}>Tỉnh/thành</option>
+                  {provinces.map((province) => (
+                    <option key={province.code} value={province.code}>
+                      {province.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.provinceCode?.message ? (
+                  <span className="mt-1 block text-[11px] text-red-500">
+                    {errors.provinceCode.message}
+                  </span>
+                ) : null}
+              </label>
+
+              <label className="block">
+                <select
+                  className="h-9 w-full rounded-md border border-slate-200 bg-white px-3 text-xs text-slate-800 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100 disabled:bg-slate-100 lg:h-11 lg:text-sm"
+                  disabled={!provinceCode}
+                  {...register('districtCode', { valueAsNumber: true })}
+                >
+                  <option value={0}>Quận/huyện</option>
+                  {districts.map((district) => (
+                    <option key={district.code} value={district.code}>
+                      {district.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.districtCode?.message ? (
+                  <span className="mt-1 block text-[11px] text-red-500">
+                    {errors.districtCode.message}
+                  </span>
+                ) : null}
+              </label>
+
+              <label className="block">
+                <select
+                  className="h-9 w-full rounded-md border border-slate-200 bg-white px-3 text-xs text-slate-800 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100 disabled:bg-slate-100 lg:h-11 lg:text-sm"
+                  disabled={!districtCode}
+                  {...register('wardCode', { valueAsNumber: true })}
+                >
+                  <option value={0}>Xã/phường</option>
+                  {wards.map((ward) => (
+                    <option key={ward.code} value={ward.code}>
+                      {ward.name}
+                    </option>
+                  ))}
+                </select>
+                {errors.wardCode?.message ? (
+                  <span className="mt-1 block text-[11px] text-red-500">
+                    {errors.wardCode.message}
+                  </span>
+                ) : null}
+              </label>
+            </div>
+          </div>
 
           <div className="grid gap-3 lg:grid-cols-2">
             <PasswordField

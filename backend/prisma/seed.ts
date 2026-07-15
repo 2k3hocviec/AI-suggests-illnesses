@@ -1,12 +1,150 @@
-import {
-  ConsultationType,
-  PrismaClient,
-  UserGender,
-  UserRole,
-} from '@prisma/client';
+import { ConsultationType, PrismaClient, UserGender, UserRole } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
+import * as fs from 'fs';
+import * as path from 'path';
 
 const prisma = new PrismaClient();
+
+interface AdminWard {
+  name: string;
+  code: number;
+  division_type: string;
+  codename: string;
+  district_code: number;
+}
+
+interface AdminDistrict {
+  name: string;
+  code: number;
+  division_type: string;
+  codename: string;
+  province_code: number;
+  wards: AdminWard[];
+}
+
+interface AdminProvince {
+  name: string;
+  code: number;
+  division_type: string;
+  codename: string;
+  phone_code?: number;
+  districts: AdminDistrict[];
+}
+
+const adminUnits = JSON.parse(
+  fs.readFileSync(path.join(__dirname, 'data', 'vietnam-admin-units-v1.json'), 'utf8'),
+) as AdminProvince[];
+
+const streetNames = [
+  'Nguyễn Trãi',
+  'Trần Hưng Đạo',
+  'Lê Lợi',
+  'Nguyễn Huệ',
+  'Điện Biên Phủ',
+  'Hai Bà Trưng',
+  'Lý Thường Kiệt',
+  'Nguyễn Văn Linh',
+  'Võ Văn Kiệt',
+  'Phạm Văn Đồng',
+] as const;
+
+function buildStreetAddress(wardCode: number) {
+  return `Số ${(wardCode % 90) + 10} ${streetNames[wardCode % streetNames.length]}`;
+}
+
+function composeAddress(streetAddress: string | null | undefined, adminAddress: string) {
+  return streetAddress ? `${streetAddress}, ${adminAddress}` : adminAddress;
+}
+
+function findAdminLocation(
+  provinceCodename: string,
+  districtCodename: string,
+  wardCodename: string,
+  streetAddress?: string,
+) {
+  const province = adminUnits.find((item) => item.codename === provinceCodename);
+  const district = province?.districts.find((item) => item.codename === districtCodename);
+  const ward = district?.wards.find((item) => item.codename === wardCodename);
+
+  if (!province || !district || !ward) {
+    throw new Error(`Missing administrative unit: ${provinceCodename}/${districtCodename}/${wardCodename}`);
+  }
+
+  const resolvedStreetAddress = streetAddress ?? buildStreetAddress(ward.code);
+  const adminAddress = `${ward.name}, ${district.name}, ${province.name}`;
+
+  return {
+    provinceCode: province.code,
+    districtCode: district.code,
+    wardCode: ward.code,
+    streetAddress: resolvedStreetAddress,
+    address: composeAddress(resolvedStreetAddress, adminAddress),
+  };
+}
+
+function inferAdminLocation(city?: string | null, address?: string | null) {
+  const normalizedCity = normalizeSeedText(city ?? '');
+  const normalizedAddress = normalizeSeedText(address ?? '');
+
+  if (normalizedCity === 'hochiminh' || normalizedAddress.includes('tp.hcm')) {
+    if (normalizedAddress.includes('quan 3')) {
+      return findAdminLocation('thanh_pho_ho_chi_minh', 'quan_3', 'phuong_vo_thi_sau');
+    }
+
+    if (normalizedAddress.includes('quan 5')) {
+      return findAdminLocation('thanh_pho_ho_chi_minh', 'quan_5', 'phuong_11');
+    }
+
+    if (normalizedAddress.includes('quan 7')) {
+      return findAdminLocation('thanh_pho_ho_chi_minh', 'quan_7', 'phuong_tan_phu');
+    }
+
+    if (normalizedAddress.includes('quan 10')) {
+      return findAdminLocation('thanh_pho_ho_chi_minh', 'quan_10', 'phuong_12');
+    }
+
+    if (normalizedAddress.includes('quan 11')) {
+      return findAdminLocation('thanh_pho_ho_chi_minh', 'quan_11', 'phuong_15');
+    }
+
+    if (normalizedAddress.includes('tan binh')) {
+      return findAdminLocation('thanh_pho_ho_chi_minh', 'quan_tan_binh', 'phuong_2');
+    }
+
+    if (normalizedAddress.includes('binh thanh')) {
+      return findAdminLocation('thanh_pho_ho_chi_minh', 'quan_binh_thanh', 'phuong_26');
+    }
+
+    if (normalizedAddress.includes('phu nhuan')) {
+      return findAdminLocation('thanh_pho_ho_chi_minh', 'quan_phu_nhuan', 'phuong_9');
+    }
+
+    return findAdminLocation('thanh_pho_ho_chi_minh', 'quan_1', 'phuong_ben_thanh');
+  }
+
+  if (normalizedCity === 'danang') {
+    return findAdminLocation('thanh_pho_da_nang', 'quan_hai_chau', 'phuong_hai_chau');
+  }
+
+  if (normalizedCity === 'hanoi') {
+    return findAdminLocation('thanh_pho_ha_noi', 'quan_ba_dinh', 'phuong_ngoc_khanh');
+  }
+
+  if (normalizedCity === 'hue') {
+    return findAdminLocation('thanh_pho_hue', 'quan_thuan_hoa', 'phuong_phu_hoi');
+  }
+
+  return null;
+}
+
+function normalizeSeedText(value: string) {
+  return value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/đ/g, 'd')
+    .replace(/Đ/g, 'D')
+    .toLowerCase();
+}
 
 const specialties = [
   ['GENERAL_MEDICINE', 'Nội tổng quát', 'Triệu chứng chưa xác định rõ hoặc cần đánh giá tổng quát.'],
@@ -357,22 +495,38 @@ const doctorLocations = [
   {
     city: 'DaNang',
     cityLabel: 'Đà Nẵng',
-    districts: ['Hải Châu', 'Thanh Khê', 'Sơn Trà'],
+    locations: [
+      findAdminLocation('thanh_pho_da_nang', 'quan_hai_chau', 'phuong_hai_chau'),
+      findAdminLocation('thanh_pho_da_nang', 'quan_thanh_khe', 'phuong_chinh_gian'),
+      findAdminLocation('thanh_pho_da_nang', 'quan_son_tra', 'phuong_an_hai_bac'),
+    ],
   },
   {
     city: 'HaNoi',
     cityLabel: 'Hà Nội',
-    districts: ['Ba Đình', 'Cầu Giấy', 'Đống Đa'],
+    locations: [
+      findAdminLocation('thanh_pho_ha_noi', 'quan_ba_dinh', 'phuong_ngoc_khanh'),
+      findAdminLocation('thanh_pho_ha_noi', 'quan_cau_giay', 'phuong_yen_hoa'),
+      findAdminLocation('thanh_pho_ha_noi', 'quan_dong_da', 'phuong_khuong_thuong'),
+    ],
   },
   {
     city: 'Hue',
     cityLabel: 'Huế',
-    districts: ['Phú Hội', 'Vỹ Dạ', 'Thuận Hóa'],
+    locations: [
+      findAdminLocation('thanh_pho_hue', 'quan_thuan_hoa', 'phuong_phu_hoi'),
+      findAdminLocation('thanh_pho_hue', 'quan_thuan_hoa', 'phuong_vy_da'),
+      findAdminLocation('thanh_pho_hue', 'quan_thuan_hoa', 'phuong_vinh_ninh'),
+    ],
   },
   {
     city: 'HoChiMinh',
     cityLabel: 'TP.HCM',
-    districts: ['Quận 1', 'Quận 3', 'Quận 7'],
+    locations: [
+      findAdminLocation('thanh_pho_ho_chi_minh', 'quan_1', 'phuong_ben_thanh'),
+      findAdminLocation('thanh_pho_ho_chi_minh', 'quan_3', 'phuong_vo_thi_sau'),
+      findAdminLocation('thanh_pho_ho_chi_minh', 'quan_7', 'phuong_tan_phu'),
+    ],
   },
 ] as const;
 
@@ -561,46 +715,269 @@ const doctorFamilyNames = [
   'Huỳnh',
 ] as const;
 
-const generatedDoctors = specialtyDoctorProfiles.flatMap(
-  (specialty, specialtyIndex) =>
-    doctorLocations.flatMap((location, locationIndex) =>
-      location.districts.map((district, districtIndex) => {
-        const doctorIndex = locationIndex * location.districts.length + districtIndex;
-        const nameIndex = (specialtyIndex + doctorIndex) % doctorGivenNames.length;
-        const rating = (4.35 + ((specialtyIndex + doctorIndex) % 7) * 0.07).toFixed(1);
+const generatedDoctors = specialtyDoctorProfiles.flatMap((specialty, specialtyIndex) =>
+  doctorLocations.flatMap((location, locationIndex) =>
+    location.locations.map((adminLocation, addressIndex) => {
+      const doctorIndex = locationIndex * location.locations.length + addressIndex;
+      const nameIndex = (specialtyIndex + doctorIndex) % doctorGivenNames.length;
+      const rating = (4.35 + ((specialtyIndex + doctorIndex) % 7) * 0.07).toFixed(1);
 
-        return {
-          email: `bs.${specialty.code.toLowerCase()}.${location.city.toLowerCase()}.${districtIndex + 1}@example.com`,
-          fullName: `Bác sĩ ${doctorFamilyNames[nameIndex]} ${doctorGivenNames[nameIndex]}`,
-          academicTitle:
-            doctorIndex % 3 === 0
-              ? 'Bác sĩ Chuyên khoa II'
-              : doctorIndex % 3 === 1
-                ? 'Thạc sĩ Bác sĩ'
-                : 'Bác sĩ Chuyên khoa I',
-          specialtyCode: specialty.code,
-          experienceYears: 6 + ((specialtyIndex + doctorIndex) % 18),
-          workplace: `${doctorIndex % 2 === 0 ? 'Bệnh viện' : 'Phòng khám'} ${specialty.label} ${location.cityLabel}`,
-          address: `${district}, ${location.cityLabel}`,
-          city: location.city,
-          phoneNumber: `09${String(20000000 + specialtyIndex * 1000 + doctorIndex).padStart(8, '0')}`,
-          workingTime:
-            doctorIndex % 2 === 0
-              ? 'Mon-Fri 08:00-17:00'
-              : 'Mon-Sat 09:00-18:00',
-          consultationType:
-            doctorIndex % 2 === 0
-              ? [ConsultationType.OFFLINE, ConsultationType.ONLINE]
-              : [ConsultationType.OFFLINE],
-          rating,
-          symptoms: specialty.symptoms,
-        };
-      }),
-    ),
+      return {
+        email: `bs.${specialty.code.toLowerCase()}.${location.city.toLowerCase()}.${addressIndex + 1}@example.com`,
+        fullName: `Bác sĩ ${doctorFamilyNames[nameIndex]} ${doctorGivenNames[nameIndex]}`,
+        academicTitle:
+          doctorIndex % 3 === 0
+            ? 'Bác sĩ Chuyên khoa II'
+            : doctorIndex % 3 === 1
+              ? 'Thạc sĩ Bác sĩ'
+              : 'Bác sĩ Chuyên khoa I',
+        specialtyCode: specialty.code,
+        experienceYears: 6 + ((specialtyIndex + doctorIndex) % 18),
+        workplace: `${doctorIndex % 2 === 0 ? 'Bệnh viện' : 'Phòng khám'} ${specialty.label} ${location.cityLabel}`,
+        streetAddress: adminLocation.streetAddress,
+        address: adminLocation.address,
+        city: location.city,
+        provinceCode: adminLocation.provinceCode,
+        districtCode: adminLocation.districtCode,
+        wardCode: adminLocation.wardCode,
+        phoneNumber: `09${String(20000000 + specialtyIndex * 1000 + doctorIndex).padStart(8, '0')}`,
+        workingTime: doctorIndex % 2 === 0 ? 'Mon-Fri 08:00-17:00' : 'Mon-Sat 09:00-18:00',
+        consultationType:
+          doctorIndex % 2 === 0 ? [ConsultationType.OFFLINE, ConsultationType.ONLINE] : [ConsultationType.OFFLINE],
+        rating,
+        symptoms: specialty.symptoms,
+      };
+    }),
+  ),
 );
+
+const supplementalRegionalDoctorSeeds = [
+  {
+    city: 'HoChiMinh',
+    cityLabel: 'TP.HCM',
+    specialtyCode: 'GENERAL_MEDICINE',
+    ...findAdminLocation('thanh_pho_ho_chi_minh', 'quan_1', 'phuong_da_kao'),
+  },
+  {
+    city: 'HoChiMinh',
+    cityLabel: 'TP.HCM',
+    specialtyCode: 'CARDIOLOGY',
+    ...findAdminLocation('thanh_pho_ho_chi_minh', 'quan_3', 'phuong_9'),
+  },
+  {
+    city: 'HoChiMinh',
+    cityLabel: 'TP.HCM',
+    specialtyCode: 'PEDIATRICS',
+    ...findAdminLocation('thanh_pho_ho_chi_minh', 'quan_10', 'phuong_12'),
+  },
+  {
+    city: 'HoChiMinh',
+    cityLabel: 'TP.HCM',
+    specialtyCode: 'DERMATOLOGY',
+    ...findAdminLocation('thanh_pho_ho_chi_minh', 'quan_tan_binh', 'phuong_2'),
+  },
+  {
+    city: 'HoChiMinh',
+    cityLabel: 'TP.HCM',
+    specialtyCode: 'GASTROENTEROLOGY',
+    ...findAdminLocation('thanh_pho_ho_chi_minh', 'quan_binh_thanh', 'phuong_26'),
+  },
+  {
+    city: 'HoChiMinh',
+    cityLabel: 'TP.HCM',
+    specialtyCode: 'OB_GYN',
+    ...findAdminLocation('thanh_pho_ho_chi_minh', 'quan_7', 'phuong_tan_phu'),
+  },
+  {
+    city: 'DaNang',
+    cityLabel: 'Đà Nẵng',
+    specialtyCode: 'RESPIRATORY',
+    ...findAdminLocation('thanh_pho_da_nang', 'quan_hai_chau', 'phuong_hai_chau'),
+  },
+  {
+    city: 'DaNang',
+    cityLabel: 'Đà Nẵng',
+    specialtyCode: 'ENT',
+    ...findAdminLocation('thanh_pho_da_nang', 'quan_hai_chau', 'phuong_thach_thang'),
+  },
+  {
+    city: 'DaNang',
+    cityLabel: 'Đà Nẵng',
+    specialtyCode: 'ORTHOPEDICS',
+    ...findAdminLocation('thanh_pho_da_nang', 'quan_thanh_khe', 'phuong_chinh_gian'),
+  },
+  {
+    city: 'DaNang',
+    cityLabel: 'Đà Nẵng',
+    specialtyCode: 'OPHTHALMOLOGY',
+    ...findAdminLocation('thanh_pho_da_nang', 'quan_thanh_khe', 'phuong_thac_gian'),
+  },
+  {
+    city: 'DaNang',
+    cityLabel: 'Đà Nẵng',
+    specialtyCode: 'DENTISTRY',
+    ...findAdminLocation('thanh_pho_da_nang', 'quan_hai_chau', 'phuong_phuoc_ninh'),
+  },
+  {
+    city: 'DaNang',
+    cityLabel: 'Đà Nẵng',
+    specialtyCode: 'UROLOGY',
+    ...findAdminLocation('thanh_pho_da_nang', 'quan_son_tra', 'phuong_an_hai_bac'),
+  },
+  {
+    city: 'HaNoi',
+    cityLabel: 'Hà Nội',
+    specialtyCode: 'NEUROLOGY',
+    ...findAdminLocation('thanh_pho_ha_noi', 'quan_cau_giay', 'phuong_trung_hoa'),
+  },
+  {
+    city: 'HaNoi',
+    cityLabel: 'Hà Nội',
+    specialtyCode: 'ENDOCRINOLOGY',
+    ...findAdminLocation('thanh_pho_ha_noi', 'quan_cau_giay', 'phuong_nghia_do'),
+  },
+  {
+    city: 'HaNoi',
+    cityLabel: 'Hà Nội',
+    specialtyCode: 'PSYCHIATRY',
+    ...findAdminLocation('thanh_pho_ha_noi', 'quan_dong_da', 'phuong_phuong_mai'),
+  },
+  {
+    city: 'HaNoi',
+    cityLabel: 'Hà Nội',
+    specialtyCode: 'ONCOLOGY',
+    ...findAdminLocation('thanh_pho_ha_noi', 'quan_dong_da', 'phuong_lang_ha'),
+  },
+  {
+    city: 'HaNoi',
+    cityLabel: 'Hà Nội',
+    specialtyCode: 'CARDIOLOGY',
+    ...findAdminLocation('thanh_pho_ha_noi', 'quan_hoan_kiem', 'phuong_phan_chu_trinh'),
+  },
+  {
+    city: 'HaNoi',
+    cityLabel: 'Hà Nội',
+    specialtyCode: 'PEDIATRICS',
+    ...findAdminLocation('thanh_pho_ha_noi', 'quan_dong_da', 'phuong_lang_thuong'),
+  },
+  {
+    city: 'Hue',
+    cityLabel: 'Huế',
+    specialtyCode: 'GENERAL_MEDICINE',
+    ...findAdminLocation('thanh_pho_hue', 'quan_thuan_hoa', 'phuong_vinh_ninh'),
+  },
+  {
+    city: 'Hue',
+    cityLabel: 'Huế',
+    specialtyCode: 'RESPIRATORY',
+    ...findAdminLocation('thanh_pho_hue', 'quan_thuan_hoa', 'phuong_vinh_ninh'),
+  },
+  {
+    city: 'Hue',
+    cityLabel: 'Huế',
+    specialtyCode: 'DERMATOLOGY',
+    ...findAdminLocation('thanh_pho_hue', 'quan_thuan_hoa', 'phuong_phu_hoi'),
+  },
+  {
+    city: 'Hue',
+    cityLabel: 'Huế',
+    specialtyCode: 'OB_GYN',
+    ...findAdminLocation('thanh_pho_hue', 'quan_thuan_hoa', 'phuong_phu_nhuan'),
+  },
+  {
+    city: 'Hue',
+    cityLabel: 'Huế',
+    specialtyCode: 'DENTISTRY',
+    ...findAdminLocation('thanh_pho_hue', 'quan_phu_xuan', 'phuong_thuan_loc'),
+  },
+  {
+    city: 'Hue',
+    cityLabel: 'Huế',
+    specialtyCode: 'ORTHOPEDICS',
+    ...findAdminLocation('thanh_pho_hue', 'quan_phu_xuan', 'phuong_tay_loc'),
+  },
+] as const;
+
+const supplementalRegionalDoctors = supplementalRegionalDoctorSeeds.map((seed, index) => {
+  const specialty = specialtyDoctorProfiles.find((profile) => profile.code === seed.specialtyCode);
+
+  if (!specialty) {
+    throw new Error(`Missing specialty profile for ${seed.specialtyCode}`);
+  }
+
+  const nameIndex = index % doctorGivenNames.length;
+  const titleIndex = index % 3;
+
+  return {
+    email: `bs.bo-sung.${seed.specialtyCode.toLowerCase()}.${seed.city.toLowerCase()}.${index + 1}@example.com`,
+    fullName: `Bác sĩ ${doctorFamilyNames[nameIndex]} ${doctorGivenNames[(nameIndex + 4) % doctorGivenNames.length]}`,
+    academicTitle:
+      titleIndex === 0 ? 'Bác sĩ Chuyên khoa II' : titleIndex === 1 ? 'Thạc sĩ Bác sĩ' : 'Bác sĩ Chuyên khoa I',
+    specialtyCode: seed.specialtyCode,
+    experienceYears: 7 + (index % 16),
+    workplace: `${index % 2 === 0 ? 'Trung tâm' : 'Phòng khám'} ${specialty.label} ${seed.cityLabel}`,
+    streetAddress: seed.streetAddress,
+    address: seed.address,
+    city: seed.city,
+    provinceCode: seed.provinceCode,
+    districtCode: seed.districtCode,
+    wardCode: seed.wardCode,
+    phoneNumber: `09${String(30000000 + index).padStart(8, '0')}`,
+    workingTime: index % 2 === 0 ? 'Mon-Fri 08:00-17:00' : 'Mon-Sat 08:30-18:00',
+    consultationType:
+      index % 3 === 0 ? [ConsultationType.OFFLINE, ConsultationType.ONLINE] : [ConsultationType.OFFLINE],
+    rating: (4.45 + (index % 6) * 0.06).toFixed(1),
+    symptoms: specialty.symptoms,
+  };
+});
+
+async function seedAdministrativeUnits() {
+  await prisma.province.createMany({
+    data: adminUnits.map((province) => ({
+      code: province.code,
+      name: province.name,
+      divisionType: province.division_type,
+      codename: province.codename,
+      phoneCode: province.phone_code,
+    })),
+    skipDuplicates: true,
+  });
+
+  await prisma.district.createMany({
+    data: adminUnits.flatMap((province) =>
+      province.districts.map((district) => ({
+        code: district.code,
+        name: district.name,
+        divisionType: district.division_type,
+        codename: district.codename,
+        provinceCode: province.code,
+      })),
+    ),
+    skipDuplicates: true,
+  });
+
+  await prisma.ward.createMany({
+    data: adminUnits.flatMap((province) =>
+      province.districts.flatMap((district) =>
+        district.wards.map((ward) => ({
+          code: ward.code,
+          name: ward.name,
+          divisionType: ward.division_type,
+          codename: ward.codename,
+          districtCode: district.code,
+          provinceCode: province.code,
+        })),
+      ),
+    ),
+    skipDuplicates: true,
+  });
+}
 
 async function seedUsers() {
   const password = await bcrypt.hash('Password123!', 12);
+  const adminLocation = findAdminLocation('thanh_pho_ho_chi_minh', 'quan_1', 'phuong_ben_thanh');
+  const demoUserLocation = findAdminLocation('thanh_pho_ho_chi_minh', 'quan_5', 'phuong_11');
+
   await prisma.user.upsert({
     where: { email: 'admin@example.com' },
     update: {
@@ -608,7 +985,11 @@ async function seedUsers() {
       role: UserRole.ADMIN,
       password,
       phoneNumber: '0900000000',
-      address: 'Quận 1, TP.HCM',
+      streetAddress: adminLocation.streetAddress,
+      address: adminLocation.address,
+      provinceCode: adminLocation.provinceCode,
+      districtCode: adminLocation.districtCode,
+      wardCode: adminLocation.wardCode,
     },
     create: {
       fullName: 'System Admin',
@@ -617,7 +998,11 @@ async function seedUsers() {
       role: UserRole.ADMIN,
       gender: UserGender.UNKNOWN,
       phoneNumber: '0900000000',
-      address: 'Quận 1, TP.HCM',
+      streetAddress: adminLocation.streetAddress,
+      address: adminLocation.address,
+      provinceCode: adminLocation.provinceCode,
+      districtCode: adminLocation.districtCode,
+      wardCode: adminLocation.wardCode,
     },
   });
 
@@ -628,7 +1013,11 @@ async function seedUsers() {
       role: UserRole.USER,
       password,
       phoneNumber: '0900000001',
-      address: 'Quận 5, TP.HCM',
+      streetAddress: demoUserLocation.streetAddress,
+      address: demoUserLocation.address,
+      provinceCode: demoUserLocation.provinceCode,
+      districtCode: demoUserLocation.districtCode,
+      wardCode: demoUserLocation.wardCode,
     },
     create: {
       fullName: 'Demo User',
@@ -637,7 +1026,11 @@ async function seedUsers() {
       role: UserRole.USER,
       gender: UserGender.UNKNOWN,
       phoneNumber: '0900000001',
-      address: 'Quận 5, TP.HCM',
+      streetAddress: demoUserLocation.streetAddress,
+      address: demoUserLocation.address,
+      provinceCode: demoUserLocation.provinceCode,
+      districtCode: demoUserLocation.districtCode,
+      wardCode: demoUserLocation.wardCode,
     },
   });
 }
@@ -663,7 +1056,7 @@ async function seedSymptoms() {
 }
 
 async function seedDoctors() {
-  for (const doctor of [...doctors, ...generatedDoctors]) {
+  for (const doctor of [...doctors, ...generatedDoctors, ...supplementalRegionalDoctors]) {
     const specialty = await prisma.specialty.findUniqueOrThrow({
       where: { code: doctor.specialtyCode },
     });
@@ -671,6 +1064,16 @@ async function seedDoctors() {
     const existingDoctor = await prisma.doctor.findFirst({
       where: { email: doctor.email },
     });
+    const adminLocation =
+      'provinceCode' in doctor
+        ? {
+            streetAddress: doctor.streetAddress,
+            address: doctor.address,
+            provinceCode: doctor.provinceCode,
+            districtCode: doctor.districtCode,
+            wardCode: doctor.wardCode,
+          }
+        : inferAdminLocation(doctor.city, doctor.address);
 
     const savedDoctor = existingDoctor
       ? await prisma.doctor.update({
@@ -681,8 +1084,12 @@ async function seedDoctors() {
             specialtyId: specialty.id,
             experienceYears: doctor.experienceYears,
             workplace: doctor.workplace,
-            address: doctor.address,
+            streetAddress: adminLocation?.streetAddress,
+            address: adminLocation?.address ?? doctor.address,
             city: doctor.city,
+            provinceCode: adminLocation?.provinceCode,
+            districtCode: adminLocation?.districtCode,
+            wardCode: adminLocation?.wardCode,
             phoneNumber: doctor.phoneNumber,
             workingTime: doctor.workingTime,
             consultationType: [...doctor.consultationType],
@@ -698,8 +1105,12 @@ async function seedDoctors() {
             specialtyId: specialty.id,
             experienceYears: doctor.experienceYears,
             workplace: doctor.workplace,
-            address: doctor.address,
+            streetAddress: adminLocation?.streetAddress,
+            address: adminLocation?.address ?? doctor.address,
             city: doctor.city,
+            provinceCode: adminLocation?.provinceCode,
+            districtCode: adminLocation?.districtCode,
+            wardCode: adminLocation?.wardCode,
             phoneNumber: doctor.phoneNumber,
             workingTime: doctor.workingTime,
             consultationType: [...doctor.consultationType],
@@ -732,22 +1143,37 @@ async function seedDoctors() {
 }
 
 async function main() {
+  await seedAdministrativeUnits();
   await seedUsers();
   await seedSpecialties();
   await seedSymptoms();
   await seedDoctors();
 
-  const [userCount, specialtyCount, symptomCount, doctorCount, expertiseCount] =
-    await Promise.all([
-      prisma.user.count(),
-      prisma.specialty.count(),
-      prisma.symptom.count(),
-      prisma.doctor.count(),
-      prisma.doctorExpertise.count(),
-    ]);
+  const [
+    userCount,
+    provinceCount,
+    districtCount,
+    wardCount,
+    specialtyCount,
+    symptomCount,
+    doctorCount,
+    expertiseCount,
+  ] = await Promise.all([
+    prisma.user.count(),
+    prisma.province.count(),
+    prisma.district.count(),
+    prisma.ward.count(),
+    prisma.specialty.count(),
+    prisma.symptom.count(),
+    prisma.doctor.count(),
+    prisma.doctorExpertise.count(),
+  ]);
 
   console.log({
     users: userCount,
+    provinces: provinceCount,
+    districts: districtCount,
+    wards: wardCount,
     specialties: specialtyCount,
     symptoms: symptomCount,
     doctors: doctorCount,

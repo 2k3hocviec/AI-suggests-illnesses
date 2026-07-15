@@ -3,6 +3,7 @@ import {
   IsDateString,
   IsEmail,
   IsEnum,
+  IsInt,
   IsOptional,
   IsString,
   MinLength,
@@ -31,7 +32,16 @@ export class RegisterDto {
   @IsString()
   phoneNumber?: string;
 
-  @IsOptional()
   @IsString()
-  address?: string;
+  @MinLength(3)
+  streetAddress: string;
+
+  @IsInt()
+  provinceCode: number;
+
+  @IsInt()
+  districtCode: number;
+
+  @IsInt()
+  wardCode: number;
 }

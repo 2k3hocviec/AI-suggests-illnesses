@@ -47,6 +47,7 @@ model User {
   dateOfBirth           DateTime?  @map("date_of_birth") @db.Date
   gender                UserGender @default(UNKNOWN)
   role                  UserRole   @default(USER)
+  isEnabled             Boolean    @default(true) @map("is_enabled")
   email                 String     @unique
   phoneNumber           String?    @map("phone_number")
   streetAddress         String?    @map("street_address")

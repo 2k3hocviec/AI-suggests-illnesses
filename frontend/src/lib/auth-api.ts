@@ -12,6 +12,7 @@ export interface AuthUser {
   wardCode: number | null;
   gender: string;
   role: 'ADMIN' | 'USER';
+  isEnabled: boolean;
   dateOfBirth: string | null;
   createdAt: string;
   updatedAt: string;

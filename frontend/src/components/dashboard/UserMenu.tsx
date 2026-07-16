@@ -1,9 +1,9 @@
 "use client";
 
-import { LogOut, UserCircle } from "lucide-react";
+import { LayoutDashboard, LogOut, UserCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
-import { logout } from "@/lib/auth-api";
+import { useEffect, useRef, useState } from "react";
+import { getMe, logout } from "@/lib/auth-api";
 import { ProfileDialog } from "./ProfileDialog";
 
 export function UserMenu() {
@@ -11,7 +11,14 @@ export function UserMenu() {
   const [isOpen, setIsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    getMe()
+      .then((user) => setIsAdmin(user.role === "ADMIN"))
+      .catch(() => setIsAdmin(false));
+  }, []);
 
   async function handleLogout() {
     setIsLoggingOut(true);
@@ -49,6 +56,19 @@ export function UserMenu() {
             <UserCircle className="h-4 w-4" />
             Thông tin người dùng
           </button>
+          {isAdmin ? (
+            <button
+              type="button"
+              onClick={() => {
+                setIsOpen(false);
+                router.push("/admin");
+              }}
+              className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+            >
+              <LayoutDashboard className="h-4 w-4" />
+              Trang quản trị
+            </button>
+          ) : null}
           <button
             type="button"
             disabled={isLoggingOut}

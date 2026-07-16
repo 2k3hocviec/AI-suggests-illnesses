@@ -100,6 +100,10 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
+    if (!user.isEnabled) {
+      throw new UnauthorizedException('Account is disabled');
+    }
+
     const isPasswordValid = await bcrypt.compare(dto.password, user.password);
     if (!isPasswordValid) {
       throw new UnauthorizedException('Invalid email or password');
@@ -451,6 +455,7 @@ export class AuthService {
       wardCode: user.wardCode,
       gender: user.gender,
       role: user.role,
+      isEnabled: user.isEnabled,
       dateOfBirth: user.dateOfBirth,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,

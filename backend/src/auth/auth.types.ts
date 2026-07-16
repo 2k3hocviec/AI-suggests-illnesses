@@ -13,6 +13,7 @@ export interface RequestContext {
 export interface AuthenticatedUser {
   id: number;
   email: string;
+  role: UserRole;
 }
 
 export interface PublicUser {
@@ -27,6 +28,7 @@ export interface PublicUser {
   wardCode: number | null;
   gender: UserGender;
   role: UserRole;
+  isEnabled: boolean;
   dateOfBirth: Date | null;
   createdAt: Date;
   updatedAt: Date;

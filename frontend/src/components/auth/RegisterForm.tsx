@@ -165,7 +165,7 @@ export function RegisterForm() {
             />
 
             <FormField
-              label="Email"
+              label="Email (tài khoản)"
               icon={Mail}
               type="email"
               autoComplete="email"

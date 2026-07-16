@@ -73,6 +73,11 @@ export interface ResetPasswordRequest {
   newPassword: string;
 }
 
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+}
+
 export function login(payload: LoginRequest) {
   return apiRequest<AuthResponse>('/auth/login', {
     method: 'POST',
@@ -93,6 +98,13 @@ export function getMe() {
 
 export function updateProfile(payload: UpdateProfileRequest) {
   return apiRequest<AuthUser>('/auth/me', {
+    method: 'PATCH',
+    json: payload,
+  });
+}
+
+export function changePassword(payload: ChangePasswordRequest) {
+  return apiRequest<MessageResponse>('/auth/change-password', {
     method: 'PATCH',
     json: payload,
   });

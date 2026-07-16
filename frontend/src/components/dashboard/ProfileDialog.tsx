@@ -1,7 +1,7 @@
 "use client";
 
 import { X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   District,
   listDistricts,
@@ -10,7 +10,7 @@ import {
   Province,
   Ward,
 } from "@/lib/administrative-units-api";
-import { AuthUser, getMe, updateProfile } from "@/lib/auth-api";
+import { AuthUser, changePassword, getMe, updateProfile } from "@/lib/auth-api";
 
 interface ProfileDialogProps {
   open: boolean;
@@ -29,6 +29,12 @@ interface ProfileFormState {
   wardCode: number;
 }
 
+interface PasswordFormState {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 const emptyForm: ProfileFormState = {
   fullName: "",
   email: "",
@@ -41,8 +47,16 @@ const emptyForm: ProfileFormState = {
   wardCode: 0,
 };
 
+const emptyPasswordForm: PasswordFormState = {
+  currentPassword: "",
+  newPassword: "",
+  confirmPassword: "",
+};
+
 export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
   const [form, setForm] = useState<ProfileFormState>(emptyForm);
+  const [passwordForm, setPasswordForm] =
+    useState<PasswordFormState>(emptyPasswordForm);
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
   const [wards, setWards] = useState<Ward[]>([]);
@@ -50,6 +64,18 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const selectedProvince = useMemo(
+    () => provinces.find((province) => province.code === form.provinceCode),
+    [form.provinceCode, provinces],
+  );
+  const selectedDistrict = useMemo(
+    () => districts.find((district) => district.code === form.districtCode),
+    [districts, form.districtCode],
+  );
+  const selectedWard = useMemo(
+    () => wards.find((ward) => ward.code === form.wardCode),
+    [form.wardCode, wards],
+  );
 
   useEffect(() => {
     if (!open) {
@@ -75,6 +101,7 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
 
         setProvinces(provinceList);
         setForm(toFormState(profile));
+        setPasswordForm(emptyPasswordForm);
       } catch (loadError) {
         if (!cancelled) {
           setError(
@@ -130,12 +157,54 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
     setMessage(null);
 
     try {
+      const shouldChangePassword =
+        passwordForm.currentPassword ||
+        passwordForm.newPassword ||
+        passwordForm.confirmPassword;
+
+      if (shouldChangePassword) {
+        if (
+          !passwordForm.currentPassword ||
+          !passwordForm.newPassword ||
+          !passwordForm.confirmPassword
+        ) {
+          throw new Error("Vui lòng nhập đầy đủ thông tin đổi mật khẩu.");
+        }
+
+        if (passwordForm.newPassword.length < 6) {
+          throw new Error("Mật khẩu mới tối thiểu 6 ký tự.");
+        }
+
+        if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+          throw new Error("Mật khẩu xác nhận không khớp.");
+        }
+      }
+
       const updatedProfile = await updateProfile({
-        ...form,
+        fullName: form.fullName,
+        phoneNumber: form.phoneNumber,
+        gender: form.gender,
+        streetAddress: form.streetAddress,
+        provinceCode: form.provinceCode,
+        districtCode: form.districtCode,
+        wardCode: form.wardCode,
         dateOfBirth: form.dateOfBirth || undefined,
       });
+
+      if (shouldChangePassword) {
+        await changePassword({
+          currentPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword,
+        });
+        setPasswordForm(emptyPasswordForm);
+      }
+
       setForm(toFormState(updatedProfile));
-      setMessage("Đã cập nhật thông tin cá nhân.");
+      setMessage(
+        shouldChangePassword
+          ? "Đã cập nhật thông tin cá nhân và đổi mật khẩu."
+          : "Đã cập nhật thông tin cá nhân.",
+      );
     } catch (saveError) {
       setError(
         saveError instanceof Error
@@ -179,6 +248,30 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
             </p>
           ) : (
             <div className="grid gap-4">
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                <h4 className="text-sm font-bold text-slate-800">
+                  Địa chỉ hiện tại
+                </h4>
+                <div className="mt-3 grid gap-2 text-sm text-slate-700 sm:grid-cols-2">
+                  <AddressPreviewItem
+                    label="Số nhà và tên đường"
+                    value={form.streetAddress}
+                  />
+                  <AddressPreviewItem
+                    label="Tỉnh/thành"
+                    value={selectedProvince?.name}
+                  />
+                  <AddressPreviewItem
+                    label="Quận/huyện"
+                    value={selectedDistrict?.name}
+                  />
+                  <AddressPreviewItem
+                    label="Xã/phường"
+                    value={selectedWard?.name}
+                  />
+                </div>
+              </div>
+
               <div className="grid gap-3 sm:grid-cols-2">
                 <ProfileInput
                   label="Họ và tên"
@@ -187,11 +280,12 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
                   required
                 />
                 <ProfileInput
-                  label="Email"
+                  label="Email (tài khoản)"
                   type="email"
                   value={form.email}
                   onChange={(value) => updateField("email", value)}
                   required
+                  disabled
                 />
                 <ProfileInput
                   label="Số điện thoại"
@@ -269,6 +363,38 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
                 />
               </div>
 
+              <div className="rounded-lg border border-slate-200 bg-slate-50 p-3">
+                <h4 className="text-sm font-bold text-slate-800">
+                  Đổi mật khẩu
+                </h4>
+                <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                  <ProfileInput
+                    label="Mật khẩu hiện tại"
+                    type="password"
+                    value={passwordForm.currentPassword}
+                    onChange={(value) =>
+                      updatePasswordField("currentPassword", value)
+                    }
+                  />
+                  <ProfileInput
+                    label="Mật khẩu mới"
+                    type="password"
+                    value={passwordForm.newPassword}
+                    onChange={(value) =>
+                      updatePasswordField("newPassword", value)
+                    }
+                  />
+                  <ProfileInput
+                    label="Xác nhận mật khẩu"
+                    type="password"
+                    value={passwordForm.confirmPassword}
+                    onChange={(value) =>
+                      updatePasswordField("confirmPassword", value)
+                    }
+                  />
+                </div>
+              </div>
+
               {message ? (
                 <p className="rounded-md bg-emerald-50 px-3 py-2 text-xs font-medium text-emerald-700">
                   {message}
@@ -312,6 +438,16 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
       [field]: value,
     }));
   }
+
+  function updatePasswordField<Key extends keyof PasswordFormState>(
+    field: Key,
+    value: PasswordFormState[Key],
+  ) {
+    setPasswordForm((current) => ({
+      ...current,
+      [field]: value,
+    }));
+  }
 }
 
 function ProfileInput({
@@ -320,12 +456,14 @@ function ProfileInput({
   value,
   onChange,
   required,
+  disabled,
 }: {
   label: string;
   type?: string;
   value: string;
   onChange: (value: string) => void;
   required?: boolean;
+  disabled?: boolean;
 }) {
   return (
     <label className="block">
@@ -336,10 +474,30 @@ function ProfileInput({
         type={type}
         value={value}
         required={required}
+        disabled={disabled}
         onChange={(event) => onChange(event.target.value)}
-        className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
+        className="h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100 disabled:bg-slate-100 disabled:text-slate-400"
       />
     </label>
+  );
+}
+
+function AddressPreviewItem({
+  label,
+  value,
+}: {
+  label: string;
+  value?: string;
+}) {
+  return (
+    <div>
+      <div className="text-[11px] font-semibold uppercase text-slate-400">
+        {label}
+      </div>
+      <div className="mt-0.5 font-medium text-slate-800">
+        {value || "Chưa cập nhật"}
+      </div>
+    </div>
   );
 }
 

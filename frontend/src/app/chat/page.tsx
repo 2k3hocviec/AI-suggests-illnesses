@@ -1,5 +1,5 @@
 import { ConsultationDashboard } from '@/components/dashboard/ConsultationDashboard';
 
-export default function DashboardPage() {
+export default function ChatPage() {
   return <ConsultationDashboard />;
 }

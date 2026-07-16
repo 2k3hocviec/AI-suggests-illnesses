@@ -30,6 +30,7 @@ export function AdminDashboard() {
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [updatingUserId, setUpdatingUserId] = useState<number | null>(null);
 
@@ -39,10 +40,11 @@ export function AdminDashboard() {
         const me = await getMe();
 
         if (me.role !== "ADMIN") {
-          router.replace("/dashboard");
+          router.replace("/chat");
           return;
         }
 
+        setIsAuthorized(true);
         await loadData();
       } catch {
         localStorage.removeItem("accessToken");
@@ -54,13 +56,17 @@ export function AdminDashboard() {
   }, [router]);
 
   useEffect(() => {
+    if (!isAuthorized) {
+      return;
+    }
+
     const timeout = window.setTimeout(() => {
       void loadUsers(1, search);
       setPage(1);
     }, 350);
 
     return () => window.clearTimeout(timeout);
-  }, [search]);
+  }, [isAuthorized, search]);
 
   async function loadData() {
     setIsLoading(true);

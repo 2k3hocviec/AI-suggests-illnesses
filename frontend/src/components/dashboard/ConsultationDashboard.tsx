@@ -1,6 +1,8 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { getMe } from '@/lib/auth-api';
 import {
   ChatMessage,
   ChatSession,
@@ -15,6 +17,7 @@ import { UserAppShell } from './UserAppShell';
 import { UserSidebar } from './UserSidebar';
 
 export function ConsultationDashboard() {
+  const router = useRouter();
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<number>();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
@@ -25,8 +28,24 @@ export function ConsultationDashboard() {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
 
   useEffect(() => {
-    void refreshSessions();
-  }, []);
+    async function bootstrap() {
+      try {
+        const me = await getMe();
+
+        if (me.role === 'ADMIN') {
+          router.replace('/admin');
+          return;
+        }
+
+        await refreshSessions();
+      } catch {
+        localStorage.removeItem('accessToken');
+        router.replace('/login');
+      }
+    }
+
+    void bootstrap();
+  }, [router]);
 
   async function refreshSessions() {
     setIsLoadingSessions(true);

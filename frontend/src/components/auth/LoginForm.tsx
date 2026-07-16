@@ -44,7 +44,7 @@ export function LoginForm() {
     try {
       const response = await login(values);
       localStorage.setItem('accessToken', response.accessToken);
-      router.push('/dashboard');
+      router.push(response.user.role === 'ADMIN' ? '/admin' : '/chat');
     } catch (error) {
       setServerError(
         error instanceof Error

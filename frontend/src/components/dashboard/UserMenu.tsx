@@ -4,10 +4,12 @@ import { LogOut, UserCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { logout } from "@/lib/auth-api";
+import { ProfileDialog } from "./ProfileDialog";
 
 export function UserMenu() {
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
@@ -38,6 +40,17 @@ export function UserMenu() {
         <div className="absolute right-0 top-12 z-20 w-56 rounded-lg border border-slate-200 bg-white py-2 shadow-lg">
           <button
             type="button"
+            onClick={() => {
+              setIsOpen(false);
+              setIsProfileOpen(true);
+            }}
+            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-slate-700 transition hover:bg-slate-100"
+          >
+            <UserCircle className="h-4 w-4" />
+            Thông tin người dùng
+          </button>
+          <button
+            type="button"
             disabled={isLoggingOut}
             onClick={handleLogout}
             className="mt-1 flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:cursor-not-allowed disabled:text-slate-400"
@@ -47,6 +60,11 @@ export function UserMenu() {
           </button>
         </div>
       ) : null}
+
+      <ProfileDialog
+        open={isProfileOpen}
+        onClose={() => setIsProfileOpen(false)}
+      />
     </div>
   );
 }

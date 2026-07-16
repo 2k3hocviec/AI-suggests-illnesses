@@ -22,6 +22,9 @@ export interface PublicUser {
   phoneNumber: string | null;
   streetAddress: string | null;
   address: string | null;
+  provinceCode: number | null;
+  districtCode: number | null;
+  wardCode: number | null;
   gender: UserGender;
   role: UserRole;
   dateOfBirth: Date | null;

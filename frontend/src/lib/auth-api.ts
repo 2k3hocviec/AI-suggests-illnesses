@@ -7,6 +7,9 @@ export interface AuthUser {
   phoneNumber: string | null;
   streetAddress: string | null;
   address: string | null;
+  provinceCode: number | null;
+  districtCode: number | null;
+  wardCode: number | null;
   gender: string;
   role: 'ADMIN' | 'USER';
   dateOfBirth: string | null;
@@ -47,6 +50,18 @@ export interface RegisterRequest {
   wardCode: number;
 }
 
+export interface UpdateProfileRequest {
+  fullName?: string;
+  email?: string;
+  phoneNumber?: string;
+  dateOfBirth?: string;
+  gender?: 'MALE' | 'FEMALE' | 'OTHER' | 'UNKNOWN';
+  streetAddress?: string;
+  provinceCode?: number;
+  districtCode?: number;
+  wardCode?: number;
+}
+
 export interface ForgotPasswordRequest {
   email: string;
 }
@@ -67,6 +82,17 @@ export function login(payload: LoginRequest) {
 export function register(payload: RegisterRequest) {
   return apiRequest<RegisterResponse>('/auth/register', {
     method: 'POST',
+    json: payload,
+  });
+}
+
+export function getMe() {
+  return apiRequest<AuthUser>('/auth/me');
+}
+
+export function updateProfile(payload: UpdateProfileRequest) {
+  return apiRequest<AuthUser>('/auth/me', {
+    method: 'PATCH',
     json: payload,
   });
 }

@@ -17,6 +17,7 @@ import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { UpdateProfileDto } from './dto/update-profile.dto';
 import { MailService } from './mail.service';
 import { AdministrativeUnitsService } from '../administrative-units/administrative-units.service';
 
@@ -110,6 +111,96 @@ export class AuthService {
   async getProfile(userId: number) {
     const user = await this.findUserById(userId);
     return this.toPublicUser(user);
+  }
+
+  async updateProfile(userId: number, dto: UpdateProfileDto) {
+    const currentUser = await this.findUserById(userId);
+    const email = dto.email?.trim().toLowerCase();
+
+    if (email && email !== currentUser.email) {
+      const existing = await this.prisma.user.findUnique({
+        where: { email },
+      });
+
+      if (existing) {
+        throw new ConflictException('Email đã tồn tại');
+      }
+    }
+
+    const address = await this.resolveUpdateAddress(currentUser, dto);
+    const user = await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        fullName: dto.fullName?.trim() || undefined,
+        email,
+        phoneNumber:
+          dto.phoneNumber !== undefined
+            ? dto.phoneNumber.trim() || null
+            : undefined,
+        dateOfBirth:
+          dto.dateOfBirth !== undefined
+            ? dto.dateOfBirth
+              ? new Date(dto.dateOfBirth)
+              : null
+            : undefined,
+        gender: dto.gender,
+        streetAddress: address?.streetAddress,
+        address: address?.address,
+        provinceCode: address?.provinceCode,
+        districtCode: address?.districtCode,
+        wardCode: address?.wardCode,
+      },
+    });
+
+    return this.toPublicUser(user);
+  }
+
+  private async resolveUpdateAddress(user: User, dto: UpdateProfileDto) {
+    const shouldUpdateAddress =
+      dto.streetAddress !== undefined ||
+      dto.provinceCode !== undefined ||
+      dto.districtCode !== undefined ||
+      dto.wardCode !== undefined;
+
+    if (!shouldUpdateAddress) {
+      return null;
+    }
+
+    const streetAddress = dto.streetAddress?.trim() || user.streetAddress;
+    const provinceCode = dto.provinceCode ?? user.provinceCode;
+    const districtCode = dto.districtCode ?? user.districtCode;
+    const wardCode = dto.wardCode ?? user.wardCode;
+
+    if (!streetAddress || !provinceCode || !districtCode || !wardCode) {
+      throw new BadRequestException('Vui lòng nhập đầy đủ địa chỉ');
+    }
+
+    const [districts, wards] = await Promise.all([
+      this.administrativeUnits.listDistricts(provinceCode),
+      this.administrativeUnits.listWards(districtCode),
+    ]);
+    const district = districts.find((item) => item.code === districtCode);
+    const ward = wards.find((item) => item.code === wardCode);
+
+    if (!district || !ward || ward.provinceCode !== provinceCode) {
+      throw new BadRequestException('Địa chỉ hành chính không hợp lệ');
+    }
+
+    const province = (await this.administrativeUnits.listProvinces()).find(
+      (item) => item.code === provinceCode,
+    );
+
+    if (!province) {
+      throw new BadRequestException('Tỉnh/thành không hợp lệ');
+    }
+
+    return {
+      streetAddress,
+      address: `${streetAddress}, ${ward.name}, ${district.name}, ${province.name}`,
+      provinceCode: province.code,
+      districtCode: district.code,
+      wardCode: ward.code,
+    };
   }
 
   async changePassword(userId: number, dto: ChangePasswordDto) {
@@ -355,6 +446,9 @@ export class AuthService {
       phoneNumber: user.phoneNumber,
       streetAddress: user.streetAddress,
       address: user.address,
+      provinceCode: user.provinceCode,
+      districtCode: user.districtCode,
+      wardCode: user.wardCode,
       gender: user.gender,
       role: user.role,
       dateOfBirth: user.dateOfBirth,

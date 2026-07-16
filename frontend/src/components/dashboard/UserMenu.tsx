@@ -22,12 +22,12 @@ export function UserMenu() {
 
   async function handleLogout() {
     setIsLoggingOut(true);
+    localStorage.removeItem("accessToken");
+
     try {
       await logout();
     } finally {
-      localStorage.removeItem("accessToken");
-      router.push("/login");
-      router.refresh();
+      window.location.replace("/login");
     }
   }
 

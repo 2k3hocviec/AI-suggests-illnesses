@@ -130,9 +130,9 @@ export function AdminDashboard() {
   }
 
   async function handleLogout() {
-    await logout().catch(() => null);
     localStorage.removeItem("accessToken");
-    router.replace("/login");
+    await logout().catch(() => null);
+    window.location.replace("/login");
   }
 
   const modelRequestShare = useMemo(() => {

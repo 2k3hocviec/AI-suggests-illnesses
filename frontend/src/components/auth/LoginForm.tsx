@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { login } from '@/lib/auth-api';
+import { LoadingOverlay } from '@/components/LoadingOverlay';
 import { AuthCard } from './AuthCard';
 import { FormField } from './FormField';
 import { PasswordField } from './PasswordField';
@@ -58,6 +59,7 @@ export function LoginForm() {
 
   return (
     <div className="w-full">
+      <LoadingOverlay show={isSubmitting} message="Đang đăng nhập..." />
       <AuthCard>
         <div className="mb-5">
           <h2 className="text-base font-bold text-ink lg:text-xl">

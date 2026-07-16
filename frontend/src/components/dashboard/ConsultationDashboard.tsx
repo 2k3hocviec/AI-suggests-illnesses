@@ -93,16 +93,31 @@ export function ConsultationDashboard() {
   async function handleSend(content: string) {
     setError(null);
     setIsSending(true);
+    const optimisticMessageId = -Date.now();
+    const optimisticMessage: ChatMessage = {
+      id: optimisticMessageId,
+      sessionId: activeSessionId ?? 0,
+      userId: null,
+      role: 'USER',
+      content,
+      metadata: null,
+      createdAt: new Date().toISOString(),
+    };
+
+    setMessages((current) => [...current, optimisticMessage]);
     try {
       const response = await sendChatMessage(content, activeSessionId);
       setActiveSessionId(response.session.id);
       setMessages((current) => [
-        ...current,
+        ...current.filter((message) => message.id !== optimisticMessageId),
         response.userMessage,
         response.assistantMessage,
       ]);
       await refreshSessions();
     } catch (requestError) {
+      setMessages((current) =>
+        current.filter((message) => message.id !== optimisticMessageId),
+      );
       setError(
         getRequestErrorMessage(requestError, 'Không thể gửi tin nhắn.'),
       );

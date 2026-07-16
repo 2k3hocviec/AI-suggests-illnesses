@@ -822,13 +822,9 @@ export class ChatService {
             const distance = doctor.distanceText
               ? `\n   o   Khu vực: ${doctor.distanceText}`
               : "";
-            const locationScore =
-              doctor.locationScore !== null
-                ? `\n   o   Điểm khu vực: ${doctor.locationScore.toFixed(2)}/1.0`
-                : "";
             const doctorScore = `\n   o   Điểm phù hợp: ${doctor.doctorScore.toFixed(2)}/1.0`;
 
-            return `${index + 1}. ${title}\n   o   Kinh nghiệm: ${doctor.experienceYears} năm${rating}${doctorScore}\n   o   Nơi làm việc: ${doctor.workplace ?? "chưa cập nhật"}\n   o   Địa chỉ: ${doctor.address ?? doctor.city ?? "chưa cập nhật"}${distance}${locationScore}\n   o   Lịch làm việc: ${doctor.workingTime ?? "chưa cập nhật"}\n   o   Hình thức: ${consultationType}\n   o   Liên hệ: ${doctor.phoneNumber ?? "chưa cập nhật"}${doctor.email ? ` · ${doctor.email}` : ""}`;
+            return `${index + 1}. ${title}\n   o   Kinh nghiệm: ${doctor.experienceYears} năm${rating}${doctorScore}\n   o   Nơi làm việc: ${doctor.workplace ?? "chưa cập nhật"}\n   o   Địa chỉ: ${doctor.address ?? doctor.city ?? "chưa cập nhật"}${distance}\n   o   Lịch làm việc: ${doctor.workingTime ?? "chưa cập nhật"}\n   o   Hình thức: ${consultationType}\n   o   Liên hệ: ${doctor.phoneNumber ?? "chưa cập nhật"}${doctor.email ? ` · ${doctor.email}` : ""}`;
           })
           .join("\n\n");
 

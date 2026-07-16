@@ -21,6 +21,7 @@ import {
   setUserEnabled,
 } from "@/lib/admin-api";
 import { getMe, logout } from "@/lib/auth-api";
+import { LoadingOverlay } from "@/components/LoadingOverlay";
 import { useRouter } from "next/navigation";
 
 export function AdminDashboard() {
@@ -31,6 +32,7 @@ export function AdminDashboard() {
   const [page, setPage] = useState(1);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [updatingUserId, setUpdatingUserId] = useState<number | null>(null);
 
@@ -129,9 +131,10 @@ export function AdminDashboard() {
     }
   }
 
-  async function handleLogout() {
+  function handleLogout() {
+    setIsLoggingOut(true);
     localStorage.removeItem("accessToken");
-    await logout().catch(() => null);
+    void logout().catch(() => null);
     window.location.replace("/login");
   }
 
@@ -158,6 +161,7 @@ export function AdminDashboard() {
 
   return (
     <main className="min-h-screen bg-[#fbfaf9] text-slate-900">
+      <LoadingOverlay show={isLoggingOut} message="Đang đăng xuất..." />
       <header className="border-b border-slate-200 bg-white px-5 py-4 lg:px-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
           <div>
@@ -181,6 +185,7 @@ export function AdminDashboard() {
             <button
               type="button"
               onClick={handleLogout}
+              disabled={isLoggingOut}
               className="inline-flex h-9 items-center gap-2 rounded-md bg-slate-900 px-3 text-sm font-semibold text-white transition hover:bg-slate-800"
             >
               Đăng xuất

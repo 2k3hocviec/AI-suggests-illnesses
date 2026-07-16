@@ -4,6 +4,7 @@ import { LayoutDashboard, LogOut, UserCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { getMe, logout } from "@/lib/auth-api";
+import { LoadingOverlay } from "@/components/LoadingOverlay";
 import { ProfileDialog } from "./ProfileDialog";
 
 export function UserMenu() {
@@ -20,19 +21,16 @@ export function UserMenu() {
       .catch(() => setIsAdmin(false));
   }, []);
 
-  async function handleLogout() {
+  function handleLogout() {
     setIsLoggingOut(true);
     localStorage.removeItem("accessToken");
-
-    try {
-      await logout();
-    } finally {
-      window.location.replace("/login");
-    }
+    void logout().catch(() => null);
+    window.location.replace("/login");
   }
 
   return (
     <div className="relative" ref={menuRef}>
+      <LoadingOverlay show={isLoggingOut} message="Đang đăng xuất..." />
       <button
         type="button"
         aria-label="Mở menu tài khoản"

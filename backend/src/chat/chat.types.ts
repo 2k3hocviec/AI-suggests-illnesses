@@ -8,6 +8,7 @@ export interface ModelAnalyzeResponse {
   symptoms: ModelSymptom[];
   specialties: string[];
   message: string;
+  analysisSource?: 'NER' | 'Gemini';
 }
 
 export interface SpecialtyHint {

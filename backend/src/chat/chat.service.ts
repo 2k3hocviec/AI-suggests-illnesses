@@ -10,6 +10,7 @@ import { PrismaService } from "../prisma/prisma.service";
 import { SendChatMessageDto } from "./dto/send-chat-message.dto";
 import {
   ModelAnalyzeResponse,
+  ModelSymptom,
   RecommendedDoctor,
   RecommendedSpecialty,
   RecommendedSpecialtyWithDoctors,
@@ -283,38 +284,235 @@ export class ChatService {
         throw new ServiceUnavailableException("Model chưa sẵn sàng");
       }
       const analysis = (await response.json()) as ModelAnalyzeResponse;
+      const nerAnalysis = {
+        ...analysis,
+        analysisSource: "NER" as const,
+      };
 
-      return analysis;
+      if (!this.hasConfidentSymptoms(nerAnalysis)) {
+        return this.analyzeWithGemini(content);
+      }
+
+      return nerAnalysis;
     } catch (error) {
-      console.error("Không gọi được model, dùng fallback:", error);
-      return this.fallbackAnalyze(content);
+      console.error("Không gọi được model NER, chuyển sang Gemini:", error);
+      return this.analyzeWithGemini(content);
     }
   }
 
-  /*
-  Chạy khi model chết, sẽ phát triển thêm lên khi gọi model trả về độ tin tưởng còn quá thấp.
-  */
-  private fallbackAnalyze(content: string): ModelAnalyzeResponse {
-    const normalized = this.normalize(content);
-    const symptoms = SPECIALTY_HINTS.flatMap((hint) =>
-      hint.keywords
-        .filter((keyword) => normalized.includes(this.normalize(keyword)))
-        .map((keyword) => ({
-          name: keyword,
-          confidence: 0.65,
-          specialty_code: hint.code,
-        })),
+  private async analyzeWithGemini(
+    content: string,
+  ): Promise<ModelAnalyzeResponse> {
+    const apiKey =
+      this.config.get<string>("geminiApiKey") ??
+      this.config.get<string>("GEMINI_API_KEY");
+    const model =
+      this.config.get<string>("geminiModel") ??
+      this.config.get<string>("GEMINI_MODEL") ??
+      "gemini-1.5-flash";
+
+    if (!apiKey) {
+      throw new ServiceUnavailableException("Gemini API key chưa được cấu hình");
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    try {
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                role: "user",
+                parts: [
+                  {
+                    text: this.buildGeminiAnalyzePrompt(content),
+                  },
+                ],
+              },
+            ],
+            generationConfig: {
+              temperature: 0,
+              responseMimeType: "application/json",
+            },
+          }),
+          signal: controller.signal,
+        },
+      );
+
+      if (!response.ok) {
+        throw new ServiceUnavailableException("Gemini chưa sẵn sàng");
+      }
+
+      const payload = (await response.json()) as {
+        candidates?: Array<{
+          content?: {
+            parts?: Array<{ text?: string }>;
+          };
+        }>;
+      };
+      const text = payload.candidates?.[0]?.content?.parts?.[0]?.text;
+
+      if (!text) {
+        throw new ServiceUnavailableException("Gemini không trả về JSON");
+      }
+
+      const analysis = this.normalizeGeminiAnalysis(JSON.parse(text));
+
+      if (!this.hasConfidentSymptoms(analysis)) {
+        return {
+          symptoms: [],
+          specialties: [],
+          message:
+            'Không tìm thấy triệu chứng có độ tin cậy đủ cao. Bạn hãy mô tả rõ hơn, ví dụ: "Tôi bị đau đầu và sốt cao".',
+          analysisSource: "Gemini",
+        };
+      }
+
+      return analysis;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  private hasConfidentSymptoms(analysis: ModelAnalyzeResponse) {
+    return (
+      analysis.symptoms.some((symptom) => symptom.confidence >= 0.5) &&
+      analysis.specialties.length > 0
     );
+  }
+
+  private buildGeminiAnalyzePrompt(content: string) {
+    return `Bạn là bộ trích xuất triệu chứng y tế cho hệ thống gợi ý chuyên khoa.
+
+Yêu cầu bắt buộc:
+- Chỉ trích xuất triệu chứng được người dùng nêu rõ trong câu.
+- Không suy luận bệnh.
+- Không tự thêm triệu chứng không xuất hiện trong câu.
+- Không đưa lời khuyên y tế.
+- Chỉ trả về JSON hợp lệ, không markdown, không giải thích.
+- specialty_code chỉ được dùng một trong các mã sau:
+GENERAL_MEDICINE, CARDIOLOGY, RESPIRATORY, PEDIATRICS, DERMATOLOGY, NEUROLOGY, ENT, OB_GYN, ORTHOPEDICS, OPHTHALMOLOGY, GASTROENTEROLOGY, DENTISTRY, UROLOGY, ENDOCRINOLOGY, PSYCHIATRY, ONCOLOGY, EMERGENCY.
+
+Format JSON bắt buộc:
+{
+  "symptoms": [
+    {
+      "name": "string",
+      "confidence": 0.0,
+      "specialty_code": "SPECIALTY_CODE"
+    }
+  ],
+  "specialties": ["SPECIALTY_CODE"],
+  "message": "string"
+}
+
+Nếu không có triệu chứng rõ ràng, trả về:
+{
+  "symptoms": [],
+  "specialties": [],
+  "message": "Chưa nhận diện được triệu chứng rõ ràng."
+}
+
+Câu người dùng:
+${content}`;
+  }
+
+  private normalizeGeminiAnalysis(value: unknown): ModelAnalyzeResponse {
+    const allowedSpecialties = new Set([
+      "GENERAL_MEDICINE",
+      "CARDIOLOGY",
+      "RESPIRATORY",
+      "PEDIATRICS",
+      "DERMATOLOGY",
+      "NEUROLOGY",
+      "ENT",
+      "OB_GYN",
+      "ORTHOPEDICS",
+      "OPHTHALMOLOGY",
+      "GASTROENTEROLOGY",
+      "DENTISTRY",
+      "UROLOGY",
+      "ENDOCRINOLOGY",
+      "PSYCHIATRY",
+      "ONCOLOGY",
+      "EMERGENCY",
+    ]);
+
+    if (!value || typeof value !== "object") {
+      throw new ServiceUnavailableException("Gemini JSON không hợp lệ");
+    }
+
+    const raw = value as {
+      symptoms?: unknown;
+      specialties?: unknown;
+      message?: unknown;
+    };
+    const symptoms = Array.isArray(raw.symptoms)
+      ? raw.symptoms
+          .map((symptom) => {
+            if (!symptom || typeof symptom !== "object") {
+              return null;
+            }
+
+            const item = symptom as {
+              name?: unknown;
+              confidence?: unknown;
+              specialty_code?: unknown;
+            };
+            const specialtyCode =
+              typeof item.specialty_code === "string"
+                ? item.specialty_code
+                : "";
+
+            if (
+              typeof item.name !== "string" ||
+              !allowedSpecialties.has(specialtyCode)
+            ) {
+              return null;
+            }
+
+            const confidence = Number(item.confidence);
+
+            return {
+              name: item.name,
+              confidence: this.clampScore(confidence),
+              specialty_code: specialtyCode,
+            };
+          })
+          .filter((symptom): symptom is ModelSymptom => symptom !== null)
+      : [];
     const specialties = [
-      ...new Set(symptoms.map((item) => item.specialty_code)),
+      ...new Set(
+        [
+          ...(Array.isArray(raw.specialties)
+            ? raw.specialties.filter(
+                (specialty): specialty is string =>
+                  typeof specialty === "string" &&
+                  allowedSpecialties.has(specialty),
+              )
+            : []),
+          ...symptoms.map((symptom) => symptom.specialty_code),
+        ],
+      ),
     ];
 
     return {
       symptoms,
       specialties,
-      message: symptoms.length
-        ? `Tìm thấy ${symptoms.length} triệu chứng và ${specialties.length} chuyên khoa phù hợp.`
-        : "Chưa nhận diện được triệu chứng rõ ràng. Bạn có thể mô tả cụ thể hơn về vị trí đau, thời gian kéo dài và mức độ nặng nhẹ.",
+      message:
+        typeof raw.message === "string"
+          ? raw.message
+          : symptoms.length
+            ? `Tìm thấy ${symptoms.length} triệu chứng.`
+            : "Chưa nhận diện được triệu chứng rõ ràng.",
+      analysisSource: "Gemini",
     };
   }
 
@@ -828,6 +1026,10 @@ export class ChatService {
     return `Bác sĩ được đề xuất vì ${reasons.join(", ")}.`;
   }
 
+  private buildAnalysisSourceLabel(analysis: ModelAnalyzeResponse) {
+    return `Nguồn phân tích: ${analysis.analysisSource ?? "NER"}`;
+  }
+
   /*
   Nhóm các triệu chứng cùng chuyên khoa lại với nhau
   */
@@ -854,7 +1056,7 @@ export class ChatService {
       ) {
         return `Mình ghi nhận có dấu hiệu thuộc nhóm cấp cứu:\n\n${groupedSymptoms.join(
           "\n",
-        )}\n\nVới các triệu chứng cấp cứu, bạn không nên chờ gợi ý bác sĩ trên hệ thống. Hãy đến cơ sở y tế gần nhất hoặc gọi cấp cứu để được thăm khám và điều trị kịp thời.\n\nThông tin này chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ.`;
+        )}\n\nVới các triệu chứng cấp cứu, bạn không nên chờ gợi ý bác sĩ trên hệ thống. Hãy đến cơ sở y tế gần nhất hoặc gọi cấp cứu để được thăm khám và điều trị kịp thời.\n\nThông tin này chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ.\n${this.buildAnalysisSourceLabel(analysis)}`;
       }
 
       const doctorSuggestions = recommendedSpecialties.map((specialty) => {
@@ -897,10 +1099,10 @@ export class ChatService {
         "\n",
       )}\n\nDưới đây là các bác sĩ có mức độ phù hợp cao nhất.\n\n${doctorSuggestions.join(
         "\n\n",
-      )}\n\nThông tin này chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ.`;
+      )}\n\nThông tin này chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ.\n${this.buildAnalysisSourceLabel(analysis)}`;
     }
 
-    return `${analysis.message}`;
+    return `${analysis.message}\n${this.buildAnalysisSourceLabel(analysis)}`;
   }
 
   private normalize(value: string) {

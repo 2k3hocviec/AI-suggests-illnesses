@@ -109,7 +109,11 @@ export class ChatService {
       await this.findRecommendedSpecialties(analysis);
     const recommendedSpecialtiesWithDoctors = hasEmergencySpecialty
       ? this.withoutDoctorSuggestions(recommendedSpecialties)
-      : await this.attachDoctorsToSpecialties(userId, recommendedSpecialties);
+      : await this.attachDoctorsToSpecialties(
+          userId,
+          recommendedSpecialties,
+          analysis,
+        );
     const assistantContent = this.buildAssistantReply(
       analysis,
       recommendedSpecialtiesWithDoctors,
@@ -380,6 +384,7 @@ export class ChatService {
   private async attachDoctorsToSpecialties(
     userId: number,
     specialties: RecommendedSpecialty[],
+    analysis: ModelAnalyzeResponse,
   ): Promise<RecommendedSpecialtyWithDoctors[]> {
     if (!specialties.length) {
       return [];
@@ -416,6 +421,17 @@ export class ChatService {
             code: true,
           },
         },
+        expertises: {
+          select: {
+            expertiseScore: true,
+            symptom: {
+              select: {
+                name: true,
+                normalizedName: true,
+              },
+            },
+          },
+        },
       },
       orderBy: [
         {
@@ -438,6 +454,26 @@ export class ChatService {
         .filter((doctor) => doctor.specialty.code === specialty.code)
         .map((doctor): RecommendedDoctor => {
           const distance = doctorDistances.get(doctor.id);
+          const specialtyScore = 1;
+          const expertiseScore = this.calculateExpertiseScore(
+            doctor.expertises,
+            analysis,
+            specialty.code,
+          );
+          const experienceScore = this.calculateExperienceScore(
+            doctor.experienceYears,
+          );
+          const locationScore = distance?.locationScore ?? 0;
+          const ratingScore = this.calculateRatingScore(
+            doctor.rating?.toString() ?? null,
+          );
+          const doctorScore = this.calculateDoctorScore({
+            specialtyScore,
+            expertiseScore,
+            experienceScore,
+            locationScore,
+            ratingScore,
+          });
 
           return {
             id: doctor.id,
@@ -460,10 +496,19 @@ export class ChatService {
             distanceMeters: distance?.distanceMeters ?? null,
             durationText: distance?.durationText ?? null,
             durationSeconds: distance?.durationSeconds ?? null,
+            specialtyScore,
+            expertiseScore,
+            experienceScore,
             locationScore: distance?.locationScore ?? null,
+            ratingScore,
+            doctorScore,
           };
         })
         .sort((firstDoctor, secondDoctor) => {
+          if (firstDoctor.doctorScore !== secondDoctor.doctorScore) {
+            return secondDoctor.doctorScore - firstDoctor.doctorScore;
+          }
+
           const firstScore = firstDoctor.locationScore ?? 0;
           const secondScore = secondDoctor.locationScore ?? 0;
 
@@ -526,6 +571,81 @@ export class ChatService {
     };
   }
 
+  private calculateExpertiseScore(
+    expertises: Array<{
+      expertiseScore: { toString(): string };
+      symptom: {
+        name: string;
+        normalizedName: string;
+      };
+    }>,
+    analysis: ModelAnalyzeResponse,
+    specialtyCode: string,
+  ) {
+    const symptomNames = analysis.symptoms
+      .filter((symptom) => symptom.specialty_code === specialtyCode)
+      .map((symptom) => this.normalize(symptom.name));
+
+    if (!symptomNames.length) {
+      return 0;
+    }
+
+    const matchedExpertiseScores = expertises
+      .filter((expertise) => {
+        const normalizedName = this.normalize(expertise.symptom.name);
+        const normalizedCode = this.normalize(expertise.symptom.normalizedName);
+
+        return symptomNames.some(
+          (symptomName) =>
+            symptomName === normalizedName || symptomName === normalizedCode,
+        );
+      })
+      .map((expertise) => Number(expertise.expertiseScore.toString()))
+      .filter((score) => Number.isFinite(score));
+
+    if (!matchedExpertiseScores.length) {
+      return 0;
+    }
+
+    const total = matchedExpertiseScores.reduce((sum, score) => sum + score, 0);
+    return this.clampScore(total / matchedExpertiseScores.length);
+  }
+
+  private calculateExperienceScore(experienceYears: number) {
+    return this.clampScore(Math.min(Math.max(experienceYears, 0), 10) / 10);
+  }
+
+  private calculateRatingScore(rating: string | null) {
+    return this.clampScore(Number(rating ?? 0) / 5);
+  }
+
+  /*
+  Tính điểm cho từng bác sĩ
+  */
+  private calculateDoctorScore(scores: {
+    specialtyScore: number;
+    expertiseScore: number;
+    experienceScore: number;
+    locationScore: number;
+    ratingScore: number;
+  }) {
+    return this.clampScore(
+      scores.specialtyScore * 0.25 +
+        scores.expertiseScore * 0.25 +
+        scores.experienceScore * 0.15 +
+        scores.locationScore * 0.3 +
+        scores.ratingScore * 0.05,
+    );
+  }
+
+  private clampScore(score: number) {
+    if (!Number.isFinite(score)) {
+      return 0;
+    }
+
+    return Math.min(Math.max(score, 0), 1);
+  }
+
   private async findDoctorDistances(
     userLocation: AdministrativeLocation | null,
     doctors: Array<{
@@ -564,20 +684,20 @@ export class ChatService {
   ): DoctorDistance {
     const sameProvince = Boolean(
       userLocation.provinceCode &&
-        doctorLocation.provinceCode &&
-        userLocation.provinceCode === doctorLocation.provinceCode,
+      doctorLocation.provinceCode &&
+      userLocation.provinceCode === doctorLocation.provinceCode,
     );
     const sameDistrict = Boolean(
       sameProvince &&
-        userLocation.districtCode &&
-        doctorLocation.districtCode &&
-        userLocation.districtCode === doctorLocation.districtCode,
+      userLocation.districtCode &&
+      doctorLocation.districtCode &&
+      userLocation.districtCode === doctorLocation.districtCode,
     );
     const sameWard = Boolean(
       sameDistrict &&
-        userLocation.wardCode &&
-        doctorLocation.wardCode &&
-        userLocation.wardCode === doctorLocation.wardCode,
+      userLocation.wardCode &&
+      doctorLocation.wardCode &&
+      userLocation.wardCode === doctorLocation.wardCode,
     );
 
     if (
@@ -706,8 +826,9 @@ export class ChatService {
               doctor.locationScore !== null
                 ? `\n   o   Điểm khu vực: ${doctor.locationScore.toFixed(2)}/1.0`
                 : "";
+            const doctorScore = `\n   o   Điểm phù hợp: ${doctor.doctorScore.toFixed(2)}/1.0`;
 
-            return `${index + 1}. ${title}\n   o   Kinh nghiệm: ${doctor.experienceYears} năm${rating}\n   o   Nơi làm việc: ${doctor.workplace ?? "chưa cập nhật"}\n   o   Địa chỉ: ${doctor.address ?? doctor.city ?? "chưa cập nhật"}${distance}${locationScore}\n   o   Lịch làm việc: ${doctor.workingTime ?? "chưa cập nhật"}\n   o   Hình thức: ${consultationType}\n   o   Liên hệ: ${doctor.phoneNumber ?? "chưa cập nhật"}${doctor.email ? ` · ${doctor.email}` : ""}`;
+            return `${index + 1}. ${title}\n   o   Kinh nghiệm: ${doctor.experienceYears} năm${rating}${doctorScore}\n   o   Nơi làm việc: ${doctor.workplace ?? "chưa cập nhật"}\n   o   Địa chỉ: ${doctor.address ?? doctor.city ?? "chưa cập nhật"}${distance}${locationScore}\n   o   Lịch làm việc: ${doctor.workingTime ?? "chưa cập nhật"}\n   o   Hình thức: ${consultationType}\n   o   Liên hệ: ${doctor.phoneNumber ?? "chưa cập nhật"}${doctor.email ? ` · ${doctor.email}` : ""}`;
           })
           .join("\n\n");
 

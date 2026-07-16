@@ -37,7 +37,12 @@ export interface ChatDoctor {
   distanceMeters: number | null;
   durationText: string | null;
   durationSeconds: number | null;
+  specialtyScore: number;
+  expertiseScore: number;
+  experienceScore: number;
   locationScore: number | null;
+  ratingScore: number;
+  doctorScore: number;
 }
 
 export interface ChatSpecialtyWithDoctors extends ChatSpecialty {

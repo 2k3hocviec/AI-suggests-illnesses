@@ -772,6 +772,62 @@ export class ChatService {
       .replace(/\s+/g, " ");
   }
 
+  private formatScorePercent(score: number) {
+    return Math.round(this.clampScore(score) * 100);
+  }
+
+  private getSuitabilityLabel(score: number) {
+    const percent = this.formatScorePercent(score);
+
+    if (percent >= 85) {
+      return "Rất phù hợp";
+    }
+
+    if (percent >= 70) {
+      return "Phù hợp";
+    }
+
+    if (percent >= 50) {
+      return "Có thể tham khảo";
+    }
+
+    return "Ít phù hợp";
+  }
+
+  private formatWorkSchedule(workingTime: string | null) {
+    if (!workingTime) {
+      return "chưa cập nhật";
+    }
+
+    return workingTime
+      .replace(/Mon-Fri/g, "Thứ Hai – Thứ Sáu")
+      .replace(/Mon-Sat/g, "Thứ Hai – Thứ Bảy")
+      .replace(/Mon-Sun/g, "Thứ Hai – Chủ Nhật")
+      .replace(/Tue-Sat/g, "Thứ Ba – Thứ Bảy");
+  }
+
+  private buildRecommendationReason(doctor: RecommendedDoctor) {
+    const reasons = ["đúng chuyên khoa"];
+
+    if (doctor.expertiseScore >= 0.8) {
+      reasons.push("khớp tốt với triệu chứng");
+    }
+
+    if (doctor.experienceScore >= 1) {
+      reasons.push("nhiều kinh nghiệm");
+    }
+
+    if ((doctor.locationScore ?? 0) >= 0.65) {
+      reasons.push("làm việc gần khu vực của bạn");
+    }
+
+    if (doctor.ratingScore >= 0.9) {
+      reasons.push("đánh giá cao");
+    }
+
+    return `Bác sĩ được đề xuất vì ${reasons.join(", ")}.`;
+  }
+
   /*
   Nhóm các triệu chứng cùng chuyên khoa lại với nhau
   */
@@ -807,6 +863,7 @@ export class ChatService {
         }
 
         const doctors = specialty.doctors
+          .slice(0, 5)
           .map((doctor, index) => {
             const title = doctor.academicTitle
               ? `${doctor.academicTitle} ${doctor.fullName}`
@@ -818,22 +875,27 @@ export class ChatService {
                   )
                   .join(", ")
               : "chưa cập nhật";
-            const rating = doctor.rating ? ` · Đánh giá: ${doctor.rating}` : "";
             const distance = doctor.distanceText
-              ? `\n   o   Khu vực: ${doctor.distanceText}`
+              ? `\n• Khoảng cách khu vực: ${doctor.distanceText}`
               : "";
-            const doctorScore = `\n   o   Điểm phù hợp: ${doctor.doctorScore.toFixed(2)}/1.0`;
+            const scorePercent = this.formatScorePercent(doctor.doctorScore);
+            const suitabilityLabel = this.getSuitabilityLabel(
+              doctor.doctorScore,
+            );
+            const workSchedule = this.formatWorkSchedule(doctor.workingTime);
+            const recommendationReason =
+              this.buildRecommendationReason(doctor);
 
-            return `${index + 1}. ${title}\n   o   Kinh nghiệm: ${doctor.experienceYears} năm${rating}${doctorScore}\n   o   Nơi làm việc: ${doctor.workplace ?? "chưa cập nhật"}\n   o   Địa chỉ: ${doctor.address ?? doctor.city ?? "chưa cập nhật"}${distance}\n   o   Lịch làm việc: ${doctor.workingTime ?? "chưa cập nhật"}\n   o   Hình thức: ${consultationType}\n   o   Liên hệ: ${doctor.phoneNumber ?? "chưa cập nhật"}${doctor.email ? ` · ${doctor.email}` : ""}`;
+            return `${index + 1}. ${title}\n\nĐiểm phù hợp: ${scorePercent}% — ${suitabilityLabel}\n\n• Chuyên khoa: ${specialty.name}\n• Kinh nghiệm: ${doctor.experienceYears} năm\n• Đánh giá: ${doctor.rating ?? "chưa cập nhật"}/5\n• Nơi làm việc: ${doctor.workplace ?? "chưa cập nhật"}\n• Địa chỉ: ${doctor.address ?? doctor.city ?? "chưa cập nhật"}${distance}\n• Thời gian làm việc: ${workSchedule}\n• Hình thức tư vấn: ${consultationType}\n• Điện thoại: ${doctor.phoneNumber ?? "chưa cập nhật"}\n• Email: ${doctor.email ?? "chưa cập nhật"}\n\nLý do đề xuất: ${recommendationReason}`;
           })
           .join("\n\n");
 
         return `Chuyên khoa: ${specialty.name}\n\n${doctors}`;
       });
 
-      return `Mình ghi nhận các nhóm chuyên khoa phù hợp với triệu chứng của bạn:\n\n${groupedSymptoms.join(
+      return `Kết quả tham khảo\n\nDựa trên triệu chứng bạn cung cấp:\n\n${groupedSymptoms.join(
         "\n",
-      )}\n\nDanh sách bác sĩ chuyên khoa phù hợp\n\n${doctorSuggestions.join(
+      )}\n\nDưới đây là các bác sĩ có mức độ phù hợp cao nhất.\n\n${doctorSuggestions.join(
         "\n\n",
       )}\n\nThông tin này chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ.`;
     }

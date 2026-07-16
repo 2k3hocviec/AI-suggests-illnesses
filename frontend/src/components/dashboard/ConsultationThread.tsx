@@ -1,6 +1,6 @@
 'use client';
 
-import { Bot, UserCircle } from 'lucide-react';
+import { Bot, Mail, Phone, UserCircle } from 'lucide-react';
 import { useEffect, useRef } from 'react';
 
 export interface ThreadMessage {
@@ -67,7 +67,7 @@ export function ConsultationThread({
               </div>
               <div className="max-w-[76%]">
                 <div className="whitespace-pre-line rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-sm leading-6 shadow-sm lg:text-[15px]">
-                  <p>{message.content}</p>
+                  <AssistantContent content={message.content} />
                 </div>
                 <p className="mt-2 text-xs text-slate-600">{time}</p>
               </div>
@@ -89,6 +89,59 @@ export function ConsultationThread({
       </div>
     </section>
   );
+}
+
+function AssistantContent({ content }: { content: string }) {
+  return (
+    <div className="space-y-1">
+      {content.split('\n').map((line, index) => {
+        const phone = getContactValue(line, 'Điện thoại:');
+        const email = getContactValue(line, 'Email:');
+
+        if (phone && phone !== 'chưa cập nhật') {
+          return (
+            <div key={`${line}-${index}`} className="pt-1">
+              <a
+                href={`tel:${phone.replace(/\s+/g, '')}`}
+                className="inline-flex items-center gap-2 rounded-md bg-[#073f87] px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-[#052f66]"
+              >
+                <Phone className="h-3.5 w-3.5" />
+                Gọi điện
+              </a>
+              <span className="ml-2 text-slate-600">{phone}</span>
+            </div>
+          );
+        }
+
+        if (email && email !== 'chưa cập nhật') {
+          return (
+            <div key={`${line}-${index}`} className="pt-1">
+              <a
+                href={`mailto:${email}`}
+                className="inline-flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
+              >
+                <Mail className="h-3.5 w-3.5" />
+                Gửi email
+              </a>
+              <span className="ml-2 text-slate-600">{email}</span>
+            </div>
+          );
+        }
+
+        return <p key={`${line}-${index}`}>{line || '\u00A0'}</p>;
+      })}
+    </div>
+  );
+}
+
+function getContactValue(line: string, label: string) {
+  const normalizedLine = line.replace(/^•\s*/, '').trim();
+
+  if (!normalizedLine.startsWith(label)) {
+    return null;
+  }
+
+  return normalizedLine.slice(label.length).trim();
 }
 
 function formatTime(value: string) {

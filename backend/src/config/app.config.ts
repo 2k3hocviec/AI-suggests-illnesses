@@ -15,6 +15,7 @@ export default () => ({
   passwordResetOtpTtlMinutes: Number(
     process.env.PASSWORD_RESET_OTP_TTL_MINUTES ?? 10,
   ),
+  resendApiKey: process.env.RESEND_API_KEY,
   smtp: {
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT ?? 587),

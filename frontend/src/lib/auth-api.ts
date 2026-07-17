@@ -5,9 +5,14 @@ export interface AuthUser {
   fullName: string;
   email: string;
   phoneNumber: string | null;
+  streetAddress: string | null;
   address: string | null;
+  provinceCode: number | null;
+  districtCode: number | null;
+  wardCode: number | null;
   gender: string;
   role: 'ADMIN' | 'USER';
+  isEnabled: boolean;
   dateOfBirth: string | null;
   createdAt: string;
   updatedAt: string;
@@ -40,7 +45,22 @@ export interface RegisterRequest {
   phoneNumber?: string;
   dateOfBirth?: string;
   gender?: 'MALE' | 'FEMALE' | 'OTHER' | 'UNKNOWN';
-  address?: string;
+  streetAddress: string;
+  provinceCode: number;
+  districtCode: number;
+  wardCode: number;
+}
+
+export interface UpdateProfileRequest {
+  fullName?: string;
+  email?: string;
+  phoneNumber?: string;
+  dateOfBirth?: string;
+  gender?: 'MALE' | 'FEMALE' | 'OTHER' | 'UNKNOWN';
+  streetAddress?: string;
+  provinceCode?: number;
+  districtCode?: number;
+  wardCode?: number;
 }
 
 export interface ForgotPasswordRequest {
@@ -50,6 +70,11 @@ export interface ForgotPasswordRequest {
 export interface ResetPasswordRequest {
   email: string;
   otp: string;
+  newPassword: string;
+}
+
+export interface ChangePasswordRequest {
+  currentPassword: string;
   newPassword: string;
 }
 
@@ -63,6 +88,24 @@ export function login(payload: LoginRequest) {
 export function register(payload: RegisterRequest) {
   return apiRequest<RegisterResponse>('/auth/register', {
     method: 'POST',
+    json: payload,
+  });
+}
+
+export function getMe() {
+  return apiRequest<AuthUser>('/auth/me');
+}
+
+export function updateProfile(payload: UpdateProfileRequest) {
+  return apiRequest<AuthUser>('/auth/me', {
+    method: 'PATCH',
+    json: payload,
+  });
+}
+
+export function changePassword(payload: ChangePasswordRequest) {
+  return apiRequest<MessageResponse>('/auth/change-password', {
+    method: 'PATCH',
     json: payload,
   });
 }

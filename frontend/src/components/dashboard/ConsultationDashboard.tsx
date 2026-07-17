@@ -1,0 +1,163 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { getMe } from '@/lib/auth-api';
+import {
+  ChatMessage,
+  ChatSession,
+  listChatMessages,
+  listChatSessions,
+  sendChatMessage,
+} from '@/lib/chat-api';
+import { ChatHistoryDialog } from './ChatHistoryDialog';
+import { ConsultationChat } from './ConsultationChat';
+import { ConsultationHeader } from './ConsultationHeader';
+import { UserAppShell } from './UserAppShell';
+import { UserSidebar } from './UserSidebar';
+
+export function ConsultationDashboard() {
+  const router = useRouter();
+  const [sessions, setSessions] = useState<ChatSession[]>([]);
+  const [activeSessionId, setActiveSessionId] = useState<number>();
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [isSending, setIsSending] = useState(false);
+  const [isLoadingSessions, setIsLoadingSessions] = useState(false);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+
+  useEffect(() => {
+    async function bootstrap() {
+      try {
+        const me = await getMe();
+
+        if (me.role === 'ADMIN') {
+          router.replace('/admin');
+          return;
+        }
+
+        await refreshSessions();
+      } catch {
+        localStorage.removeItem('accessToken');
+        router.replace('/login');
+      }
+    }
+
+    void bootstrap();
+  }, [router]);
+
+  async function refreshSessions() {
+    setIsLoadingSessions(true);
+    try {
+      const nextSessions = await listChatSessions();
+      setSessions(nextSessions);
+    } catch (requestError) {
+      setError(getRequestErrorMessage(requestError, 'Không thể tải lịch sử.'));
+    } finally {
+      setIsLoadingSessions(false);
+    }
+  }
+
+  function handleNewChat() {
+    setActiveSessionId(undefined);
+    setMessages([]);
+    setError(null);
+  }
+
+  async function handleOpenHistory() {
+    setIsHistoryOpen(true);
+    await refreshSessions();
+  }
+
+  async function handleSelectSession(sessionId: number) {
+    if (sessionId === activeSessionId) {
+      return;
+    }
+
+    setError(null);
+    setIsLoadingMessages(true);
+    try {
+      const sessionMessages = await listChatMessages(sessionId);
+      setActiveSessionId(sessionId);
+      setMessages(sessionMessages);
+    } catch (requestError) {
+      setError(
+        getRequestErrorMessage(requestError, 'Không thể tải phiên chat.'),
+      );
+    } finally {
+      setIsLoadingMessages(false);
+    }
+  }
+
+  async function handleSend(content: string) {
+    setError(null);
+    setIsSending(true);
+    const optimisticMessageId = -Date.now();
+    const optimisticMessage: ChatMessage = {
+      id: optimisticMessageId,
+      sessionId: activeSessionId ?? 0,
+      userId: null,
+      role: 'USER',
+      content,
+      metadata: null,
+      createdAt: new Date().toISOString(),
+    };
+
+    setMessages((current) => [...current, optimisticMessage]);
+    try {
+      const response = await sendChatMessage(content, activeSessionId);
+      setActiveSessionId(response.session.id);
+      setMessages((current) => [
+        ...current.filter((message) => message.id !== optimisticMessageId),
+        response.userMessage,
+        response.assistantMessage,
+      ]);
+      await refreshSessions();
+    } catch (requestError) {
+      setMessages((current) =>
+        current.filter((message) => message.id !== optimisticMessageId),
+      );
+      setError(
+        getRequestErrorMessage(requestError, 'Không thể gửi tin nhắn.'),
+      );
+    } finally {
+      setIsSending(false);
+    }
+  }
+
+  return (
+    <UserAppShell
+      sidebar={
+        <UserSidebar
+          onNewChat={handleNewChat}
+          onOpenHistory={handleOpenHistory}
+        />
+      }
+    >
+      <ConsultationHeader
+        onNewChat={handleNewChat}
+        onOpenHistory={handleOpenHistory}
+      />
+      <ConsultationChat
+        messages={messages}
+        error={error}
+        isSending={isSending}
+        isLoadingMessages={isLoadingMessages}
+        onSend={handleSend}
+      />
+      <ChatHistoryDialog
+        isOpen={isHistoryOpen}
+        sessions={sessions}
+        activeSessionId={activeSessionId}
+        isLoading={isLoadingSessions}
+        onClose={() => setIsHistoryOpen(false)}
+        onSelectSession={handleSelectSession}
+      />
+    </UserAppShell>
+  );
+}
+
+function getRequestErrorMessage(error: unknown, fallback: string) {
+  return error instanceof Error ? error.message : fallback;
+}

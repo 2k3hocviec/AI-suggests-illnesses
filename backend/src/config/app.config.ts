@@ -2,6 +2,7 @@ export default () => ({
   port: Number(process.env.PORT ?? 3000),
   nodeEnv: process.env.NODE_ENV ?? "development",
   aiServiceUrl: process.env.AI_SERVICE_URL ?? "http://localhost:5678",
+  aiServiceTimeoutMs: Number(process.env.AI_SERVICE_TIMEOUT_MS ?? 60000),
   geminiApiKey: process.env.GEMINI_API_KEY,
   geminiModel: process.env.GEMINI_MODEL ?? "gemini-3.1-flash-lite",
   databaseUrl: process.env.DATABASE_URL,

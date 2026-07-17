@@ -266,34 +266,41 @@ export class ChatService {
       "PYTHON_API_ENDPOINT",
       "/api/extract-symptoms",
     );
+    const timeoutMs =
+      this.config.get<number>("aiServiceTimeoutMs") ??
+      Number(this.config.get<string>("AI_SERVICE_TIMEOUT_MS") ?? 60000);
 
     try {
       const controller = new AbortController();
-      const timeout = setTimeout(() => controller.abort(), 8000);
-      const response = await fetch(`${modelUrl}${endpoint}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ text: content }),
-        signal: controller.signal,
-      });
-      clearTimeout(timeout);
+      const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
-      if (!response.ok) {
-        throw new ServiceUnavailableException("Model chưa sẵn sàng");
+      try {
+        const response = await fetch(`${modelUrl}${endpoint}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ text: content }),
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new ServiceUnavailableException("Model chưa sẵn sàng");
+        }
+        const analysis = (await response.json()) as ModelAnalyzeResponse;
+        const nerAnalysis = {
+          ...analysis,
+          analysisSource: "NER" as const,
+        };
+
+        if (!this.hasConfidentSymptoms(nerAnalysis)) {
+          return this.analyzeWithGemini(content);
+        }
+
+        return nerAnalysis;
+      } finally {
+        clearTimeout(timeout);
       }
-      const analysis = (await response.json()) as ModelAnalyzeResponse;
-      const nerAnalysis = {
-        ...analysis,
-        analysisSource: "NER" as const,
-      };
-
-      if (!this.hasConfidentSymptoms(nerAnalysis)) {
-        return this.analyzeWithGemini(content);
-      }
-
-      return nerAnalysis;
     } catch (error) {
       console.error("Không gọi được model NER, chuyển sang Gemini:", error);
       return this.analyzeWithGemini(content);

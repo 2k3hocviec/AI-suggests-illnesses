@@ -293,6 +293,10 @@ export class ChatService {
           analysisSource: "NER" as const,
         };
 
+        if (this.isConversationalModelReply(nerAnalysis)) {
+          return nerAnalysis;
+        }
+
         if (!this.hasConfidentSymptoms(nerAnalysis)) {
           return this.analyzeWithGemini(content);
         }
@@ -392,6 +396,20 @@ export class ChatService {
     return (
       analysis.symptoms.some((symptom) => symptom.confidence >= 0.5) &&
       analysis.specialties.length > 0
+    );
+  }
+
+  private isConversationalModelReply(analysis: ModelAnalyzeResponse) {
+    if (analysis.symptoms.length || analysis.specialties.length) {
+      return false;
+    }
+
+    const message = this.normalize(analysis.message);
+    return (
+      message.includes("xin chao") ||
+      message.includes("rat vui duoc ho tro") ||
+      message.includes("toi ho tro goi y chuyen khoa") ||
+      message.includes("tam biet")
     );
   }
 

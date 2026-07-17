@@ -121,8 +121,8 @@ export class AuthController {
   ) {
     response.cookie(this.getRefreshCookieName(), refreshToken, {
       httpOnly: true,
-      secure: this.config.get<string>('nodeEnv') === 'production',
-      sameSite: 'lax',
+      secure: this.isProduction(),
+      sameSite: this.isProduction() ? 'none' : 'lax',
       expires,
       path: '/api/v1/auth',
     });
@@ -131,8 +131,8 @@ export class AuthController {
   private clearRefreshCookie(response: Response) {
     response.clearCookie(this.getRefreshCookieName(), {
       httpOnly: true,
-      secure: this.config.get<string>('nodeEnv') === 'production',
-      sameSite: 'lax',
+      secure: this.isProduction(),
+      sameSite: this.isProduction() ? 'none' : 'lax',
       path: '/api/v1/auth',
     });
   }
@@ -144,6 +144,10 @@ export class AuthController {
 
   private getRefreshCookieName() {
     return this.config.get<string>('refreshTokenCookieName', 'refreshToken');
+  }
+
+  private isProduction() {
+    return this.config.get<string>('nodeEnv') === 'production';
   }
 
   private getRequestContext(request: Request) {

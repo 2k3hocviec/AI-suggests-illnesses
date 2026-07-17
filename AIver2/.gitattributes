@@ -1,0 +1,2 @@
+output/medical-ner-model/*.safetensors filter=lfs diff=lfs merge=lfs -text
+output/medical-ner-model/*.bin filter=lfs diff=lfs merge=lfs -text

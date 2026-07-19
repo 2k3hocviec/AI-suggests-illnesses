@@ -5,6 +5,10 @@ import re
 import unicodedata
 from pathlib import Path
 
+os.environ.setdefault("OMP_NUM_THREADS", "1")
+os.environ.setdefault("MKL_NUM_THREADS", "1")
+os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+
 from fastapi import FastAPI, HTTPException  # type: ignore
 from fastapi.middleware.cors import CORSMiddleware  # type: ignore
 from pydantic import BaseModel  # type: ignore
@@ -15,7 +19,7 @@ from inference import extract_specialty_symptoms
 
 # Sử dụng đường dẫn tuyệt đối để đảm bảo load được model từ bất kỳ đâu
 MODEL_PATH = str(Path(__file__).parent / "output" / "medical-ner-model")
-PORT = 5678
+PORT = int(os.getenv("PORT", "5678"))
 
 app = FastAPI(title="Medical Specialty NER API")
 app.add_middleware(

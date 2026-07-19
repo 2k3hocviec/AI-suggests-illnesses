@@ -2,7 +2,6 @@
 
 import os
 import re
-import time
 import unicodedata
 from pathlib import Path
 
@@ -16,8 +15,7 @@ from inference import extract_specialty_symptoms
 
 # Sử dụng đường dẫn tuyệt đối để đảm bảo load được model từ bất kỳ đâu
 MODEL_PATH = str(Path(__file__).parent / "output" / "medical-ner-model")
-PORT = int(os.getenv("PORT", "5678"))
-MODEL_WARMUP_TEXT = os.getenv("MODEL_WARMUP_TEXT", "Toi bi dau dau va sot cao")
+PORT = 5678
 
 app = FastAPI(title="Medical Specialty NER API")
 app.add_middleware(
@@ -29,14 +27,6 @@ app.add_middleware(
 )
 
 ner_pipeline = None
-
-
-@app.middleware("http")
-async def add_process_time_header(request, call_next):
-    start_time = time.perf_counter()
-    response = await call_next(request)
-    response.headers["X-Process-Time"] = f"{time.perf_counter() - start_time:.4f}"
-    return response
 
 
 class SymptomRequest(BaseModel):
@@ -134,12 +124,6 @@ async def load_model():
             aggregation_strategy="simple",
         )
         print(f"[AI Service] ✅ Model đã load thành công từ: {MODEL_PATH}")
-        warmup_started = time.perf_counter()
-        ner_pipeline(MODEL_WARMUP_TEXT)
-        print(
-            "[AI Service] Warm-up inference hoan tat trong "
-            f"{time.perf_counter() - warmup_started:.3f}s"
-        )
     except FileNotFoundError as e:
         print(f"[AI Service] ❌ Lỗi: File không tìm thấy - {e}")
     except Exception as error:

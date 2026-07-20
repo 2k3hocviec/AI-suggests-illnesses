@@ -18,7 +18,8 @@ from inference import extract_specialty_symptoms
 
 
 # Sử dụng đường dẫn tuyệt đối để đảm bảo load được model từ bất kỳ đâu
-MODEL_PATH = str(Path(__file__).parent / "output" / "medical-ner-model")
+DEFAULT_MODEL_PATH = str(Path(__file__).parent / "output" / "medical-ner-model")
+MODEL_PATH = os.getenv("MODEL_PATH", DEFAULT_MODEL_PATH)
 PORT = int(os.getenv("PORT", "5678"))
 
 app = FastAPI(title="Medical Specialty NER API")
@@ -31,6 +32,15 @@ app.add_middleware(
 )
 
 ner_pipeline = None
+
+
+def is_local_model_path(model_path: str) -> bool:
+    """Return True for filesystem paths, False for Hugging Face repo ids."""
+    return (
+        os.path.isabs(model_path)
+        or model_path.startswith((".", "\\"))
+        or ":" in model_path
+    )
 
 
 class SymptomRequest(BaseModel):
@@ -115,7 +125,7 @@ async def load_model():
 
     print(f"[AI Service] Đang load model từ: {MODEL_PATH}")
 
-    if not os.path.exists(MODEL_PATH):
+    if is_local_model_path(MODEL_PATH) and not os.path.exists(MODEL_PATH):
         print(f"[AI Service] ❌ Model không tìm thấy tại: {MODEL_PATH}")
         print(f"[AI Service] Các file hiện tại: {os.listdir(os.path.dirname(MODEL_PATH)) if os.path.exists(os.path.dirname(MODEL_PATH)) else 'Folder không tồn tại'}")
         return
@@ -143,7 +153,8 @@ async def health_check():
         "status": "ok" if ner_pipeline else "degraded",
         "model_loaded": ner_pipeline is not None,
         "model_path": MODEL_PATH,
-        "model_exists": os.path.exists(MODEL_PATH),
+        "model_source": "local" if is_local_model_path(MODEL_PATH) else "huggingface",
+        "model_exists": os.path.exists(MODEL_PATH) if is_local_model_path(MODEL_PATH) else None,
     }
 
 

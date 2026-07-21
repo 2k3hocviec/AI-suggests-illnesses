@@ -16,16 +16,20 @@ const welcomeMessage: ThreadMessage = {
 interface ConsultationChatProps {
   messages: ChatMessage[];
   error?: string | null;
+  notice?: string | null;
   isSending?: boolean;
   isLoadingMessages?: boolean;
+  disabled?: boolean;
   onSend: (message: string) => Promise<void> | void;
 }
 
 export function ConsultationChat({
   messages,
   error,
+  notice,
   isSending = false,
   isLoadingMessages = false,
+  disabled = false,
   onSend,
 }: ConsultationChatProps) {
   const threadMessages = useMemo<ThreadMessage[]>(
@@ -53,7 +57,15 @@ export function ConsultationChat({
           {error}
         </p>
       ) : null}
-      <ChatComposer onSend={onSend} disabled={isSending || isLoadingMessages} />
+      {notice ? (
+        <p className="mx-auto w-full max-w-5xl px-4 pb-2 text-center text-sm font-medium text-slate-600 lg:px-10">
+          {notice}
+        </p>
+      ) : null}
+      <ChatComposer
+        onSend={onSend}
+        disabled={disabled || isSending || isLoadingMessages}
+      />
     </>
   );
 }

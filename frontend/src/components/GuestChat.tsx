@@ -6,14 +6,22 @@ import { useState } from "react";
 import { ChatMessage, sendGuestChatMessage } from "@/lib/chat-api";
 import { ConsultationChat } from "./dashboard/ConsultationChat";
 
+const MAX_GUEST_REQUESTS = 5;
+
 export function GuestChat() {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);
+  const [requestCount, setRequestCount] = useState(0);
 
   async function handleSend(content: string) {
+    if (requestCount >= MAX_GUEST_REQUESTS) {
+      return;
+    }
+
     setError(null);
     setIsSending(true);
+    setRequestCount((current) => current + 1);
 
     const optimisticMessageId = -Date.now();
     const optimisticMessage: ChatMessage = {
@@ -105,12 +113,18 @@ export function GuestChat() {
             </div>
 
             <div className="flex min-h-0 flex-1 flex-col bg-[#fcfdfd]">
-              <ConsultationChat
-                messages={messages}
-                error={error}
-                isSending={isSending}
-                onSend={handleSend}
-              />
+            <ConsultationChat
+              messages={messages}
+              error={error}
+              notice={
+                requestCount >= MAX_GUEST_REQUESTS
+                  ? "Bạn đã sử dụng 5 lượt chat miễn phí. Hãy đăng nhập để tiếp tục hoặc tải lại trang để bắt đầu lại."
+                  : `Bạn còn ${MAX_GUEST_REQUESTS - requestCount} lượt chat miễn phí trong lần truy cập này.`
+              }
+              isSending={isSending}
+              disabled={requestCount >= MAX_GUEST_REQUESTS}
+              onSend={handleSend}
+            />
             </div>
           </div>
         </div>

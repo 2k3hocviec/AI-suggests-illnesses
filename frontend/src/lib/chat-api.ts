@@ -70,6 +70,19 @@ export interface ChatSession {
   };
 }
 
+export interface ChatAnalysis {
+  symptoms: Array<{
+    name: string;
+    confidence: number;
+    specialty_code: string;
+  }>;
+  specialties: string[];
+  intent: ChatIntent;
+  action: ChatAction;
+  recommendedSpecialty: ChatSpecialty | null;
+  recommendedSpecialties: ChatSpecialtyWithDoctors[];
+}
+
 export interface SendChatMessageResponse {
   session: {
     id: number;
@@ -77,18 +90,14 @@ export interface SendChatMessageResponse {
   };
   userMessage: ChatMessage;
   assistantMessage: ChatMessage;
-  analysis: {
-    symptoms: Array<{
-      name: string;
-      confidence: number;
-      specialty_code: string;
-    }>;
-    specialties: string[];
-    intent: ChatIntent;
-    action: ChatAction;
-    recommendedSpecialty: ChatSpecialty | null;
-    recommendedSpecialties: ChatSpecialtyWithDoctors[];
-  };
+  analysis: ChatAnalysis;
+}
+
+export interface GuestChatResponse {
+  session: null;
+  userMessage: ChatMessage;
+  assistantMessage: ChatMessage;
+  analysis: ChatAnalysis;
 }
 
 export function sendChatMessage(message: string, sessionId?: number) {
@@ -98,6 +107,13 @@ export function sendChatMessage(message: string, sessionId?: number) {
       message,
       sessionId,
     },
+  });
+}
+
+export function sendGuestChatMessage(message: string) {
+  return apiRequest<GuestChatResponse>('/chat/guest-messages', {
+    method: 'POST',
+    json: { message },
   });
 }
 

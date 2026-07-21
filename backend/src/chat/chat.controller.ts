@@ -39,3 +39,13 @@ export class ChatController {
     return this.chatService.listMessages(user.id, sessionId);
   }
 }
+
+@Controller('chat')
+export class GuestChatController {
+  constructor(private readonly chatService: ChatService) {}
+
+  @Post('guest-messages')
+  sendGuestMessage(@Body() dto: SendChatMessageDto) {
+    return this.chatService.sendGuestMessage(dto);
+  }
+}

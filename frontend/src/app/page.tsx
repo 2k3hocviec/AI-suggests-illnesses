@@ -1,5 +1,5 @@
-import { redirect } from 'next/navigation';
+import { GuestChat } from '@/components/GuestChat';
 
 export default function HomePage() {
-  redirect('/login');
+  return <GuestChat />;
 }

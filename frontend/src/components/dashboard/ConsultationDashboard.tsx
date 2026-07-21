@@ -40,7 +40,7 @@ export function ConsultationDashboard() {
         await refreshSessions();
       } catch {
         localStorage.removeItem('accessToken');
-        router.replace('/login');
+        router.replace('/');
       }
     }
 

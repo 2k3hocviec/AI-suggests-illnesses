@@ -100,6 +100,14 @@ interface DoctorDistance {
   locationScore: number;
 }
 
+interface PreparedChatResponse {
+  analysis: ModelAnalyzeResponse;
+  hasEmergencySpecialty: boolean;
+  recommendedSpecialtiesWithDoctors: RecommendedSpecialtyWithDoctors[];
+  assistantContent: string;
+  primarySpecialty: RecommendedSpecialtyWithDoctors | undefined;
+}
+
 @Injectable()
 export class ChatService {
   constructor(
@@ -126,27 +134,14 @@ export class ChatService {
       },
     });
 
-    const analysis = await this.analyze(content);
-    const isMedicalRequest = analysis.action === "FIND_DOCTORS";
-    const hasEmergencySpecialty =
-      isMedicalRequest && this.hasEmergencySpecialty(analysis);
-    const recommendedSpecialties = isMedicalRequest
-      ? await this.findRecommendedSpecialties(analysis)
-      : [];
-    const recommendedSpecialtiesWithDoctors = !isMedicalRequest
-      ? []
-      : hasEmergencySpecialty
-        ? this.withoutDoctorSuggestions(recommendedSpecialties)
-        : await this.attachDoctorsToSpecialties(
-            userId,
-            recommendedSpecialties,
-            analysis,
-          );
-    const assistantContent = this.buildAssistantReply(
+    const prepared = await this.prepareChatResponse(content, userId);
+    const {
       analysis,
+      hasEmergencySpecialty,
       recommendedSpecialtiesWithDoctors,
-    );
-    const [primarySpecialty] = recommendedSpecialtiesWithDoctors;
+      assistantContent,
+      primarySpecialty,
+    } = prepared;
 
     const assistantMessage = await this.prisma.chatMessage.create({
       data: {
@@ -201,6 +196,104 @@ export class ChatService {
   /*
   Lấy danh sách message của một phiên chat.
   */
+  async sendGuestMessage(dto: SendChatMessageDto) {
+    const content = dto.message.trim();
+    if (!content) {
+      throw new BadRequestException("Ná»™i dung tin nháº¯n khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng");
+    }
+
+    const prepared = await this.prepareChatResponse(content);
+    const {
+      analysis,
+      hasEmergencySpecialty,
+      recommendedSpecialtiesWithDoctors,
+      assistantContent,
+      primarySpecialty,
+    } = prepared;
+
+    // Guest requests are intentionally logged without creating a chat session
+    // or chat messages. The nullable fields identify this as a guest request.
+    await this.prisma.consultationHistory.create({
+      data: {
+        originalMessage: content,
+        extractedSymptoms:
+          analysis.symptoms as unknown as Prisma.InputJsonValue,
+        recommendedSpecialtyId: primarySpecialty?.id,
+        emergency: hasEmergencySpecialty,
+        emergencyLevel: hasEmergencySpecialty ? "EMERGENCY" : "NORMAL",
+        emergencyReasons: hasEmergencySpecialty
+          ? (analysis.symptoms as unknown as Prisma.InputJsonValue)
+          : undefined,
+      },
+    });
+
+    const createdAt = new Date().toISOString();
+    const userMessage = {
+      id: -Date.now(),
+      sessionId: 0,
+      userId: null,
+      role: ChatRole.USER,
+      content,
+      metadata: null,
+      createdAt,
+    };
+    const assistantMessage = {
+      id: -(Date.now() + 1),
+      sessionId: 0,
+      userId: null,
+      role: ChatRole.ASSISTANT,
+      content: assistantContent,
+      metadata: analysis as unknown as Prisma.JsonValue,
+      createdAt,
+    };
+
+    return {
+      session: null,
+      userMessage,
+      assistantMessage,
+      analysis: {
+        ...analysis,
+        recommendedSpecialty: primarySpecialty ?? null,
+        recommendedSpecialties: recommendedSpecialtiesWithDoctors,
+      },
+    };
+  }
+
+  private async prepareChatResponse(
+    content: string,
+    userId?: number,
+  ): Promise<PreparedChatResponse> {
+    const analysis = await this.analyze(content);
+    const isMedicalRequest = analysis.action === "FIND_DOCTORS";
+    const hasEmergencySpecialty =
+      isMedicalRequest && this.hasEmergencySpecialty(analysis);
+    const recommendedSpecialties = isMedicalRequest
+      ? await this.findRecommendedSpecialties(analysis)
+      : [];
+    const recommendedSpecialtiesWithDoctors = !isMedicalRequest
+      ? []
+      : hasEmergencySpecialty
+        ? this.withoutDoctorSuggestions(recommendedSpecialties)
+        : await this.attachDoctorsToSpecialties(
+            userId,
+            recommendedSpecialties,
+            analysis,
+          );
+    const assistantContent = this.buildAssistantReply(
+      analysis,
+      recommendedSpecialtiesWithDoctors,
+    );
+    const [primarySpecialty] = recommendedSpecialtiesWithDoctors;
+
+    return {
+      analysis,
+      hasEmergencySpecialty,
+      recommendedSpecialtiesWithDoctors,
+      assistantContent,
+      primarySpecialty,
+    };
+  }
+
   async listSessions(userId: number) {
     return this.prisma.chatSession.findMany({
       where: {
@@ -622,7 +715,7 @@ ${content}`;
   Map chuyên khoa để lấy các bác sĩ tương ứng mà người nhập triệu chứng vào.
   */
   private async attachDoctorsToSpecialties(
-    userId: number,
+    userId: number | undefined,
     specialties: RecommendedSpecialty[],
     analysis: ModelAnalyzeResponse,
   ): Promise<RecommendedSpecialtyWithDoctors[]> {
@@ -786,7 +879,11 @@ ${content}`;
     }));
   }
 
-  private async findUserLocation(userId: number) {
+  private async findUserLocation(userId: number | undefined) {
+    if (!userId) {
+      return null;
+    }
+
     const user = await this.prisma.user.findUnique({
       where: {
         id: userId,

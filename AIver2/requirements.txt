@@ -4,3 +4,6 @@ transformers
 torch
 sentencepiece
 pydantic
+numpy
+seqeval
+accelerate

@@ -4,10 +4,20 @@ export interface ModelSymptom {
   specialty_code: string;
 }
 
+export type ModelIntent =
+  | "SYMPTOM"
+  | "GREETING"
+  | "THANKS"
+  | "GOODBYE"
+  | "UNKNOWN";
+
+export type ModelAction = "FIND_DOCTORS" | "REPLY" | "CLARIFY";
+
 export interface ModelAnalyzeResponse {
   symptoms: ModelSymptom[];
   specialties: string[];
-  message: string;
+  intent: ModelIntent;
+  action: ModelAction;
   analysisSource?: 'NER' | 'Gemini';
 }
 

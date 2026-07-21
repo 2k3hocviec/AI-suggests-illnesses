@@ -42,6 +42,8 @@ data/raw/
 data/cache/
 data/train_processed.json
 data/val_processed.json
+data/train_multitask.json
+data/val_multitask.json
 
 # Keep the source dataset trackable so the project can be retrained.
 !data/dataset.json

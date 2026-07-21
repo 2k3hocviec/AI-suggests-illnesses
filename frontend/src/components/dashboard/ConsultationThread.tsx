@@ -21,17 +21,25 @@ export function ConsultationThread({
   isThinking = false,
   isLoadingMessages = false,
 }: ConsultationThreadProps) {
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const threadRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({
+    const thread = threadRef.current;
+    if (!thread) {
+      return;
+    }
+
+    thread.scrollTo({
+      top: thread.scrollHeight,
       behavior: 'smooth',
-      block: 'end',
     });
   }, [messages, isThinking]);
 
   return (
-    <section className="min-h-0 flex-1 overflow-y-auto px-4 py-5 lg:px-10">
+    <section
+      ref={threadRef}
+      className="chat-scrollbar min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5 lg:px-10"
+    >
       <div className="mx-auto flex max-w-5xl flex-col gap-5">
         {isLoadingMessages ? (
           <div className="rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-sm text-slate-600 shadow-sm">
@@ -85,7 +93,6 @@ export function ConsultationThread({
             </div>
           </div>
         ) : null}
-        <div ref={bottomRef} />
       </div>
     </section>
   );

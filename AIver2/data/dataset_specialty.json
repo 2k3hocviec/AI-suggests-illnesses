@@ -18,6 +18,24 @@
     "intent": "SYMPTOM"
   },
   {
+    "text": "Tôi hay bị đau nửa đầu, buồn nôn khi ra nắng",
+    "entities": [
+      {
+        "start": 11,
+        "end": 22,
+        "label": "NEUROLOGY",
+        "text": "đau nửa đầu"
+      },
+      {
+        "start": 24,
+        "end": 32,
+        "label": "GASTROENTEROLOGY",
+        "text": "buồn nôn"
+      }
+    ],
+    "intent": "SYMPTOM"
+  },
+  {
     "text": "Mấy ngày nay tôi bị sổ mũi, hắt hơi liên tục và đau họng",
     "entities": [
       {
@@ -137,24 +155,7 @@
     ],
     "intent": "SYMPTOM"
   },
-  {
-    "text": "Tôi hay bị đau nửa đầu, buồn nôn khi ra nắng",
-    "entities": [
-      {
-        "start": 11,
-        "end": 22,
-        "label": "NEUROLOGY",
-        "text": "đau nửa đầu"
-      },
-      {
-        "start": 24,
-        "end": 32,
-        "label": "GASTROENTEROLOGY",
-        "text": "buồn nôn"
-      }
-    ],
-    "intent": "SYMPTOM"
-  },
+
   {
     "text": "Răng tôi bị đau nhức, sưng nướu và chảy máu",
     "entities": [
@@ -545,30 +546,7 @@
     ],
     "intent": "SYMPTOM"
   },
-  {
-    "text": "Tôi bị chóng mặt, mất thăng bằng và buồn nôn khi đứng dậy",
-    "entities": [
-      {
-        "start": 7,
-        "end": 16,
-        "label": "NEUROLOGY",
-        "text": "chóng mặt"
-      },
-      {
-        "start": 18,
-        "end": 32,
-        "label": "NEUROLOGY",
-        "text": "mất thăng bằng"
-      },
-      {
-        "start": 36,
-        "end": 44,
-        "label": "GASTROENTEROLOGY",
-        "text": "buồn nôn"
-      }
-    ],
-    "intent": "SYMPTOM"
-  },
+
   {
     "text": "Khớp gối tôi sưng đau, cứng khớp vào buổi sáng",
     "entities": [
@@ -1109,30 +1087,7 @@
     ],
     "intent": "SYMPTOM"
   },
-  {
-    "text": "Chân tay em bị tê bì râm ran như kiến bò và vết thương rất lâu lành",
-    "entities": [
-      {
-        "start": 15,
-        "end": 20,
-        "label": "NEUROLOGY",
-        "text": "tê bì"
-      },
-      {
-        "start": 21,
-        "end": 40,
-        "label": "ORTHOPEDICS",
-        "text": "râm ran như kiến bò"
-      },
-      {
-        "start": 44,
-        "end": 67,
-        "label": "DERMATOLOGY",
-        "text": "vết thương rất lâu lành"
-      }
-    ],
-    "intent": "SYMPTOM"
-  },
+
   {
     "text": "Tôi thường xuyên thèm ăn đồ ngọt mắt nhìn mờ đi nhiều so với trước",
     "entities": [
@@ -1199,36 +1154,7 @@
     ],
     "intent": "SYMPTOM"
   },
-  {
-    "text": "Cơ thể lúc nào cũng lờ đờ sợ lạnh táo bón và trí nhớ suy giảm nhiều",
-    "entities": [
-      {
-        "start": 20,
-        "end": 25,
-        "label": "NEUROLOGY",
-        "text": "lờ đờ"
-      },
-      {
-        "start": 26,
-        "end": 33,
-        "label": "NEUROLOGY",
-        "text": "sợ lạnh"
-      },
-      {
-        "start": 34,
-        "end": 41,
-        "label": "GASTROENTEROLOGY",
-        "text": "táo bón"
-      },
-      {
-        "start": 45,
-        "end": 61,
-        "label": "NEUROLOGY",
-        "text": "trí nhớ suy giảm"
-      }
-    ],
-    "intent": "SYMPTOM"
-  },
+
   {
     "text": "Em đi khám bị hạ đường huyết đột ngột vã mồ hôi chân tay bủn rủn",
     "entities": [
@@ -47231,24 +47157,7 @@
     ],
     "intent": "SYMPTOM"
   },
-  {
-    "text": "Tôi vừa bị đau đầu kinh niên vừa bị chậm kinh không rõ nguyên nhân.",
-    "entities": [
-      {
-        "start": 11,
-        "end": 28,
-        "label": "NEUROLOGY",
-        "text": "đau đầu kinh niên"
-      },
-      {
-        "start": 36,
-        "end": 45,
-        "label": "OB_GYN",
-        "text": "chậm kinh"
-      }
-    ],
-    "intent": "SYMPTOM"
-  },
+
   {
     "text": "Cơ thể lúc nào cũng ngứa vùng kín kèm theo hiện tượng ho sặc sụa.",
     "entities": [
@@ -47861,24 +47770,7 @@
     ],
     "intent": "SYMPTOM"
   },
-  {
-    "text": "Cứ đến tối là tôi lại đau nửa đầu và bị thở khò khè dữ dội.",
-    "entities": [
-      {
-        "start": 22,
-        "end": 33,
-        "label": "NEUROLOGY",
-        "text": "đau nửa đầu"
-      },
-      {
-        "start": 40,
-        "end": 51,
-        "label": "PEDIATRICS",
-        "text": "thở khò khè"
-      }
-    ],
-    "intent": "SYMPTOM"
-  },
+
   {
     "text": "Dạo gần đây tôi thường xuyên bong tróc da đôi khi thấy lười ăn.",
     "entities": [
@@ -47987,42 +47879,7 @@
     ],
     "intent": "SYMPTOM"
   },
-  {
-    "text": "Người bệnh có triệu chứng hoa mắt dẫn đến tình trạng ho khục khọc.",
-    "entities": [
-      {
-        "start": 26,
-        "end": 33,
-        "label": "NEUROLOGY",
-        "text": "hoa mắt"
-      },
-      {
-        "start": 53,
-        "end": 65,
-        "label": "RESPIRATORY",
-        "text": "ho khục khọc"
-      }
-    ],
-    "intent": "SYMPTOM"
-  },
-  {
-    "text": "Mấy ngày nay em cứ bị đau nửa đầu và lại còn ngứa vùng kín nữa.",
-    "entities": [
-      {
-        "start": 22,
-        "end": 33,
-        "label": "NEUROLOGY",
-        "text": "đau nửa đầu"
-      },
-      {
-        "start": 45,
-        "end": 58,
-        "label": "OB_GYN",
-        "text": "ngứa vùng kín"
-      }
-    ],
-    "intent": "SYMPTOM"
-  },
+
   {
     "text": "Cơ thể lúc nào cũng chuột rút kèm theo hiện tượng hoa mắt.",
     "entities": [
@@ -48041,24 +47898,7 @@
     ],
     "intent": "SYMPTOM"
   },
-  {
-    "text": "Em cảm thấy mình bị chân tay bủn rủn song song đó là mệt mỏi rất khó chịu.",
-    "entities": [
-      {
-        "start": 20,
-        "end": 36,
-        "label": "NEUROLOGY",
-        "text": "chân tay bủn rủn"
-      },
-      {
-        "start": 53,
-        "end": 60,
-        "label": "GENERAL_MEDICINE",
-        "text": "mệt mỏi"
-      }
-    ],
-    "intent": "SYMPTOM"
-  },
+
   {
     "text": "Tôi bị tiêu chảy kèm theo ho sặc sụa từ hôm qua.",
     "entities": [
@@ -48617,24 +48457,7 @@
     ],
     "intent": "SYMPTOM"
   },
-  {
-    "text": "Bác sĩ ơi, cháu nhà em bị đau nửa đầu rồi cứ mỏi cơ suốt đêm.",
-    "entities": [
-      {
-        "start": 26,
-        "end": 37,
-        "label": "NEUROLOGY",
-        "text": "đau nửa đầu"
-      },
-      {
-        "start": 45,
-        "end": 51,
-        "label": "ORTHOPEDICS",
-        "text": "mỏi cơ"
-      }
-    ],
-    "intent": "SYMPTOM"
-  },
+
   {
     "text": "Hiện tại tôi đang bị đầy hơi cộng thêm việc suy nghĩ tiêu cực mấy tuần nay.",
     "entities": [
@@ -48816,4008 +48639,7 @@
     "intent": "SYMPTOM"
   },
   {
-    "text": "xin chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "xin chào nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: xin chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói xin chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, xin chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào bác sĩ",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào bác sĩ nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chào bác sĩ",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chào bác sĩ",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chào bác sĩ",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "hello",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "hello nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: hello",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói hello",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, hello",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "hi bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "hi bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: hi bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói hi bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, hi bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "alo",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "alo nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: alo",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói alo",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, alo",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào buổi sáng",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào buổi sáng nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chào buổi sáng",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chào buổi sáng",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chào buổi sáng",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào buổi tối",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào buổi tối nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chào buổi tối",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chào buổi tối",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chào buổi tối",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "rất vui được gặp bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "rất vui được gặp bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: rất vui được gặp bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói rất vui được gặp bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, rất vui được gặp bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "xin gửi lời chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "xin gửi lời chào nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: xin gửi lời chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói xin gửi lời chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, xin gửi lời chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "mình muốn chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "mình muốn chào bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: mình muốn chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói mình muốn chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, mình muốn chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "cho mình chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "cho mình chào bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cho mình chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cho mình chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cho mình chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "xin phép chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "xin phép chào bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: xin phép chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói xin phép chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, xin phép chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào mọi người",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào mọi người nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chào mọi người",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chào mọi người",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chào mọi người",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào trợ lý",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào trợ lý nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chào trợ lý",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chào trợ lý",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chào trợ lý",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào chuyên gia",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào chuyên gia nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chào chuyên gia",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chào chuyên gia",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chào chuyên gia",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào hệ thống",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào hệ thống nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chào hệ thống",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chào hệ thống",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chào hệ thống",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "xin chào trợ lý y tế",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "xin chào trợ lý y tế nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: xin chào trợ lý y tế",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói xin chào trợ lý y tế",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, xin chào trợ lý y tế",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào bạn nhé nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chào bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chào bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chào bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "xin chào nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "xin chào nhé nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: xin chào nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói xin chào nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, xin chào nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "mình chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "mình chào bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: mình chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói mình chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, mình chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "tôi chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "tôi chào bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "gửi lời chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "gửi lời chào bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: gửi lời chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói gửi lời chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, gửi lời chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "xin được chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "xin được chào bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: xin được chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói xin được chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, xin được chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào bạn hôm nay",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào bạn hôm nay nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chào bạn hôm nay",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chào bạn hôm nay",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chào bạn hôm nay",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào bác sĩ ạ",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào bác sĩ ạ nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chào bác sĩ ạ",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chào bác sĩ ạ",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chào bác sĩ ạ",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "hello bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "hello bạn nhé nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: hello bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói hello bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, hello bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "hi bác sĩ",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "hi bác sĩ nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: hi bác sĩ",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói hi bác sĩ",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, hi bác sĩ",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "alo bạn ơi",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "alo bạn ơi nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: alo bạn ơi",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói alo bạn ơi",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, alo bạn ơi",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "xin chào mọi người",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "xin chào mọi người nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: xin chào mọi người",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói xin chào mọi người",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, xin chào mọi người",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào buổi trưa",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào buổi trưa nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chào buổi trưa",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chào buổi trưa",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chào buổi trưa",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chúc bạn một ngày tốt lành",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chúc bạn một ngày tốt lành nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chúc bạn một ngày tốt lành",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chúc bạn một ngày tốt lành",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chúc bạn một ngày tốt lành",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "mình đến chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "mình đến chào bạn nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: mình đến chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói mình đến chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, mình đến chào bạn",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "tôi muốn gửi lời chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "tôi muốn gửi lời chào nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi muốn gửi lời chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi muốn gửi lời chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi muốn gửi lời chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "bắt đầu bằng lời chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "bắt đầu bằng lời chào nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: bắt đầu bằng lời chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói bắt đầu bằng lời chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, bắt đầu bằng lời chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "cho tôi gửi lời chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "cho tôi gửi lời chào nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cho tôi gửi lời chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cho tôi gửi lời chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cho tôi gửi lời chào",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "xin chào người hỗ trợ",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "xin chào người hỗ trợ nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: xin chào người hỗ trợ",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói xin chào người hỗ trợ",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, xin chào người hỗ trợ",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào người bạn thông minh",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào người bạn thông minh nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chào người bạn thông minh",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chào người bạn thông minh",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chào người bạn thông minh",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "xin chào ứng dụng",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "xin chào ứng dụng nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: xin chào ứng dụng",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói xin chào ứng dụng",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, xin chào ứng dụng",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào trợ lý sức khỏe",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "chào trợ lý sức khỏe nhé",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chào trợ lý sức khỏe",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chào trợ lý sức khỏe",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chào trợ lý sức khỏe",
-    "intent": "GREETING",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "xin cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "xin cảm ơn nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: xin cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói xin cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, xin cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "rất cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "rất cảm ơn nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: rất cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói rất cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, rất cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn nhiều nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn nhiều nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn bạn nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn bạn nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn bạn nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "tôi biết ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "tôi biết ơn bạn nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi biết ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi biết ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi biết ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "thật sự cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "thật sự cảm ơn nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: thật sự cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói thật sự cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, thật sự cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn vì đã giúp tôi",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn vì đã giúp tôi nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn vì đã giúp tôi",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn vì đã giúp tôi",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn vì đã giúp tôi",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn sự hỗ trợ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn sự hỗ trợ nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn sự hỗ trợ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn sự hỗ trợ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn sự hỗ trợ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn sự giúp đỡ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn sự giúp đỡ nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn sự giúp đỡ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn sự giúp đỡ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn sự giúp đỡ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bác sĩ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bác sĩ nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn bác sĩ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn bác sĩ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn bác sĩ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn trợ lý",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn trợ lý nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn trợ lý",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn trợ lý",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn trợ lý",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn đã tư vấn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn đã tư vấn nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn bạn đã tư vấn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn bạn đã tư vấn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn bạn đã tư vấn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn đã giải thích",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn đã giải thích nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn bạn đã giải thích",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn bạn đã giải thích",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn bạn đã giải thích",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn đã hướng dẫn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn đã hướng dẫn nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn bạn đã hướng dẫn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn bạn đã hướng dẫn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn bạn đã hướng dẫn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn đã giúp đỡ tôi",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn đã giúp đỡ tôi nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn bạn đã giúp đỡ tôi",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn bạn đã giúp đỡ tôi",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn bạn đã giúp đỡ tôi",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "tôi rất cảm kích",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "tôi rất cảm kích nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi rất cảm kích",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi rất cảm kích",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi rất cảm kích",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "xin ghi nhận lời cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "xin ghi nhận lời cảm ơn nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: xin ghi nhận lời cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói xin ghi nhận lời cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, xin ghi nhận lời cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "mang ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "mang ơn bạn nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: mang ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói mang ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, mang ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "biết ơn sự giúp đỡ của bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "biết ơn sự giúp đỡ của bạn nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: biết ơn sự giúp đỡ của bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói biết ơn sự giúp đỡ của bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, biết ơn sự giúp đỡ của bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm kích sự hỗ trợ của bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm kích sự hỗ trợ của bạn nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm kích sự hỗ trợ của bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm kích sự hỗ trợ của bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm kích sự hỗ trợ của bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn rất nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn rất nhiều nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn bạn rất nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn bạn rất nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn bạn rất nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn thật nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn thật nhiều nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn bạn thật nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn bạn thật nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn bạn thật nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn vì lời khuyên",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn vì lời khuyên nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn vì lời khuyên",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn vì lời khuyên",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn vì lời khuyên",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn vì thông tin hữu ích",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn vì thông tin hữu ích nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn vì thông tin hữu ích",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn vì thông tin hữu ích",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn vì thông tin hữu ích",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn vì đã lắng nghe",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn vì đã lắng nghe nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn vì đã lắng nghe",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn vì đã lắng nghe",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn vì đã lắng nghe",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn vì đã trả lời",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn vì đã trả lời nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn vì đã trả lời",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn vì đã trả lời",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn vì đã trả lời",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn vì sự tận tình",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn vì sự tận tình nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn vì sự tận tình",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn vì sự tận tình",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn vì sự tận tình",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn đã quan tâm",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn đã quan tâm nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn bạn đã quan tâm",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn bạn đã quan tâm",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn bạn đã quan tâm",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn đã phản hồi",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn đã phản hồi nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn bạn đã phản hồi",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn bạn đã phản hồi",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn bạn đã phản hồi",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn đã hỗ trợ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bạn đã hỗ trợ nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn bạn đã hỗ trợ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn bạn đã hỗ trợ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn bạn đã hỗ trợ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bác sĩ rất nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cảm ơn bác sĩ rất nhiều nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cảm ơn bác sĩ rất nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cảm ơn bác sĩ rất nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cảm ơn bác sĩ rất nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "tôi xin cảm ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "tôi xin cảm ơn bạn nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi xin cảm ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi xin cảm ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi xin cảm ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cho tôi gửi lời cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "cho tôi gửi lời cảm ơn nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cho tôi gửi lời cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cho tôi gửi lời cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cho tôi gửi lời cảm ơn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "một lời cảm ơn chân thành",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "một lời cảm ơn chân thành nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: một lời cảm ơn chân thành",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói một lời cảm ơn chân thành",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, một lời cảm ơn chân thành",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "xin nhận lời cảm ơn của tôi",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "xin nhận lời cảm ơn của tôi nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: xin nhận lời cảm ơn của tôi",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói xin nhận lời cảm ơn của tôi",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, xin nhận lời cảm ơn của tôi",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "tôi trân trọng sự giúp đỡ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "tôi trân trọng sự giúp đỡ nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi trân trọng sự giúp đỡ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi trân trọng sự giúp đỡ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi trân trọng sự giúp đỡ",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "bạn đã giúp tôi rất nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "bạn đã giúp tôi rất nhiều nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: bạn đã giúp tôi rất nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói bạn đã giúp tôi rất nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, bạn đã giúp tôi rất nhiều",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "thật lòng cảm ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "thật lòng cảm ơn bạn nhé",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: thật lòng cảm ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói thật lòng cảm ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, thật lòng cảm ơn bạn",
-    "intent": "THANKS",
-    "entities": []
-  },
-  {
-    "text": "tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tạm biệt nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "bye",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "bye nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: bye",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói bye",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, bye",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "goodbye",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "goodbye nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: goodbye",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói goodbye",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, goodbye",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "hẹn gặp lại",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "hẹn gặp lại nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: hẹn gặp lại",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói hẹn gặp lại",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, hẹn gặp lại",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "chào tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "chào tạm biệt nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chào tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chào tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chào tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tôi đi đây",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tôi đi đây nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi đi đây",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi đi đây",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi đi đây",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "mình đi đây",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "mình đi đây nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: mình đi đây",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói mình đi đây",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, mình đi đây",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tôi sẽ quay lại sau",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tôi sẽ quay lại sau nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi sẽ quay lại sau",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi sẽ quay lại sau",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi sẽ quay lại sau",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "hẹn bạn lần sau",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "hẹn bạn lần sau nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: hẹn bạn lần sau",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói hẹn bạn lần sau",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, hẹn bạn lần sau",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "gặp lại sau nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "gặp lại sau nhé nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: gặp lại sau nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói gặp lại sau nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, gặp lại sau nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "chúc bạn sức khỏe",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "chúc bạn sức khỏe nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chúc bạn sức khỏe",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chúc bạn sức khỏe",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chúc bạn sức khỏe",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "chúc bạn một ngày tốt lành",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "chúc bạn một ngày tốt lành nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chúc bạn một ngày tốt lành",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chúc bạn một ngày tốt lành",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chúc bạn một ngày tốt lành",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "chúc bạn buổi tối vui vẻ",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "chúc bạn buổi tối vui vẻ nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chúc bạn buổi tối vui vẻ",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chúc bạn buổi tối vui vẻ",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chúc bạn buổi tối vui vẻ",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "chúc bạn buổi sáng tốt lành",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "chúc bạn buổi sáng tốt lành nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chúc bạn buổi sáng tốt lành",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chúc bạn buổi sáng tốt lành",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chúc bạn buổi sáng tốt lành",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tôi xin phép kết thúc",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tôi xin phép kết thúc nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi xin phép kết thúc",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi xin phép kết thúc",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi xin phép kết thúc",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "mình xin phép đi trước",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "mình xin phép đi trước nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: mình xin phép đi trước",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói mình xin phép đi trước",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, mình xin phép đi trước",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "đến lúc nói lời tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "đến lúc nói lời tạm biệt nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: đến lúc nói lời tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói đến lúc nói lời tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, đến lúc nói lời tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "hẹn gặp lại bác sĩ",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "hẹn gặp lại bác sĩ nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: hẹn gặp lại bác sĩ",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói hẹn gặp lại bác sĩ",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, hẹn gặp lại bác sĩ",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "hẹn gặp lại bạn",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "hẹn gặp lại bạn nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: hẹn gặp lại bạn",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói hẹn gặp lại bạn",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, hẹn gặp lại bạn",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "gặp lại bạn sau",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "gặp lại bạn sau nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: gặp lại bạn sau",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói gặp lại bạn sau",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, gặp lại bạn sau",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tôi sẽ liên hệ lại",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tôi sẽ liên hệ lại nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi sẽ liên hệ lại",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi sẽ liên hệ lại",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi sẽ liên hệ lại",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "mình sẽ quay lại",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "mình sẽ quay lại nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: mình sẽ quay lại",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói mình sẽ quay lại",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, mình sẽ quay lại",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "xin chào tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "xin chào tạm biệt nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: xin chào tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói xin chào tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, xin chào tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "bye bye",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "bye bye nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: bye bye",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói bye bye",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, bye bye",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "goodbye bạn nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "goodbye bạn nhé nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: goodbye bạn nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói goodbye bạn nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, goodbye bạn nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tạm biệt và cảm ơn",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tạm biệt và cảm ơn nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tạm biệt và cảm ơn",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tạm biệt và cảm ơn",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tạm biệt và cảm ơn",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tôi kết thúc cuộc trò chuyện",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tôi kết thúc cuộc trò chuyện nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi kết thúc cuộc trò chuyện",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi kết thúc cuộc trò chuyện",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi kết thúc cuộc trò chuyện",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "mình kết thúc ở đây",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "mình kết thúc ở đây nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: mình kết thúc ở đây",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói mình kết thúc ở đây",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, mình kết thúc ở đây",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "hẹn lần tư vấn tiếp theo",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "hẹn lần tư vấn tiếp theo nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: hẹn lần tư vấn tiếp theo",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói hẹn lần tư vấn tiếp theo",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, hẹn lần tư vấn tiếp theo",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tôi không cần hỏi thêm",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tôi không cần hỏi thêm nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi không cần hỏi thêm",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi không cần hỏi thêm",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi không cần hỏi thêm",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "chúc bạn luôn khỏe",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "chúc bạn luôn khỏe nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chúc bạn luôn khỏe",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chúc bạn luôn khỏe",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chúc bạn luôn khỏe",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "chúc bác sĩ nhiều sức khỏe",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "chúc bác sĩ nhiều sức khỏe nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: chúc bác sĩ nhiều sức khỏe",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói chúc bác sĩ nhiều sức khỏe",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, chúc bác sĩ nhiều sức khỏe",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "xin phép chào tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "xin phép chào tạm biệt nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: xin phép chào tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói xin phép chào tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, xin phép chào tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tôi xin chào tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tôi xin chào tạm biệt nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi xin chào tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi xin chào tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi xin chào tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "mình nói lời tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "mình nói lời tạm biệt nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: mình nói lời tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói mình nói lời tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, mình nói lời tạm biệt",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "hẹn gặp lại trong lần tới",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "hẹn gặp lại trong lần tới nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: hẹn gặp lại trong lần tới",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói hẹn gặp lại trong lần tới",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, hẹn gặp lại trong lần tới",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tạm biệt trợ lý",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tạm biệt trợ lý nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tạm biệt trợ lý",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tạm biệt trợ lý",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tạm biệt trợ lý",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tạm biệt bác sĩ",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tạm biệt bác sĩ nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tạm biệt bác sĩ",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tạm biệt bác sĩ",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tạm biệt bác sĩ",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tạm biệt bạn nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "tạm biệt bạn nhé nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tạm biệt bạn nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tạm biệt bạn nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tạm biệt bạn nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "gặp lại sau",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "gặp lại sau nhé",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: gặp lại sau",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói gặp lại sau",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, gặp lại sau",
-    "intent": "GOODBYE",
-    "entities": []
-  },
-  {
-    "text": "bạn là ai",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "bạn là ai nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: bạn là ai",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói bạn là ai",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, bạn là ai",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "bạn tên gì",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "bạn tên gì nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: bạn tên gì",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói bạn tên gì",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, bạn tên gì",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "thời tiết hôm nay thế nào",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "thời tiết hôm nay thế nào nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: thời tiết hôm nay thế nào",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói thời tiết hôm nay thế nào",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, thời tiết hôm nay thế nào",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "hôm nay là thứ mấy",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "hôm nay là thứ mấy nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: hôm nay là thứ mấy",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói hôm nay là thứ mấy",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, hôm nay là thứ mấy",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "kể cho tôi một câu chuyện",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "kể cho tôi một câu chuyện nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: kể cho tôi một câu chuyện",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói kể cho tôi một câu chuyện",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, kể cho tôi một câu chuyện",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "mở nhạc giúp tôi",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "mở nhạc giúp tôi nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: mở nhạc giúp tôi",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói mở nhạc giúp tôi",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, mở nhạc giúp tôi",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tôi muốn đặt đồ ăn",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tôi muốn đặt đồ ăn nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi muốn đặt đồ ăn",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi muốn đặt đồ ăn",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi muốn đặt đồ ăn",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "giá vé máy bay bao nhiêu",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "giá vé máy bay bao nhiêu nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: giá vé máy bay bao nhiêu",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói giá vé máy bay bao nhiêu",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, giá vé máy bay bao nhiêu",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tìm giúp tôi một bộ phim",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tìm giúp tôi một bộ phim nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tìm giúp tôi một bộ phim",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tìm giúp tôi một bộ phim",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tìm giúp tôi một bộ phim",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "bạn có thích đọc sách không",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "bạn có thích đọc sách không nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: bạn có thích đọc sách không",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói bạn có thích đọc sách không",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, bạn có thích đọc sách không",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "ai phát minh ra điện thoại",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "ai phát minh ra điện thoại nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: ai phát minh ra điện thoại",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói ai phát minh ra điện thoại",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, ai phát minh ra điện thoại",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "cho tôi biết thủ đô nước Pháp",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "cho tôi biết thủ đô nước Pháp nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cho tôi biết thủ đô nước Pháp",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cho tôi biết thủ đô nước Pháp",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cho tôi biết thủ đô nước Pháp",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tôi muốn học tiếng Anh",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tôi muốn học tiếng Anh nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi muốn học tiếng Anh",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi muốn học tiếng Anh",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi muốn học tiếng Anh",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "giúp tôi làm bài tập toán",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "giúp tôi làm bài tập toán nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: giúp tôi làm bài tập toán",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói giúp tôi làm bài tập toán",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, giúp tôi làm bài tập toán",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tìm một công thức nấu ăn",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tìm một công thức nấu ăn nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tìm một công thức nấu ăn",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tìm một công thức nấu ăn",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tìm một công thức nấu ăn",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tôi muốn mua một chiếc áo",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tôi muốn mua một chiếc áo nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi muốn mua một chiếc áo",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi muốn mua một chiếc áo",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi muốn mua một chiếc áo",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "hãy kể một câu chuyện cười",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "hãy kể một câu chuyện cười nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: hãy kể một câu chuyện cười",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói hãy kể một câu chuyện cười",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, hãy kể một câu chuyện cười",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "bạn có thể chơi cờ không",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "bạn có thể chơi cờ không nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: bạn có thể chơi cờ không",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói bạn có thể chơi cờ không",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, bạn có thể chơi cờ không",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tôi muốn nghe một bài hát",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tôi muốn nghe một bài hát nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi muốn nghe một bài hát",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi muốn nghe một bài hát",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi muốn nghe một bài hát",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "đặt lịch xem phim giúp tôi",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "đặt lịch xem phim giúp tôi nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: đặt lịch xem phim giúp tôi",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói đặt lịch xem phim giúp tôi",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, đặt lịch xem phim giúp tôi",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tìm nhà hàng gần đây",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tìm nhà hàng gần đây nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tìm nhà hàng gần đây",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tìm nhà hàng gần đây",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tìm nhà hàng gần đây",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tôi cần thông tin du lịch",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tôi cần thông tin du lịch nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi cần thông tin du lịch",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi cần thông tin du lịch",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi cần thông tin du lịch",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "làm sao để tiết kiệm tiền",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "làm sao để tiết kiệm tiền nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: làm sao để tiết kiệm tiền",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói làm sao để tiết kiệm tiền",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, làm sao để tiết kiệm tiền",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "hướng dẫn sử dụng máy ảnh",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "hướng dẫn sử dụng máy ảnh nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: hướng dẫn sử dụng máy ảnh",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói hướng dẫn sử dụng máy ảnh",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, hướng dẫn sử dụng máy ảnh",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tôi muốn đổi mật khẩu",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tôi muốn đổi mật khẩu nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi muốn đổi mật khẩu",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi muốn đổi mật khẩu",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi muốn đổi mật khẩu",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tài khoản của tôi bị khóa",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tài khoản của tôi bị khóa nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tài khoản của tôi bị khóa",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tài khoản của tôi bị khóa",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tài khoản của tôi bị khóa",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "gửi cho tôi một email",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "gửi cho tôi một email nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: gửi cho tôi một email",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói gửi cho tôi một email",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, gửi cho tôi một email",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tạo một danh sách mua sắm",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tạo một danh sách mua sắm nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tạo một danh sách mua sắm",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tạo một danh sách mua sắm",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tạo một danh sách mua sắm",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "nhắc tôi uống nước",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "nhắc tôi uống nước nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: nhắc tôi uống nước",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói nhắc tôi uống nước",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, nhắc tôi uống nước",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "bây giờ là mấy giờ",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "bây giờ là mấy giờ nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: bây giờ là mấy giờ",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói bây giờ là mấy giờ",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, bây giờ là mấy giờ",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "ngày mai có mưa không",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "ngày mai có mưa không nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: ngày mai có mưa không",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói ngày mai có mưa không",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, ngày mai có mưa không",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tôi muốn học nấu ăn",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tôi muốn học nấu ăn nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi muốn học nấu ăn",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi muốn học nấu ăn",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi muốn học nấu ăn",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "giới thiệu một cuốn sách hay",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "giới thiệu một cuốn sách hay nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: giới thiệu một cuốn sách hay",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói giới thiệu một cuốn sách hay",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, giới thiệu một cuốn sách hay",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "cho tôi một câu đố",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "cho tôi một câu đố nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: cho tôi một câu đố",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói cho tôi một câu đố",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, cho tôi một câu đố",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "bạn biết chơi guitar không",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "bạn biết chơi guitar không nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: bạn biết chơi guitar không",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói bạn biết chơi guitar không",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, bạn biết chơi guitar không",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tìm đường đến sân bay",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tìm đường đến sân bay nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tìm đường đến sân bay",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tìm đường đến sân bay",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tìm đường đến sân bay",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tôi muốn thuê xe",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tôi muốn thuê xe nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tôi muốn thuê xe",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tôi muốn thuê xe",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tôi muốn thuê xe",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "giúp tôi viết một bài thơ",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "giúp tôi viết một bài thơ nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: giúp tôi viết một bài thơ",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói giúp tôi viết một bài thơ",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, giúp tôi viết một bài thơ",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "dịch câu này sang tiếng Anh",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "dịch câu này sang tiếng Anh nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: dịch câu này sang tiếng Anh",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói dịch câu này sang tiếng Anh",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, dịch câu này sang tiếng Anh",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tạo một mật khẩu mạnh",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "tạo một mật khẩu mạnh nhé",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Tôi muốn nói: tạo một mật khẩu mạnh",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Cho tôi nói tạo một mật khẩu mạnh",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
-    "text": "Một lần nữa, tạo một mật khẩu mạnh",
-    "intent": "UNKNOWN",
-    "entities": []
-  },
-  {
     "text": "Xin chào, tôi bị đau ngực",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 17,
@@ -52825,11 +48647,11 @@
         "label": "CARDIOLOGY",
         "text": "đau ngực"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Chào bạn, hiện tôi đang bị đau ngực",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 27,
@@ -52837,11 +48659,11 @@
         "label": "CARDIOLOGY",
         "text": "đau ngực"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Cảm ơn, nhưng tôi vẫn bị đau ngực",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 25,
@@ -52849,11 +48671,11 @@
         "label": "CARDIOLOGY",
         "text": "đau ngực"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào bác sĩ, triệu chứng của tôi là đau ngực",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 40,
@@ -52861,11 +48683,11 @@
         "label": "CARDIOLOGY",
         "text": "đau ngực"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Tôi muốn chào bạn, nhưng hiện đang bị đau ngực",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 38,
@@ -52873,11 +48695,11 @@
         "label": "CARDIOLOGY",
         "text": "đau ngực"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào, tôi bị khó thở",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 17,
@@ -52885,11 +48707,11 @@
         "label": "RESPIRATORY",
         "text": "khó thở"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Chào bạn, hiện tôi đang bị khó thở",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 27,
@@ -52897,11 +48719,11 @@
         "label": "RESPIRATORY",
         "text": "khó thở"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Cảm ơn, nhưng tôi vẫn bị khó thở",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 25,
@@ -52909,11 +48731,11 @@
         "label": "RESPIRATORY",
         "text": "khó thở"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào bác sĩ, triệu chứng của tôi là khó thở",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 40,
@@ -52921,11 +48743,11 @@
         "label": "RESPIRATORY",
         "text": "khó thở"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Tôi muốn chào bạn, nhưng hiện đang bị khó thở",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 38,
@@ -52933,71 +48755,12 @@
         "label": "RESPIRATORY",
         "text": "khó thở"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
-  {
-    "text": "Xin chào, tôi bị đau đầu dữ dội",
-    "intent": "SYMPTOM",
-    "entities": [
-      {
-        "start": 17,
-        "end": 31,
-        "label": "NEUROLOGY",
-        "text": "đau đầu dữ dội"
-      }
-    ]
-  },
-  {
-    "text": "Chào bạn, hiện tôi đang bị đau đầu dữ dội",
-    "intent": "SYMPTOM",
-    "entities": [
-      {
-        "start": 27,
-        "end": 41,
-        "label": "NEUROLOGY",
-        "text": "đau đầu dữ dội"
-      }
-    ]
-  },
-  {
-    "text": "Cảm ơn, nhưng tôi vẫn bị đau đầu dữ dội",
-    "intent": "SYMPTOM",
-    "entities": [
-      {
-        "start": 25,
-        "end": 39,
-        "label": "NEUROLOGY",
-        "text": "đau đầu dữ dội"
-      }
-    ]
-  },
-  {
-    "text": "Xin chào bác sĩ, triệu chứng của tôi là đau đầu dữ dội",
-    "intent": "SYMPTOM",
-    "entities": [
-      {
-        "start": 40,
-        "end": 54,
-        "label": "NEUROLOGY",
-        "text": "đau đầu dữ dội"
-      }
-    ]
-  },
-  {
-    "text": "Tôi muốn chào bạn, nhưng hiện đang bị đau đầu dữ dội",
-    "intent": "SYMPTOM",
-    "entities": [
-      {
-        "start": 38,
-        "end": 52,
-        "label": "NEUROLOGY",
-        "text": "đau đầu dữ dội"
-      }
-    ]
-  },
+
   {
     "text": "Xin chào, tôi bị sốt cao",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 17,
@@ -53005,11 +48768,11 @@
         "label": "GENERAL_MEDICINE",
         "text": "sốt cao"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Chào bạn, hiện tôi đang bị sốt cao",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 27,
@@ -53017,11 +48780,11 @@
         "label": "GENERAL_MEDICINE",
         "text": "sốt cao"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Cảm ơn, nhưng tôi vẫn bị sốt cao",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 25,
@@ -53029,11 +48792,11 @@
         "label": "GENERAL_MEDICINE",
         "text": "sốt cao"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào bác sĩ, triệu chứng của tôi là sốt cao",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 40,
@@ -53041,11 +48804,11 @@
         "label": "GENERAL_MEDICINE",
         "text": "sốt cao"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Tôi muốn chào bạn, nhưng hiện đang bị sốt cao",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 38,
@@ -53053,11 +48816,11 @@
         "label": "GENERAL_MEDICINE",
         "text": "sốt cao"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào, tôi bị đau bụng",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 17,
@@ -53065,11 +48828,11 @@
         "label": "GASTROENTEROLOGY",
         "text": "đau bụng"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Chào bạn, hiện tôi đang bị đau bụng",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 27,
@@ -53077,11 +48840,11 @@
         "label": "GASTROENTEROLOGY",
         "text": "đau bụng"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Cảm ơn, nhưng tôi vẫn bị đau bụng",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 25,
@@ -53089,11 +48852,11 @@
         "label": "GASTROENTEROLOGY",
         "text": "đau bụng"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào bác sĩ, triệu chứng của tôi là đau bụng",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 40,
@@ -53101,11 +48864,11 @@
         "label": "GASTROENTEROLOGY",
         "text": "đau bụng"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Tôi muốn chào bạn, nhưng hiện đang bị đau bụng",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 38,
@@ -53113,11 +48876,11 @@
         "label": "GASTROENTEROLOGY",
         "text": "đau bụng"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào, tôi bị ngứa da",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 17,
@@ -53125,11 +48888,11 @@
         "label": "DERMATOLOGY",
         "text": "ngứa da"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Chào bạn, hiện tôi đang bị ngứa da",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 27,
@@ -53137,11 +48900,11 @@
         "label": "DERMATOLOGY",
         "text": "ngứa da"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Cảm ơn, nhưng tôi vẫn bị ngứa da",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 25,
@@ -53149,11 +48912,11 @@
         "label": "DERMATOLOGY",
         "text": "ngứa da"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào bác sĩ, triệu chứng của tôi là ngứa da",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 40,
@@ -53161,11 +48924,11 @@
         "label": "DERMATOLOGY",
         "text": "ngứa da"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Tôi muốn chào bạn, nhưng hiện đang bị ngứa da",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 38,
@@ -53173,11 +48936,11 @@
         "label": "DERMATOLOGY",
         "text": "ngứa da"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào, tôi bị đau khớp gối",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 17,
@@ -53185,11 +48948,11 @@
         "label": "ORTHOPEDICS",
         "text": "đau khớp gối"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Chào bạn, hiện tôi đang bị đau khớp gối",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 27,
@@ -53197,11 +48960,11 @@
         "label": "ORTHOPEDICS",
         "text": "đau khớp gối"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Cảm ơn, nhưng tôi vẫn bị đau khớp gối",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 25,
@@ -53209,11 +48972,11 @@
         "label": "ORTHOPEDICS",
         "text": "đau khớp gối"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào bác sĩ, triệu chứng của tôi là đau khớp gối",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 40,
@@ -53221,11 +48984,11 @@
         "label": "ORTHOPEDICS",
         "text": "đau khớp gối"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Tôi muốn chào bạn, nhưng hiện đang bị đau khớp gối",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 38,
@@ -53233,11 +48996,11 @@
         "label": "ORTHOPEDICS",
         "text": "đau khớp gối"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào, tôi bị mờ mắt",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 17,
@@ -53245,11 +49008,11 @@
         "label": "OPHTHALMOLOGY",
         "text": "mờ mắt"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Chào bạn, hiện tôi đang bị mờ mắt",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 27,
@@ -53257,11 +49020,11 @@
         "label": "OPHTHALMOLOGY",
         "text": "mờ mắt"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Cảm ơn, nhưng tôi vẫn bị mờ mắt",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 25,
@@ -53269,11 +49032,11 @@
         "label": "OPHTHALMOLOGY",
         "text": "mờ mắt"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào bác sĩ, triệu chứng của tôi là mờ mắt",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 40,
@@ -53281,11 +49044,11 @@
         "label": "OPHTHALMOLOGY",
         "text": "mờ mắt"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Tôi muốn chào bạn, nhưng hiện đang bị mờ mắt",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 38,
@@ -53293,11 +49056,11 @@
         "label": "OPHTHALMOLOGY",
         "text": "mờ mắt"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào, tôi bị đau răng",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 17,
@@ -53305,11 +49068,11 @@
         "label": "DENTISTRY",
         "text": "đau răng"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Chào bạn, hiện tôi đang bị đau răng",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 27,
@@ -53317,11 +49080,11 @@
         "label": "DENTISTRY",
         "text": "đau răng"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Cảm ơn, nhưng tôi vẫn bị đau răng",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 25,
@@ -53329,11 +49092,11 @@
         "label": "DENTISTRY",
         "text": "đau răng"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào bác sĩ, triệu chứng của tôi là đau răng",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 40,
@@ -53341,11 +49104,11 @@
         "label": "DENTISTRY",
         "text": "đau răng"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Tôi muốn chào bạn, nhưng hiện đang bị đau răng",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 38,
@@ -53353,11 +49116,11 @@
         "label": "DENTISTRY",
         "text": "đau răng"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào, tôi bị đau khi đi tiểu",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 17,
@@ -53365,11 +49128,11 @@
         "label": "UROLOGY",
         "text": "đau khi đi tiểu"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Chào bạn, hiện tôi đang bị đau khi đi tiểu",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 27,
@@ -53377,11 +49140,11 @@
         "label": "UROLOGY",
         "text": "đau khi đi tiểu"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Cảm ơn, nhưng tôi vẫn bị đau khi đi tiểu",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 25,
@@ -53389,11 +49152,11 @@
         "label": "UROLOGY",
         "text": "đau khi đi tiểu"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào bác sĩ, triệu chứng của tôi là đau khi đi tiểu",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 40,
@@ -53401,11 +49164,11 @@
         "label": "UROLOGY",
         "text": "đau khi đi tiểu"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Tôi muốn chào bạn, nhưng hiện đang bị đau khi đi tiểu",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 38,
@@ -53413,11 +49176,11 @@
         "label": "UROLOGY",
         "text": "đau khi đi tiểu"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào, tôi bị rụng tóc",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 17,
@@ -53425,11 +49188,11 @@
         "label": "ENDOCRINOLOGY",
         "text": "rụng tóc"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Chào bạn, hiện tôi đang bị rụng tóc",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 27,
@@ -53437,11 +49200,11 @@
         "label": "ENDOCRINOLOGY",
         "text": "rụng tóc"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Cảm ơn, nhưng tôi vẫn bị rụng tóc",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 25,
@@ -53449,11 +49212,11 @@
         "label": "ENDOCRINOLOGY",
         "text": "rụng tóc"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào bác sĩ, triệu chứng của tôi là rụng tóc",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 40,
@@ -53461,11 +49224,11 @@
         "label": "ENDOCRINOLOGY",
         "text": "rụng tóc"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Tôi muốn chào bạn, nhưng hiện đang bị rụng tóc",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 38,
@@ -53473,11 +49236,11 @@
         "label": "ENDOCRINOLOGY",
         "text": "rụng tóc"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào, tôi bị đau tai",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 17,
@@ -53485,11 +49248,11 @@
         "label": "ENT",
         "text": "đau tai"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Chào bạn, hiện tôi đang bị đau tai",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 27,
@@ -53497,11 +49260,11 @@
         "label": "ENT",
         "text": "đau tai"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Cảm ơn, nhưng tôi vẫn bị đau tai",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 25,
@@ -53509,11 +49272,11 @@
         "label": "ENT",
         "text": "đau tai"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào bác sĩ, triệu chứng của tôi là đau tai",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 40,
@@ -53521,11 +49284,11 @@
         "label": "ENT",
         "text": "đau tai"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Tôi muốn chào bạn, nhưng hiện đang bị đau tai",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 38,
@@ -53533,11 +49296,11 @@
         "label": "ENT",
         "text": "đau tai"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào, tôi bị buồn nôn khi mang thai",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 17,
@@ -53545,11 +49308,11 @@
         "label": "OB_GYN",
         "text": "buồn nôn khi mang thai"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Chào bạn, hiện tôi đang bị buồn nôn khi mang thai",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 27,
@@ -53557,11 +49320,11 @@
         "label": "OB_GYN",
         "text": "buồn nôn khi mang thai"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Cảm ơn, nhưng tôi vẫn bị buồn nôn khi mang thai",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 25,
@@ -53569,11 +49332,11 @@
         "label": "OB_GYN",
         "text": "buồn nôn khi mang thai"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào bác sĩ, triệu chứng của tôi là buồn nôn khi mang thai",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 40,
@@ -53581,11 +49344,11 @@
         "label": "OB_GYN",
         "text": "buồn nôn khi mang thai"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Tôi muốn chào bạn, nhưng hiện đang bị buồn nôn khi mang thai",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 38,
@@ -53593,11 +49356,11 @@
         "label": "OB_GYN",
         "text": "buồn nôn khi mang thai"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào, tôi bị ho kéo dài ở trẻ",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 17,
@@ -53605,11 +49368,11 @@
         "label": "PEDIATRICS",
         "text": "ho kéo dài ở trẻ"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Chào bạn, hiện tôi đang bị ho kéo dài ở trẻ",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 27,
@@ -53617,11 +49380,11 @@
         "label": "PEDIATRICS",
         "text": "ho kéo dài ở trẻ"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Cảm ơn, nhưng tôi vẫn bị ho kéo dài ở trẻ",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 25,
@@ -53629,11 +49392,11 @@
         "label": "PEDIATRICS",
         "text": "ho kéo dài ở trẻ"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào bác sĩ, triệu chứng của tôi là ho kéo dài ở trẻ",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 40,
@@ -53641,11 +49404,11 @@
         "label": "PEDIATRICS",
         "text": "ho kéo dài ở trẻ"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Tôi muốn chào bạn, nhưng hiện đang bị ho kéo dài ở trẻ",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 38,
@@ -53653,11 +49416,11 @@
         "label": "PEDIATRICS",
         "text": "ho kéo dài ở trẻ"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào, tôi bị mất ngủ nhiều ngày",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 17,
@@ -53665,11 +49428,11 @@
         "label": "PSYCHIATRY",
         "text": "mất ngủ nhiều ngày"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Chào bạn, hiện tôi đang bị mất ngủ nhiều ngày",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 27,
@@ -53677,11 +49440,11 @@
         "label": "PSYCHIATRY",
         "text": "mất ngủ nhiều ngày"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Cảm ơn, nhưng tôi vẫn bị mất ngủ nhiều ngày",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 25,
@@ -53689,11 +49452,11 @@
         "label": "PSYCHIATRY",
         "text": "mất ngủ nhiều ngày"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào bác sĩ, triệu chứng của tôi là mất ngủ nhiều ngày",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 40,
@@ -53701,11 +49464,11 @@
         "label": "PSYCHIATRY",
         "text": "mất ngủ nhiều ngày"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Tôi muốn chào bạn, nhưng hiện đang bị mất ngủ nhiều ngày",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 38,
@@ -53713,11 +49476,11 @@
         "label": "PSYCHIATRY",
         "text": "mất ngủ nhiều ngày"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào, tôi bị sụt cân nhanh",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 17,
@@ -53725,11 +49488,11 @@
         "label": "ONCOLOGY",
         "text": "sụt cân nhanh"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Chào bạn, hiện tôi đang bị sụt cân nhanh",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 27,
@@ -53737,11 +49500,11 @@
         "label": "ONCOLOGY",
         "text": "sụt cân nhanh"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Cảm ơn, nhưng tôi vẫn bị sụt cân nhanh",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 25,
@@ -53749,11 +49512,11 @@
         "label": "ONCOLOGY",
         "text": "sụt cân nhanh"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào bác sĩ, triệu chứng của tôi là sụt cân nhanh",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 40,
@@ -53761,11 +49524,11 @@
         "label": "ONCOLOGY",
         "text": "sụt cân nhanh"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Tôi muốn chào bạn, nhưng hiện đang bị sụt cân nhanh",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 38,
@@ -53773,11 +49536,11 @@
         "label": "ONCOLOGY",
         "text": "sụt cân nhanh"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào, tôi bị co giật",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 17,
@@ -53785,11 +49548,11 @@
         "label": "EMERGENCY",
         "text": "co giật"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Chào bạn, hiện tôi đang bị co giật",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 27,
@@ -53797,11 +49560,11 @@
         "label": "EMERGENCY",
         "text": "co giật"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Cảm ơn, nhưng tôi vẫn bị co giật",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 25,
@@ -53809,11 +49572,11 @@
         "label": "EMERGENCY",
         "text": "co giật"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào bác sĩ, triệu chứng của tôi là co giật",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 40,
@@ -53821,11 +49584,11 @@
         "label": "EMERGENCY",
         "text": "co giật"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Tôi muốn chào bạn, nhưng hiện đang bị co giật",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 38,
@@ -53833,11 +49596,11 @@
         "label": "EMERGENCY",
         "text": "co giật"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào, tôi bị đau lưng",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 17,
@@ -53845,11 +49608,11 @@
         "label": "GENERAL_MEDICINE",
         "text": "đau lưng"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Chào bạn, hiện tôi đang bị đau lưng",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 27,
@@ -53857,11 +49620,11 @@
         "label": "GENERAL_MEDICINE",
         "text": "đau lưng"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Cảm ơn, nhưng tôi vẫn bị đau lưng",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 25,
@@ -53869,11 +49632,11 @@
         "label": "GENERAL_MEDICINE",
         "text": "đau lưng"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào bác sĩ, triệu chứng của tôi là đau lưng",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 40,
@@ -53881,11 +49644,11 @@
         "label": "GENERAL_MEDICINE",
         "text": "đau lưng"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Tôi muốn chào bạn, nhưng hiện đang bị đau lưng",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 38,
@@ -53893,71 +49656,12 @@
         "label": "GENERAL_MEDICINE",
         "text": "đau lưng"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
-  {
-    "text": "Xin chào, tôi bị chóng mặt",
-    "intent": "SYMPTOM",
-    "entities": [
-      {
-        "start": 17,
-        "end": 26,
-        "label": "NEUROLOGY",
-        "text": "chóng mặt"
-      }
-    ]
-  },
-  {
-    "text": "Chào bạn, hiện tôi đang bị chóng mặt",
-    "intent": "SYMPTOM",
-    "entities": [
-      {
-        "start": 27,
-        "end": 36,
-        "label": "NEUROLOGY",
-        "text": "chóng mặt"
-      }
-    ]
-  },
-  {
-    "text": "Cảm ơn, nhưng tôi vẫn bị chóng mặt",
-    "intent": "SYMPTOM",
-    "entities": [
-      {
-        "start": 25,
-        "end": 34,
-        "label": "NEUROLOGY",
-        "text": "chóng mặt"
-      }
-    ]
-  },
-  {
-    "text": "Xin chào bác sĩ, triệu chứng của tôi là chóng mặt",
-    "intent": "SYMPTOM",
-    "entities": [
-      {
-        "start": 40,
-        "end": 49,
-        "label": "NEUROLOGY",
-        "text": "chóng mặt"
-      }
-    ]
-  },
-  {
-    "text": "Tôi muốn chào bạn, nhưng hiện đang bị chóng mặt",
-    "intent": "SYMPTOM",
-    "entities": [
-      {
-        "start": 38,
-        "end": 47,
-        "label": "NEUROLOGY",
-        "text": "chóng mặt"
-      }
-    ]
-  },
+
   {
     "text": "Xin chào, tôi bị ho và khò khè",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 17,
@@ -53965,11 +49669,11 @@
         "label": "RESPIRATORY",
         "text": "ho và khò khè"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Chào bạn, hiện tôi đang bị ho và khò khè",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 27,
@@ -53977,11 +49681,11 @@
         "label": "RESPIRATORY",
         "text": "ho và khò khè"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Cảm ơn, nhưng tôi vẫn bị ho và khò khè",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 25,
@@ -53989,11 +49693,11 @@
         "label": "RESPIRATORY",
         "text": "ho và khò khè"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Xin chào bác sĩ, triệu chứng của tôi là ho và khò khè",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 40,
@@ -54001,11 +49705,11 @@
         "label": "RESPIRATORY",
         "text": "ho và khò khè"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
   },
   {
     "text": "Tôi muốn chào bạn, nhưng hiện đang bị ho và khò khè",
-    "intent": "SYMPTOM",
     "entities": [
       {
         "start": 38,
@@ -54013,6 +49717,4011 @@
         "label": "RESPIRATORY",
         "text": "ho và khò khè"
       }
-    ]
+    ],
+    "intent": "SYMPTOM"
+  },
+  {
+"text": "xin chào nhé",
+"entities": [], 
+    "intent": "GREETING"
+},
+{
+    "text": "xin chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+
+    "entities": []
+  },
+  {
+    "text": "Tôi muốn nói: xin chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói xin chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, xin chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào bác sĩ",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào bác sĩ nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: chào bác sĩ",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói chào bác sĩ",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, chào bác sĩ",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "hello",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "hello nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: hello",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói hello",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, hello",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "hi bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "hi bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: hi bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói hi bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, hi bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "alo",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "alo nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: alo",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói alo",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, alo",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào buổi sáng",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào buổi sáng nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: chào buổi sáng",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói chào buổi sáng",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, chào buổi sáng",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào buổi tối",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào buổi tối nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: chào buổi tối",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói chào buổi tối",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, chào buổi tối",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "rất vui được gặp bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "rất vui được gặp bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: rất vui được gặp bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói rất vui được gặp bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, rất vui được gặp bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "xin gửi lời chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "xin gửi lời chào nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: xin gửi lời chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói xin gửi lời chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, xin gửi lời chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "mình muốn chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "mình muốn chào bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: mình muốn chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói mình muốn chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, mình muốn chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "cho mình chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "cho mình chào bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: cho mình chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói cho mình chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, cho mình chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "xin phép chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "xin phép chào bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: xin phép chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói xin phép chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, xin phép chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào mọi người",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào mọi người nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: chào mọi người",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói chào mọi người",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, chào mọi người",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào trợ lý",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào trợ lý nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: chào trợ lý",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói chào trợ lý",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, chào trợ lý",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào chuyên gia",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào chuyên gia nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: chào chuyên gia",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói chào chuyên gia",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, chào chuyên gia",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào hệ thống",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào hệ thống nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: chào hệ thống",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói chào hệ thống",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, chào hệ thống",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "xin chào trợ lý y tế",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "xin chào trợ lý y tế nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: xin chào trợ lý y tế",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói xin chào trợ lý y tế",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, xin chào trợ lý y tế",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào bạn nhé nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: chào bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói chào bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, chào bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "xin chào nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "xin chào nhé nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: xin chào nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói xin chào nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, xin chào nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "mình chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "mình chào bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: mình chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói mình chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, mình chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "tôi chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "tôi chào bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: tôi chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói tôi chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, tôi chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "gửi lời chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "gửi lời chào bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: gửi lời chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói gửi lời chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, gửi lời chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "xin được chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "xin được chào bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: xin được chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói xin được chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, xin được chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào bạn hôm nay",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào bạn hôm nay nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: chào bạn hôm nay",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói chào bạn hôm nay",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, chào bạn hôm nay",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào bác sĩ ạ",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào bác sĩ ạ nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: chào bác sĩ ạ",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói chào bác sĩ ạ",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, chào bác sĩ ạ",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "hello bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "hello bạn nhé nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: hello bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói hello bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, hello bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "hi bác sĩ",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "hi bác sĩ nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: hi bác sĩ",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói hi bác sĩ",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, hi bác sĩ",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "alo bạn ơi",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "alo bạn ơi nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: alo bạn ơi",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói alo bạn ơi",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, alo bạn ơi",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "xin chào mọi người",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "xin chào mọi người nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: xin chào mọi người",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói xin chào mọi người",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, xin chào mọi người",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào buổi trưa",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào buổi trưa nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: chào buổi trưa",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói chào buổi trưa",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, chào buổi trưa",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chúc bạn một ngày tốt lành",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chúc bạn một ngày tốt lành nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: chúc bạn một ngày tốt lành",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói chúc bạn một ngày tốt lành",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, chúc bạn một ngày tốt lành",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "mình đến chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "mình đến chào bạn nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: mình đến chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói mình đến chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, mình đến chào bạn",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "tôi muốn gửi lời chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "tôi muốn gửi lời chào nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: tôi muốn gửi lời chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói tôi muốn gửi lời chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, tôi muốn gửi lời chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "bắt đầu bằng lời chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "bắt đầu bằng lời chào nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: bắt đầu bằng lời chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói bắt đầu bằng lời chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, bắt đầu bằng lời chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "cho tôi gửi lời chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "cho tôi gửi lời chào nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: cho tôi gửi lời chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói cho tôi gửi lời chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, cho tôi gửi lời chào",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "xin chào người hỗ trợ",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "xin chào người hỗ trợ nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: xin chào người hỗ trợ",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói xin chào người hỗ trợ",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, xin chào người hỗ trợ",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào người bạn thông minh",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào người bạn thông minh nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: chào người bạn thông minh",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói chào người bạn thông minh",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, chào người bạn thông minh",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "xin chào ứng dụng",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "xin chào ứng dụng nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: xin chào ứng dụng",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói xin chào ứng dụng",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, xin chào ứng dụng",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào trợ lý sức khỏe",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "chào trợ lý sức khỏe nhé",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Tôi muốn nói: chào trợ lý sức khỏe",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Cho tôi nói chào trợ lý sức khỏe",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "Một lần nữa, chào trợ lý sức khỏe",
+    "entities": [], 
+    "intent": "GREETING"
+  },
+  {
+    "text": "cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "xin cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "xin cảm ơn nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: xin cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói xin cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, xin cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "rất cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "rất cảm ơn nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: rất cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói rất cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, rất cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn nhiều nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn nhiều nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn bạn nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn bạn nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn bạn nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "tôi biết ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "tôi biết ơn bạn nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: tôi biết ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói tôi biết ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, tôi biết ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "thật sự cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "thật sự cảm ơn nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: thật sự cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói thật sự cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, thật sự cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn vì đã giúp tôi",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn vì đã giúp tôi nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn vì đã giúp tôi",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn vì đã giúp tôi",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn vì đã giúp tôi",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn sự hỗ trợ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn sự hỗ trợ nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn sự hỗ trợ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn sự hỗ trợ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn sự hỗ trợ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn sự giúp đỡ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn sự giúp đỡ nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn sự giúp đỡ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn sự giúp đỡ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn sự giúp đỡ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bác sĩ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bác sĩ nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn bác sĩ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn bác sĩ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn bác sĩ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn trợ lý",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn trợ lý nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn trợ lý",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn trợ lý",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn trợ lý",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn đã tư vấn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn đã tư vấn nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn bạn đã tư vấn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn bạn đã tư vấn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn bạn đã tư vấn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn đã giải thích",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn đã giải thích nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn bạn đã giải thích",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn bạn đã giải thích",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn bạn đã giải thích",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn đã hướng dẫn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn đã hướng dẫn nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn bạn đã hướng dẫn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn bạn đã hướng dẫn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn bạn đã hướng dẫn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn đã giúp đỡ tôi",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn đã giúp đỡ tôi nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn bạn đã giúp đỡ tôi",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn bạn đã giúp đỡ tôi",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn bạn đã giúp đỡ tôi",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "tôi rất cảm kích",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "tôi rất cảm kích nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: tôi rất cảm kích",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói tôi rất cảm kích",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, tôi rất cảm kích",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "xin ghi nhận lời cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "xin ghi nhận lời cảm ơn nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: xin ghi nhận lời cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói xin ghi nhận lời cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, xin ghi nhận lời cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "mang ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "mang ơn bạn nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: mang ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói mang ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, mang ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "biết ơn sự giúp đỡ của bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "biết ơn sự giúp đỡ của bạn nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: biết ơn sự giúp đỡ của bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói biết ơn sự giúp đỡ của bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, biết ơn sự giúp đỡ của bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm kích sự hỗ trợ của bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm kích sự hỗ trợ của bạn nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm kích sự hỗ trợ của bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm kích sự hỗ trợ của bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm kích sự hỗ trợ của bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn rất nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn rất nhiều nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn bạn rất nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn bạn rất nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn bạn rất nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn thật nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn thật nhiều nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn bạn thật nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn bạn thật nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn bạn thật nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn vì lời khuyên",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn vì lời khuyên nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn vì lời khuyên",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn vì lời khuyên",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn vì lời khuyên",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn vì thông tin hữu ích",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn vì thông tin hữu ích nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn vì thông tin hữu ích",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn vì thông tin hữu ích",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn vì thông tin hữu ích",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn vì đã lắng nghe",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn vì đã lắng nghe nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn vì đã lắng nghe",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn vì đã lắng nghe",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn vì đã lắng nghe",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn vì đã trả lời",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn vì đã trả lời nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn vì đã trả lời",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn vì đã trả lời",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn vì đã trả lời",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn vì sự tận tình",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn vì sự tận tình nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn vì sự tận tình",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn vì sự tận tình",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn vì sự tận tình",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn đã quan tâm",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn đã quan tâm nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn bạn đã quan tâm",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn bạn đã quan tâm",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn bạn đã quan tâm",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn đã phản hồi",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn đã phản hồi nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn bạn đã phản hồi",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn bạn đã phản hồi",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn bạn đã phản hồi",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn đã hỗ trợ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bạn đã hỗ trợ nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn bạn đã hỗ trợ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn bạn đã hỗ trợ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn bạn đã hỗ trợ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bác sĩ rất nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cảm ơn bác sĩ rất nhiều nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cảm ơn bác sĩ rất nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cảm ơn bác sĩ rất nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cảm ơn bác sĩ rất nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "tôi xin cảm ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "tôi xin cảm ơn bạn nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: tôi xin cảm ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói tôi xin cảm ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, tôi xin cảm ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cho tôi gửi lời cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "cho tôi gửi lời cảm ơn nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: cho tôi gửi lời cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói cho tôi gửi lời cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, cho tôi gửi lời cảm ơn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "một lời cảm ơn chân thành",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "một lời cảm ơn chân thành nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: một lời cảm ơn chân thành",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói một lời cảm ơn chân thành",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, một lời cảm ơn chân thành",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "xin nhận lời cảm ơn của tôi",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "xin nhận lời cảm ơn của tôi nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: xin nhận lời cảm ơn của tôi",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói xin nhận lời cảm ơn của tôi",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, xin nhận lời cảm ơn của tôi",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "tôi trân trọng sự giúp đỡ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "tôi trân trọng sự giúp đỡ nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: tôi trân trọng sự giúp đỡ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói tôi trân trọng sự giúp đỡ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, tôi trân trọng sự giúp đỡ",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "bạn đã giúp tôi rất nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "bạn đã giúp tôi rất nhiều nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: bạn đã giúp tôi rất nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói bạn đã giúp tôi rất nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, bạn đã giúp tôi rất nhiều",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "thật lòng cảm ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "thật lòng cảm ơn bạn nhé",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Tôi muốn nói: thật lòng cảm ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Cho tôi nói thật lòng cảm ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "Một lần nữa, thật lòng cảm ơn bạn",
+    "entities": [], 
+    "intent": "THANKS"
+  },
+  {
+    "text": "tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tạm biệt nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "bye",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "bye nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: bye",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói bye",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, bye",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "goodbye",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "goodbye nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: goodbye",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói goodbye",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, goodbye",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "hẹn gặp lại",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "hẹn gặp lại nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: hẹn gặp lại",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói hẹn gặp lại",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, hẹn gặp lại",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "chào tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "chào tạm biệt nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: chào tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói chào tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, chào tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tôi đi đây",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tôi đi đây nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: tôi đi đây",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói tôi đi đây",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, tôi đi đây",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "mình đi đây",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "mình đi đây nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: mình đi đây",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói mình đi đây",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, mình đi đây",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tôi sẽ quay lại sau",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tôi sẽ quay lại sau nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: tôi sẽ quay lại sau",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói tôi sẽ quay lại sau",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, tôi sẽ quay lại sau",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "hẹn bạn lần sau",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "hẹn bạn lần sau nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: hẹn bạn lần sau",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói hẹn bạn lần sau",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, hẹn bạn lần sau",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "gặp lại sau nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "gặp lại sau nhé nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: gặp lại sau nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói gặp lại sau nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, gặp lại sau nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "chúc bạn sức khỏe",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "chúc bạn sức khỏe nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: chúc bạn sức khỏe",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói chúc bạn sức khỏe",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, chúc bạn sức khỏe",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "chúc bạn một ngày tốt lành",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "chúc bạn một ngày tốt lành nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: chúc bạn một ngày tốt lành",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói chúc bạn một ngày tốt lành",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, chúc bạn một ngày tốt lành",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "chúc bạn buổi tối vui vẻ",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "chúc bạn buổi tối vui vẻ nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: chúc bạn buổi tối vui vẻ",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói chúc bạn buổi tối vui vẻ",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, chúc bạn buổi tối vui vẻ",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "chúc bạn buổi sáng tốt lành",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "chúc bạn buổi sáng tốt lành nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: chúc bạn buổi sáng tốt lành",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói chúc bạn buổi sáng tốt lành",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, chúc bạn buổi sáng tốt lành",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tôi xin phép kết thúc",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tôi xin phép kết thúc nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: tôi xin phép kết thúc",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói tôi xin phép kết thúc",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, tôi xin phép kết thúc",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "mình xin phép đi trước",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "mình xin phép đi trước nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: mình xin phép đi trước",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói mình xin phép đi trước",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, mình xin phép đi trước",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "đến lúc nói lời tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "đến lúc nói lời tạm biệt nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: đến lúc nói lời tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói đến lúc nói lời tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, đến lúc nói lời tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "hẹn gặp lại bác sĩ",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "hẹn gặp lại bác sĩ nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: hẹn gặp lại bác sĩ",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói hẹn gặp lại bác sĩ",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, hẹn gặp lại bác sĩ",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "hẹn gặp lại bạn",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "hẹn gặp lại bạn nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: hẹn gặp lại bạn",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói hẹn gặp lại bạn",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, hẹn gặp lại bạn",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "gặp lại bạn sau",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "gặp lại bạn sau nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: gặp lại bạn sau",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói gặp lại bạn sau",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, gặp lại bạn sau",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tôi sẽ liên hệ lại",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tôi sẽ liên hệ lại nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: tôi sẽ liên hệ lại",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói tôi sẽ liên hệ lại",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, tôi sẽ liên hệ lại",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "mình sẽ quay lại",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "mình sẽ quay lại nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: mình sẽ quay lại",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói mình sẽ quay lại",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, mình sẽ quay lại",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "xin chào tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "xin chào tạm biệt nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: xin chào tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói xin chào tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, xin chào tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "bye bye",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "bye bye nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: bye bye",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói bye bye",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, bye bye",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "goodbye bạn nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "goodbye bạn nhé nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: goodbye bạn nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói goodbye bạn nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, goodbye bạn nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tạm biệt và cảm ơn",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tạm biệt và cảm ơn nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: tạm biệt và cảm ơn",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói tạm biệt và cảm ơn",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, tạm biệt và cảm ơn",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tôi kết thúc cuộc trò chuyện",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tôi kết thúc cuộc trò chuyện nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: tôi kết thúc cuộc trò chuyện",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói tôi kết thúc cuộc trò chuyện",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, tôi kết thúc cuộc trò chuyện",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "mình kết thúc ở đây",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "mình kết thúc ở đây nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: mình kết thúc ở đây",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói mình kết thúc ở đây",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, mình kết thúc ở đây",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "hẹn lần tư vấn tiếp theo",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "hẹn lần tư vấn tiếp theo nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: hẹn lần tư vấn tiếp theo",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói hẹn lần tư vấn tiếp theo",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, hẹn lần tư vấn tiếp theo",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tôi không cần hỏi thêm",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tôi không cần hỏi thêm nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: tôi không cần hỏi thêm",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói tôi không cần hỏi thêm",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, tôi không cần hỏi thêm",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "chúc bạn luôn khỏe",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "chúc bạn luôn khỏe nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: chúc bạn luôn khỏe",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói chúc bạn luôn khỏe",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, chúc bạn luôn khỏe",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "chúc bác sĩ nhiều sức khỏe",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "chúc bác sĩ nhiều sức khỏe nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: chúc bác sĩ nhiều sức khỏe",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói chúc bác sĩ nhiều sức khỏe",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, chúc bác sĩ nhiều sức khỏe",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "xin phép chào tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "xin phép chào tạm biệt nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: xin phép chào tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói xin phép chào tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, xin phép chào tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tôi xin chào tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tôi xin chào tạm biệt nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: tôi xin chào tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói tôi xin chào tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, tôi xin chào tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "mình nói lời tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "mình nói lời tạm biệt nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: mình nói lời tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói mình nói lời tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, mình nói lời tạm biệt",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "hẹn gặp lại trong lần tới",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "hẹn gặp lại trong lần tới nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: hẹn gặp lại trong lần tới",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói hẹn gặp lại trong lần tới",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, hẹn gặp lại trong lần tới",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tạm biệt trợ lý",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tạm biệt trợ lý nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: tạm biệt trợ lý",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói tạm biệt trợ lý",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, tạm biệt trợ lý",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tạm biệt bác sĩ",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tạm biệt bác sĩ nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: tạm biệt bác sĩ",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói tạm biệt bác sĩ",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, tạm biệt bác sĩ",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tạm biệt bạn nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "tạm biệt bạn nhé nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: tạm biệt bạn nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói tạm biệt bạn nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, tạm biệt bạn nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "gặp lại sau",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "gặp lại sau nhé",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Tôi muốn nói: gặp lại sau",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Cho tôi nói gặp lại sau",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "Một lần nữa, gặp lại sau",
+    "entities": [], 
+    "intent": "GOODBYE"
+  },
+  {
+    "text": "bạn là ai",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "bạn là ai nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: bạn là ai",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói bạn là ai",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, bạn là ai",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "bạn tên gì",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "bạn tên gì nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: bạn tên gì",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói bạn tên gì",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, bạn tên gì",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "thời tiết hôm nay thế nào",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "thời tiết hôm nay thế nào nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: thời tiết hôm nay thế nào",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói thời tiết hôm nay thế nào",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, thời tiết hôm nay thế nào",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "hôm nay là thứ mấy",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "hôm nay là thứ mấy nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: hôm nay là thứ mấy",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói hôm nay là thứ mấy",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, hôm nay là thứ mấy",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "kể cho tôi một câu chuyện",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "kể cho tôi một câu chuyện nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: kể cho tôi một câu chuyện",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói kể cho tôi một câu chuyện",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, kể cho tôi một câu chuyện",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "mở nhạc giúp tôi",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "mở nhạc giúp tôi nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: mở nhạc giúp tôi",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói mở nhạc giúp tôi",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, mở nhạc giúp tôi",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tôi muốn đặt đồ ăn",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tôi muốn đặt đồ ăn nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: tôi muốn đặt đồ ăn",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói tôi muốn đặt đồ ăn",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, tôi muốn đặt đồ ăn",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "giá vé máy bay bao nhiêu",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "giá vé máy bay bao nhiêu nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: giá vé máy bay bao nhiêu",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói giá vé máy bay bao nhiêu",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, giá vé máy bay bao nhiêu",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tìm giúp tôi một bộ phim",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tìm giúp tôi một bộ phim nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: tìm giúp tôi một bộ phim",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói tìm giúp tôi một bộ phim",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, tìm giúp tôi một bộ phim",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "bạn có thích đọc sách không",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "bạn có thích đọc sách không nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: bạn có thích đọc sách không",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói bạn có thích đọc sách không",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, bạn có thích đọc sách không",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "ai phát minh ra điện thoại",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "ai phát minh ra điện thoại nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: ai phát minh ra điện thoại",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói ai phát minh ra điện thoại",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, ai phát minh ra điện thoại",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "cho tôi biết thủ đô nước Pháp",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "cho tôi biết thủ đô nước Pháp nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: cho tôi biết thủ đô nước Pháp",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói cho tôi biết thủ đô nước Pháp",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, cho tôi biết thủ đô nước Pháp",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tôi muốn học tiếng Anh",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tôi muốn học tiếng Anh nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: tôi muốn học tiếng Anh",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói tôi muốn học tiếng Anh",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, tôi muốn học tiếng Anh",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "giúp tôi làm bài tập toán",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "giúp tôi làm bài tập toán nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: giúp tôi làm bài tập toán",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói giúp tôi làm bài tập toán",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, giúp tôi làm bài tập toán",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tìm một công thức nấu ăn",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tìm một công thức nấu ăn nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: tìm một công thức nấu ăn",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói tìm một công thức nấu ăn",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, tìm một công thức nấu ăn",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tôi muốn mua một chiếc áo",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tôi muốn mua một chiếc áo nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: tôi muốn mua một chiếc áo",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói tôi muốn mua một chiếc áo",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, tôi muốn mua một chiếc áo",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "hãy kể một câu chuyện cười",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "hãy kể một câu chuyện cười nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: hãy kể một câu chuyện cười",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói hãy kể một câu chuyện cười",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, hãy kể một câu chuyện cười",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "bạn có thể chơi cờ không",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "bạn có thể chơi cờ không nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: bạn có thể chơi cờ không",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói bạn có thể chơi cờ không",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, bạn có thể chơi cờ không",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tôi muốn nghe một bài hát",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tôi muốn nghe một bài hát nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: tôi muốn nghe một bài hát",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói tôi muốn nghe một bài hát",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, tôi muốn nghe một bài hát",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "đặt lịch xem phim giúp tôi",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "đặt lịch xem phim giúp tôi nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: đặt lịch xem phim giúp tôi",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói đặt lịch xem phim giúp tôi",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, đặt lịch xem phim giúp tôi",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tìm nhà hàng gần đây",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tìm nhà hàng gần đây nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: tìm nhà hàng gần đây",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói tìm nhà hàng gần đây",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, tìm nhà hàng gần đây",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tôi cần thông tin du lịch",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tôi cần thông tin du lịch nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: tôi cần thông tin du lịch",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói tôi cần thông tin du lịch",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, tôi cần thông tin du lịch",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "làm sao để tiết kiệm tiền",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "làm sao để tiết kiệm tiền nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: làm sao để tiết kiệm tiền",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói làm sao để tiết kiệm tiền",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, làm sao để tiết kiệm tiền",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "hướng dẫn sử dụng máy ảnh",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "hướng dẫn sử dụng máy ảnh nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: hướng dẫn sử dụng máy ảnh",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói hướng dẫn sử dụng máy ảnh",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, hướng dẫn sử dụng máy ảnh",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tôi muốn đổi mật khẩu",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tôi muốn đổi mật khẩu nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: tôi muốn đổi mật khẩu",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói tôi muốn đổi mật khẩu",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, tôi muốn đổi mật khẩu",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tài khoản của tôi bị khóa",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tài khoản của tôi bị khóa nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: tài khoản của tôi bị khóa",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói tài khoản của tôi bị khóa",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, tài khoản của tôi bị khóa",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "gửi cho tôi một email",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "gửi cho tôi một email nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: gửi cho tôi một email",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói gửi cho tôi một email",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, gửi cho tôi một email",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tạo một danh sách mua sắm",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tạo một danh sách mua sắm nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: tạo một danh sách mua sắm",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói tạo một danh sách mua sắm",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, tạo một danh sách mua sắm",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "nhắc tôi uống nước",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "nhắc tôi uống nước nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: nhắc tôi uống nước",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói nhắc tôi uống nước",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, nhắc tôi uống nước",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "bây giờ là mấy giờ",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "bây giờ là mấy giờ nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: bây giờ là mấy giờ",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói bây giờ là mấy giờ",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, bây giờ là mấy giờ",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "ngày mai có mưa không",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "ngày mai có mưa không nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: ngày mai có mưa không",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói ngày mai có mưa không",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, ngày mai có mưa không",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tôi muốn học nấu ăn",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tôi muốn học nấu ăn nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: tôi muốn học nấu ăn",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói tôi muốn học nấu ăn",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, tôi muốn học nấu ăn",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "giới thiệu một cuốn sách hay",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "giới thiệu một cuốn sách hay nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: giới thiệu một cuốn sách hay",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói giới thiệu một cuốn sách hay",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, giới thiệu một cuốn sách hay",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "cho tôi một câu đố",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "cho tôi một câu đố nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: cho tôi một câu đố",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói cho tôi một câu đố",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, cho tôi một câu đố",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "bạn biết chơi guitar không",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "bạn biết chơi guitar không nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: bạn biết chơi guitar không",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói bạn biết chơi guitar không",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, bạn biết chơi guitar không",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tìm đường đến sân bay",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tìm đường đến sân bay nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: tìm đường đến sân bay",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói tìm đường đến sân bay",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, tìm đường đến sân bay",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tôi muốn thuê xe",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tôi muốn thuê xe nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: tôi muốn thuê xe",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói tôi muốn thuê xe",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, tôi muốn thuê xe",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "giúp tôi viết một bài thơ",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "giúp tôi viết một bài thơ nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: giúp tôi viết một bài thơ",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói giúp tôi viết một bài thơ",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, giúp tôi viết một bài thơ",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "dịch câu này sang tiếng Anh",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "dịch câu này sang tiếng Anh nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: dịch câu này sang tiếng Anh",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói dịch câu này sang tiếng Anh",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, dịch câu này sang tiếng Anh",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tạo một mật khẩu mạnh",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "tạo một mật khẩu mạnh nhé",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Tôi muốn nói: tạo một mật khẩu mạnh",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Cho tôi nói tạo một mật khẩu mạnh",
+    "entities": [], 
+    "intent": "UNKNOWN"
+  },
+  {
+    "text": "Một lần nữa, tạo một mật khẩu mạnh",
+    "entities": [], 
+    "intent": "UNKNOWN"
   }
 ]

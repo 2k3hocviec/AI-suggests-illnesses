@@ -127,6 +127,9 @@ export class UsersService {
       normalUsers,
       recentUsers,
       recentMessages,
+      consultationHistories,
+      assistantMessages,
+      specialtyGroups,
     ] = await Promise.all([
       this.prisma.user.count(),
       this.prisma.user.count({ where: { isEnabled: true } }),
@@ -156,7 +159,63 @@ export class UsersService {
           createdAt: true,
         },
       }),
+      this.prisma.consultationHistory.findMany({
+        select: {
+          extractedSymptoms: true,
+          recommendedSpecialty: {
+            select: {
+              code: true,
+              name: true,
+            },
+          },
+        },
+      }),
+      this.prisma.chatMessage.findMany({
+        where: {
+          role: 'ASSISTANT',
+          metadata: {
+            not: undefined,
+          },
+        },
+        select: {
+          metadata: true,
+        },
+      }),
+      this.prisma.consultationHistory.groupBy({
+        by: ['recommendedSpecialtyId'],
+        where: {
+          recommendedSpecialtyId: {
+            not: null,
+          },
+        },
+        _count: {
+          _all: true,
+        },
+        orderBy: {
+          _count: {
+            recommendedSpecialtyId: 'desc',
+          },
+        },
+        take: 5,
+      }),
     ]);
+    const specialtyIds = specialtyGroups
+      .map((item) => item.recommendedSpecialtyId)
+      .filter((id): id is number => typeof id === 'number');
+    const specialties = specialtyIds.length
+      ? await this.prisma.specialty.findMany({
+          where: {
+            id: {
+              in: specialtyIds,
+            },
+          },
+          select: {
+            id: true,
+            code: true,
+            name: true,
+          },
+        })
+      : [];
 
     return {
       totals: {
@@ -176,6 +235,12 @@ export class UsersService {
         { label: 'Đã vô hiệu', value: disabledUsers },
       ],
       dailyActivity: this.buildDailyActivity(since, recentUsers, recentMessages),
+      ai: this.buildAiStats(
+        consultationHistories,
+        assistantMessages,
+        specialtyGroups,
+        specialties,
+      ),
     };
   }
 
@@ -208,7 +273,7 @@ export class UsersService {
     });
   }
 
-  private async assertAdmin(userId: number) {
+  async assertAdmin(userId: number) {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: {
@@ -220,6 +285,99 @@ export class UsersService {
     if (!user?.isEnabled || user.role !== UserRole.ADMIN) {
       throw new ForbiddenException('Admin access required');
     }
+  }
+
+  private buildAiStats(
+    consultationHistories: Array<{
+      extractedSymptoms: unknown;
+      recommendedSpecialty: { code: string; name: string } | null;
+    }>,
+    assistantMessages: Array<{ metadata: unknown }>,
+    specialtyGroups: Array<{
+      recommendedSpecialtyId: number | null;
+      _count: { _all: number };
+    }>,
+    specialties: Array<{ id: number; code: string; name: string }>,
+  ) {
+    const symptomCounts = new Map<string, number>();
+    let unrecognizedCases = 0;
+
+    for (const history of consultationHistories) {
+      const symptoms = Array.isArray(history.extractedSymptoms)
+        ? history.extractedSymptoms
+        : [];
+
+      if (!symptoms.length && !history.recommendedSpecialty) {
+        unrecognizedCases += 1;
+      }
+
+      for (const symptom of symptoms) {
+        if (!symptom || typeof symptom !== 'object') {
+          continue;
+        }
+
+        const name = (symptom as { name?: unknown }).name;
+        if (typeof name !== 'string' || !name.trim()) {
+          continue;
+        }
+
+        const key = name.trim();
+        symptomCounts.set(key, (symptomCounts.get(key) ?? 0) + 1);
+      }
+    }
+
+    const sourceCounts = new Map<string, number>();
+    for (const message of assistantMessages) {
+      if (!message.metadata || typeof message.metadata !== 'object') {
+        continue;
+      }
+
+      const source = (message.metadata as { analysisSource?: unknown })
+        .analysisSource;
+      if (source !== 'NER' && source !== 'Gemini') {
+        continue;
+      }
+
+      sourceCounts.set(source, (sourceCounts.get(source) ?? 0) + 1);
+    }
+
+    return {
+      totalConsultations: consultationHistories.length,
+      unrecognizedCases,
+      topSymptoms: [...symptomCounts.entries()]
+        .sort((left, right) => right[1] - left[1])
+        .slice(0, 5)
+        .map(([name, count]) => ({ name, count })),
+      topSpecialties: specialtyGroups
+        .map((item) => {
+          const specialty = specialties.find(
+            (candidate) => candidate.id === item.recommendedSpecialtyId,
+          );
+
+          if (!specialty) {
+            return null;
+          }
+
+          return {
+            code: specialty.code,
+            name: specialty.name,
+            count: item._count._all,
+          };
+        })
+        .filter(
+          (
+            item,
+          ): item is {
+            code: string;
+            name: string;
+            count: number;
+          } => Boolean(item),
+        ),
+      sourceBreakdown: [
+        { label: 'NER', value: sourceCounts.get('NER') ?? 0 },
+        { label: 'Gemini', value: sourceCounts.get('Gemini') ?? 0 },
+      ],
+    };
   }
 
   private buildDailyActivity(

@@ -294,6 +294,15 @@ export class ChatService {
     };
   }
 
+  async testModel(content: string) {
+    const message = content.trim();
+    if (!message) {
+      throw new BadRequestException("Nội dung kiểm tra không được để trống");
+    }
+
+    return this.analyze(message);
+  }
+
   async listSessions(userId: number) {
     return this.prisma.chatSession.findMany({
       where: {

@@ -1,147 +1,155 @@
-"""
-prepare_data.py - Fix cho PhoBERT (slow tokenizer, không có word_ids())
-Dùng cách thủ công: tokenize từng từ rồi ghép nhãn lại
-"""
+"""Prepare joint NER and sentence-intent data for the multi-task model."""
+
+from __future__ import annotations
 
 import json
 import os
 import random
-from transformers import AutoTokenizer # type: ignore
+import re
+from collections import defaultdict
+
+from transformers import AutoTokenizer  # type: ignore
+
+from intent_labels import INTENT2ID, validate_intent
 from specialty_labels import LABEL2ID, validate_specialty_code
+
 
 TOKENIZER_NAME = "vinai/phobert-base"
 DATASET_PATH = os.getenv("NER_DATASET_PATH", "data/dataset_specialty.json")
+MAX_LEN = 128
 
 
-def tokenize_and_label(sample, tokenizer):
-    import re
+def tokenize_and_label(sample: dict, tokenizer) -> dict:
     text = sample["text"]
-    entities = sample["entities"]
+    entities = sample.get("entities", [])
+    intent = validate_intent(sample.get("intent", "SYMPTOM"))
 
-    # Buoc 1: Tao nhan ky tu theo chuyen khoa.
     char_labels = ["O"] * len(text)
-    for ent in entities:
-        s, e = ent["start"], ent["end"]
-        label = ent["label"]
+    for entity in entities:
+        start, end = entity["start"], entity["end"]
+        label = entity["label"]
         if label == "SYMPTOM":
             raise ValueError(
-                "Dataset van dung label SYMPTOM. Hay chay label_dataset_specialties.py "
-                "va ra soat cac entity REVIEW_REQUIRED truoc khi train."
+                "Dataset van dung label SYMPTOM. Hay chuyen entity sang ma chuyen khoa."
             )
         validate_specialty_code(label)
-        if text[s:e] != ent["text"]:
+        if text[start:end] != entity["text"]:
             raise ValueError(
-                f"Offset sai cho '{ent['text']}': text[{s}:{e}] = '{text[s:e]}'"
+                f"Offset sai cho '{entity['text']}': text[{start}:{end}] = '{text[start:end]}'"
             )
-        for i in range(s, min(e, len(text))):
-            char_labels[i] = f"B-{label}" if i == s else f"I-{label}"
+        for index in range(start, min(end, len(text))):
+            char_labels[index] = f"B-{label}" if index == start else f"I-{label}"
 
-    # Bước 2: Tách từ ĐÚNG + gán nhãn cho từng từ
-    # Dùng regex để tìm vị trí từ chính xác (không dùng .split())
-    words_with_spans = []
-    for match in re.finditer(r'\S+', text):
-        words_with_spans.append((match.group(), match.start()))
-    
-    word_labels = []
-    for word_text, start_pos in words_with_spans:
-        # Gán nhãn dựa trên vị trí ký tự thực tế, không guess
-        w_label = char_labels[start_pos] if start_pos < len(text) else "O"
-        word_labels.append(w_label)
+    words_with_spans = [
+        (match.group(), match.start()) for match in re.finditer(r"\S+", text)
+    ]
+    word_labels = [
+        char_labels[start] if start < len(char_labels) else "O"
+        for _, start in words_with_spans
+    ]
 
-    # Bước 3: Tokenize từng từ thủ công
     cls_id = tokenizer.cls_token_id
     sep_id = tokenizer.sep_token_id
     pad_id = tokenizer.pad_token_id
+    if cls_id is None or sep_id is None or pad_id is None:
+        raise ValueError("Tokenizer must provide CLS, SEP and PAD token ids")
 
-    all_input_ids = [cls_id]
-    all_labels = [-100]
-
-    for (word_text, _), w_label in zip(words_with_spans, word_labels):
+    input_ids = [cls_id]
+    labels = [-100]
+    for (word_text, _), word_label in zip(words_with_spans, word_labels):
         sub_ids = tokenizer.encode(word_text, add_special_tokens=False)
         if not sub_ids:
             continue
-        
-        label_id = LABEL2ID.get(w_label, 0)
-        for j, sid in enumerate(sub_ids):
-            all_input_ids.append(sid)
-            if j == 0:
-                all_labels.append(label_id)
+
+        label_id = LABEL2ID[word_label]
+        for sub_index, sub_id in enumerate(sub_ids):
+            input_ids.append(sub_id)
+            if sub_index == 0:
+                labels.append(label_id)
             else:
-                continuation = f"I-{w_label[2:]}" if w_label.startswith("B-") else w_label
-                all_labels.append(LABEL2ID[continuation])
+                continuation = (
+                    f"I-{word_label[2:]}"
+                    if word_label.startswith("B-")
+                    else word_label
+                )
+                labels.append(LABEL2ID[continuation])
 
-    # Token SEP ở cuối
-    all_input_ids.append(sep_id)
-    all_labels.append(-100)
+    input_ids.append(sep_id)
+    labels.append(-100)
+    input_ids = input_ids[:MAX_LEN]
+    labels = labels[:MAX_LEN]
 
-    # Truncate nếu quá dài
-    MAX_LEN = 128
-    all_input_ids = all_input_ids[:MAX_LEN]
-    all_labels = all_labels[:MAX_LEN]
-
-    # Padding
-    pad_len = MAX_LEN - len(all_input_ids)
-    attention_mask = [1] * len(all_input_ids) + [0] * pad_len
-    all_input_ids = all_input_ids + [pad_id] * pad_len
-    all_labels = all_labels + [-100] * pad_len
+    pad_len = MAX_LEN - len(input_ids)
+    attention_mask = [1] * len(input_ids) + [0] * pad_len
+    input_ids += [pad_id] * pad_len
+    labels += [-100] * pad_len
 
     return {
-        "input_ids": all_input_ids,
+        "input_ids": input_ids,
         "attention_mask": attention_mask,
-        "labels": all_labels,
+        "labels": labels,
+        "intent_labels": INTENT2ID[intent],
     }
 
 
-def prepare_dataset(json_path, tokenizer):
-    with open(json_path, "r", encoding="utf-8") as f:
-        raw_data = json.load(f)
+def load_samples(dataset_path: str) -> list[dict]:
+    with open(dataset_path, "r", encoding="utf-8-sig") as file:
+        samples = json.load(file)
 
-    processed, errors = [], 0
-    for i, sample in enumerate(raw_data):
+    normalized_samples = []
+    for sample in samples:
+        normalized = dict(sample)
+        # Existing medical records do not need to be edited manually; records
+        # without an intent are treated as SYMPTOM for backward compatibility.
+        normalized.setdefault("intent", "SYMPTOM")
+        normalized_samples.append(normalized)
+    return normalized_samples
+
+
+def prepare_dataset(samples: list[dict], tokenizer) -> list[dict]:
+    processed = []
+    for index, sample in enumerate(samples):
         try:
             processed.append(tokenize_and_label(sample, tokenizer))
-        except Exception as e:
-            print(f"  Bo qua mau {i}: {e}")
-            errors += 1
-
-    print(f"  Thanh cong: {len(processed)}/{len(raw_data)} (loi: {errors})")
-    if errors:
-        raise ValueError(
-            "Dataset con loi nhan hoac offset. Sua data/dataset_specialty.json "
-            "truoc khi tao train/validation."
-        )
+        except Exception as error:
+            raise ValueError(f"Invalid dataset sample {index}: {error}") from error
     return processed
+
+
+def stratified_split(dataset: list[dict], seed: int = 42) -> tuple[list[dict], list[dict]]:
+    groups: dict[int, list[dict]] = defaultdict(list)
+    for sample in dataset:
+        groups[sample["intent_labels"]].append(sample)
+
+    rng = random.Random(seed)
+    train_data, val_data = [], []
+    for group in groups.values():
+        rng.shuffle(group)
+        validation_size = max(1, int(round(len(group) * 0.2))) if len(group) > 1 else 0
+        val_data.extend(group[:validation_size])
+        train_data.extend(group[validation_size:])
+
+    rng.shuffle(train_data)
+    rng.shuffle(val_data)
+    return train_data, val_data
 
 
 if __name__ == "__main__":
     print(f"[1/3] Tai tokenizer: {TOKENIZER_NAME}")
-    print("      (Lan dau download ~400MB, vui long cho...)")
     tokenizer = AutoTokenizer.from_pretrained(TOKENIZER_NAME)
-    print("  OK\n")
 
-    print("[2/3] Xu ly dataset...")
-    print(f"      Nguon: {DATASET_PATH}")
-    dataset = prepare_dataset(DATASET_PATH, tokenizer)
+    print("[2/3] Xu ly dataset multi-task...")
+    print(f"  NER dataset: {DATASET_PATH}")
+    samples = load_samples(DATASET_PATH)
+    dataset = prepare_dataset(samples, tokenizer)
+    train_data, val_data = stratified_split(dataset)
 
-    if len(dataset) == 0:
-        print("LOI: Khong co mau nao duoc xu ly! Kiem tra lai dataset.json")
-        exit(1)
-
-    print("\n[3/3] Luu file...")
     os.makedirs("data", exist_ok=True)
-    random.Random(42).shuffle(dataset)
-    split = int(len(dataset) * 0.8)
-    train_data, val_data = dataset[:split], dataset[split:]
+    with open("data/train_multitask.json", "w", encoding="utf-8") as file:
+        json.dump(train_data, file, ensure_ascii=False)
+    with open("data/val_multitask.json", "w", encoding="utf-8") as file:
+        json.dump(val_data, file, ensure_ascii=False)
 
-    # Neu val rong thi lay 1 mau tu train
-    if len(val_data) == 0:
-        val_data = train_data[:1]
-
-    with open("data/train_processed.json", "w", encoding="utf-8") as f:
-        json.dump(train_data, f, ensure_ascii=False)
-    with open("data/val_processed.json", "w", encoding="utf-8") as f:
-        json.dump(val_data, f, ensure_ascii=False)
-
-    print(f"  Train: {len(train_data)} mau -> data/train_processed.json")
-    print(f"  Val:   {len(val_data)} mau -> data/val_processed.json")
-    print("\nXong! Tiep theo chay: python train.py")
+    print(f"  Total: {len(dataset)}")
+    print(f"  Train: {len(train_data)}")
+    print(f"  Val:   {len(val_data)}")

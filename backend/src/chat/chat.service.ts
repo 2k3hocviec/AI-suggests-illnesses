@@ -55,6 +55,28 @@ const SPECIALTY_HINTS: SpecialtyHint[] = [
   },
 ];
 
+const MEDICAL_SPECIALTY_CODES = new Set([
+  "GENERAL_MEDICINE",
+  "CARDIOLOGY",
+  "RESPIRATORY",
+  "PEDIATRICS",
+  "DERMATOLOGY",
+  "NEUROLOGY",
+  "ENT",
+  "OB_GYN",
+  "ORTHOPEDICS",
+  "OPHTHALMOLOGY",
+  "GASTROENTEROLOGY",
+  "DENTISTRY",
+  "UROLOGY",
+  "ENDOCRINOLOGY",
+  "PSYCHIATRY",
+  "ONCOLOGY",
+  "EMERGENCY",
+]);
+
+const CONVERSATION_INTENTS = new Set(["GREETING", "THANKS", "GOODBYE"]);
+
 const ADMINISTRATIVE_MATCH_LABELS = {
   SAME_STREET: "Cùng số nhà/tên đường",
   SAME_WARD: "Cùng phường/xã",
@@ -105,16 +127,21 @@ export class ChatService {
     });
 
     const analysis = await this.analyze(content);
-    const hasEmergencySpecialty = this.hasEmergencySpecialty(analysis);
-    const recommendedSpecialties =
-      await this.findRecommendedSpecialties(analysis);
-    const recommendedSpecialtiesWithDoctors = hasEmergencySpecialty
-      ? this.withoutDoctorSuggestions(recommendedSpecialties)
-      : await this.attachDoctorsToSpecialties(
-          userId,
-          recommendedSpecialties,
-          analysis,
-        );
+    const isMedicalRequest = analysis.action === "FIND_DOCTORS";
+    const hasEmergencySpecialty =
+      isMedicalRequest && this.hasEmergencySpecialty(analysis);
+    const recommendedSpecialties = isMedicalRequest
+      ? await this.findRecommendedSpecialties(analysis)
+      : [];
+    const recommendedSpecialtiesWithDoctors = !isMedicalRequest
+      ? []
+      : hasEmergencySpecialty
+        ? this.withoutDoctorSuggestions(recommendedSpecialties)
+        : await this.attachDoctorsToSpecialties(
+            userId,
+            recommendedSpecialties,
+            analysis,
+          );
     const assistantContent = this.buildAssistantReply(
       analysis,
       recommendedSpecialtiesWithDoctors,
@@ -287,13 +314,12 @@ export class ChatService {
         if (!response.ok) {
           throw new ServiceUnavailableException("Model chưa sẵn sàng");
         }
-        const analysis = (await response.json()) as ModelAnalyzeResponse;
-        const nerAnalysis = {
-          ...analysis,
-          analysisSource: "NER" as const,
+        const nerAnalysis: ModelAnalyzeResponse = {
+          ...this.normalizeModelAnalysis(await response.json()),
+          analysisSource: "NER",
         };
 
-        if (this.isConversationalModelReply(nerAnalysis)) {
+        if (nerAnalysis.action !== "FIND_DOCTORS") {
           return nerAnalysis;
         }
 
@@ -375,110 +401,37 @@ export class ChatService {
       }
 
       const analysis = this.normalizeGeminiAnalysis(JSON.parse(text));
-
-      if (!this.hasConfidentSymptoms(analysis)) {
-        return {
-          symptoms: [],
-          specialties: [],
-          message:
-            'Không tìm thấy triệu chứng có độ tin cậy đủ cao. Bạn hãy mô tả rõ hơn, ví dụ: "Tôi bị đau đầu và sốt cao".',
-          analysisSource: "Gemini",
-        };
-      }
-
       return analysis;
     } finally {
       clearTimeout(timeout);
     }
   }
 
-  private hasConfidentSymptoms(analysis: ModelAnalyzeResponse) {
-    return (
-      analysis.symptoms.some((symptom) => symptom.confidence >= 0.5) &&
-      analysis.specialties.length > 0
-    );
-  }
-
-  private isConversationalModelReply(analysis: ModelAnalyzeResponse) {
-    if (analysis.symptoms.length || analysis.specialties.length) {
-      return false;
-    }
-
-    const message = this.normalize(analysis.message);
-    return (
-      message.includes("xin chao") ||
-      message.includes("rat vui duoc ho tro") ||
-      message.includes("toi ho tro goi y chuyen khoa") ||
-      message.includes("tam biet")
-    );
-  }
-
-  private buildGeminiAnalyzePrompt(content: string) {
-    return `Bạn là bộ trích xuất triệu chứng y tế cho hệ thống gợi ý chuyên khoa.
-
-Yêu cầu bắt buộc:
-- Chỉ trích xuất triệu chứng được người dùng nêu rõ trong câu.
-- Không suy luận bệnh.
-- Không tự thêm triệu chứng không xuất hiện trong câu.
-- Không đưa lời khuyên y tế.
-- Chỉ trả về JSON hợp lệ, không markdown, không giải thích.
-- specialty_code chỉ được dùng một trong các mã sau:
-GENERAL_MEDICINE, CARDIOLOGY, RESPIRATORY, PEDIATRICS, DERMATOLOGY, NEUROLOGY, ENT, OB_GYN, ORTHOPEDICS, OPHTHALMOLOGY, GASTROENTEROLOGY, DENTISTRY, UROLOGY, ENDOCRINOLOGY, PSYCHIATRY, ONCOLOGY, EMERGENCY.
-
-Format JSON bắt buộc:
-{
-  "symptoms": [
-    {
-      "name": "string",
-      "confidence": 0.0,
-      "specialty_code": "SPECIALTY_CODE"
-    }
-  ],
-  "specialties": ["SPECIALTY_CODE"],
-  "message": "string"
-}
-
-Nếu không có triệu chứng rõ ràng, trả về:
-{
-  "symptoms": [],
-  "specialties": [],
-  "message": "Chưa nhận diện được triệu chứng rõ ràng."
-}
-
-Câu người dùng:
-${content}`;
-  }
-
-  private normalizeGeminiAnalysis(value: unknown): ModelAnalyzeResponse {
-    const allowedSpecialties = new Set([
-      "GENERAL_MEDICINE",
-      "CARDIOLOGY",
-      "RESPIRATORY",
-      "PEDIATRICS",
-      "DERMATOLOGY",
-      "NEUROLOGY",
-      "ENT",
-      "OB_GYN",
-      "ORTHOPEDICS",
-      "OPHTHALMOLOGY",
-      "GASTROENTEROLOGY",
-      "DENTISTRY",
-      "UROLOGY",
-      "ENDOCRINOLOGY",
-      "PSYCHIATRY",
-      "ONCOLOGY",
-      "EMERGENCY",
-    ]);
-
+  private normalizeModelAnalysis(value: unknown): ModelAnalyzeResponse {
     if (!value || typeof value !== "object") {
-      throw new ServiceUnavailableException("Gemini JSON không hợp lệ");
+      throw new ServiceUnavailableException("Model trả về JSON không hợp lệ");
     }
 
     const raw = value as {
       symptoms?: unknown;
       specialties?: unknown;
-      message?: unknown;
+      intent?: unknown;
+      action?: unknown;
     };
+    const rawIntent =
+      typeof raw.intent === "string" ? raw.intent.toUpperCase() : "UNKNOWN";
+    const rawAction =
+      typeof raw.action === "string" ? raw.action.toUpperCase() : "CLARIFY";
+    const intent = [
+      "SYMPTOM",
+      "GREETING",
+      "THANKS",
+      "GOODBYE",
+      "UNKNOWN",
+    ].includes(rawIntent)
+      ? (rawIntent as ModelAnalyzeResponse["intent"])
+      : "UNKNOWN";
+
     const symptoms = Array.isArray(raw.symptoms)
       ? raw.symptoms
           .map((symptom) => {
@@ -493,50 +446,114 @@ ${content}`;
             };
             const specialtyCode =
               typeof item.specialty_code === "string"
-                ? item.specialty_code
+                ? item.specialty_code.toUpperCase()
                 : "";
+            const confidence = Number(item.confidence);
 
             if (
               typeof item.name !== "string" ||
-              !allowedSpecialties.has(specialtyCode)
+              !MEDICAL_SPECIALTY_CODES.has(specialtyCode) ||
+              !Number.isFinite(confidence)
             ) {
               return null;
             }
 
-            const confidence = Number(item.confidence);
-
             return {
-              name: item.name,
+              name: item.name.trim(),
               confidence: this.clampScore(confidence),
               specialty_code: specialtyCode,
             };
           })
-          .filter((symptom): symptom is ModelSymptom => symptom !== null)
+          .filter((symptom): symptom is ModelSymptom => Boolean(symptom))
       : [];
-    const specialties = [
-      ...new Set(
-        [
-          ...(Array.isArray(raw.specialties)
-            ? raw.specialties.filter(
-                (specialty): specialty is string =>
-                  typeof specialty === "string" &&
-                  allowedSpecialties.has(specialty),
-              )
-            : []),
-          ...symptoms.map((symptom) => symptom.specialty_code),
+
+    if (symptoms.length > 0) {
+      return {
+        symptoms,
+        specialties: [
+          ...new Set(symptoms.map((symptom) => symptom.specialty_code)),
         ],
-      ),
-    ];
+        intent: "SYMPTOM",
+        action: "FIND_DOCTORS",
+      };
+    }
+
+    if (rawAction === "REPLY" && CONVERSATION_INTENTS.has(intent)) {
+      return {
+        symptoms: [],
+        specialties: [intent],
+        intent,
+        action: "REPLY",
+      };
+    }
 
     return {
-      symptoms,
-      specialties,
-      message:
-        typeof raw.message === "string"
-          ? raw.message
-          : symptoms.length
-            ? `Tìm thấy ${symptoms.length} triệu chứng.`
-            : "Chưa nhận diện được triệu chứng rõ ràng.",
+      symptoms: [],
+      specialties: [],
+      intent: "UNKNOWN",
+      action: "CLARIFY",
+    };
+  }
+
+  private hasConfidentSymptoms(analysis: ModelAnalyzeResponse) {
+    return (
+      analysis.symptoms.some((symptom) => symptom.confidence >= 0.5) &&
+      analysis.specialties.length > 0
+    );
+  }
+
+  private buildGeminiAnalyzePrompt(content: string) {
+    return `Bạn là bộ trích xuất triệu chứng y tế cho hệ thống gợi ý chuyên khoa.
+
+Yêu cầu bắt buộc:
+- Chỉ trích xuất triệu chứng được người dùng nêu rõ trong câu.
+- Không suy luận bệnh.
+- Không tự thêm triệu chứng không xuất hiện trong câu.
+- Không đưa lời khuyên y tế.
+- Nếu là lời chào, cảm ơn hoặc tạm biệt thuần túy, nhận diện intent tương ứng
+  (GREETING, THANKS, GOODBYE) và action là REPLY.
+- Nếu câu có triệu chứng y tế, luôn ưu tiên intent SYMPTOM và action FIND_DOCTORS.
+- Chỉ trả về JSON hợp lệ, không markdown, không giải thích.
+- specialty_code chỉ được dùng một trong các mã sau:
+GENERAL_MEDICINE, CARDIOLOGY, RESPIRATORY, PEDIATRICS, DERMATOLOGY, NEUROLOGY, ENT, OB_GYN, ORTHOPEDICS, OPHTHALMOLOGY, GASTROENTEROLOGY, DENTISTRY, UROLOGY, ENDOCRINOLOGY, PSYCHIATRY, ONCOLOGY, EMERGENCY.
+
+Format JSON bắt buộc:
+{
+  "symptoms": [
+    {
+      "name": "string",
+      "confidence": 0.0,
+      "specialty_code": "SPECIALTY_CODE"
+    }
+  ],
+  "specialties": ["SPECIALTY_CODE"],
+  "intent": "SYMPTOM",
+  "action": "FIND_DOCTORS"
+}
+
+Với lời chào/cảm ơn/tạm biệt thuần túy, dùng format:
+{
+  "symptoms": [],
+  "specialties": ["GREETING"],
+  "intent": "GREETING",
+  "action": "REPLY"
+}
+
+Nếu không có triệu chứng rõ ràng, trả về:
+{
+  "symptoms": [],
+  "specialties": [],
+  "intent": "UNKNOWN",
+  "action": "CLARIFY"
+}
+
+Câu người dùng:
+${content}`;
+  }
+
+  private normalizeGeminiAnalysis(value: unknown): ModelAnalyzeResponse {
+    return {
+      ...this.normalizeModelAnalysis(value),
       analysisSource: "Gemini",
     };
   }
@@ -1127,7 +1144,28 @@ ${content}`;
       )}\n\nThông tin này chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ.\n${this.buildAnalysisSourceLabel(analysis)}`;
     }
 
-    return `${analysis.message}\n${this.buildAnalysisSourceLabel(analysis)}`;
+    if (analysis.action === "REPLY") {
+      return this.buildConversationReply(analysis.intent);
+    }
+
+    return this.buildClarificationReply();
+  }
+
+  private buildConversationReply(intent: ModelAnalyzeResponse["intent"]) {
+    switch (intent) {
+      case "GREETING":
+        return "Xin chào! Tôi có thể hỗ trợ bạn tìm chuyên khoa dựa trên triệu chứng. Bạn đang gặp vấn đề sức khỏe nào?";
+      case "THANKS":
+        return "Không có gì. Tôi rất vui được hỗ trợ bạn!";
+      case "GOODBYE":
+        return "Tạm biệt! Chúc bạn nhiều sức khỏe.";
+      default:
+        return this.buildClarificationReply();
+    }
+  }
+
+  private buildClarificationReply() {
+    return 'Tôi chưa nhận diện được triệu chứng rõ ràng. Bạn hãy mô tả cụ thể hơn, ví dụ: "Tôi bị đau đầu và sốt cao".';
   }
 
   private normalize(value: string) {

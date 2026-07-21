@@ -49,6 +49,15 @@ export interface ChatSpecialtyWithDoctors extends ChatSpecialty {
   doctors: ChatDoctor[];
 }
 
+export type ChatIntent =
+  | 'SYMPTOM'
+  | 'GREETING'
+  | 'THANKS'
+  | 'GOODBYE'
+  | 'UNKNOWN';
+
+export type ChatAction = 'FIND_DOCTORS' | 'REPLY' | 'CLARIFY';
+
 export interface ChatSession {
   id: number;
   title: string | null;
@@ -75,7 +84,8 @@ export interface SendChatMessageResponse {
       specialty_code: string;
     }>;
     specialties: string[];
-    message: string;
+    intent: ChatIntent;
+    action: ChatAction;
     recommendedSpecialty: ChatSpecialty | null;
     recommendedSpecialties: ChatSpecialtyWithDoctors[];
   };

@@ -1,6 +1,15 @@
 'use client';
 
-import { Bot, Mail, Phone, UserCircle } from 'lucide-react';
+import {
+  Activity,
+  Bot,
+  ClipboardList,
+  Mail,
+  Phone,
+  ShieldCheck,
+  Stethoscope,
+  UserCircle,
+} from 'lucide-react';
 import { useEffect, useRef } from 'react';
 
 export interface ThreadMessage {
@@ -99,9 +108,13 @@ export function ConsultationThread({
 }
 
 function AssistantContent({ content }: { content: string }) {
+  const overview = parseRecommendationOverview(content);
+
   return (
-    <div className="space-y-1">
-      {content.split('\n').map((line, index) => {
+    <div className="space-y-3">
+      {overview ? <RecommendationOverview overview={overview} /> : null}
+      <div className="space-y-1">
+        {content.split('\n').map((line, index) => {
         const phone = getContactValue(line, 'Điện thoại:');
         const email = getContactValue(line, 'Email:');
         const trimmedLine = line.trim();
@@ -218,9 +231,157 @@ function AssistantContent({ content }: { content: string }) {
             {trimmedLine}
           </p>
         );
-      })}
+        })}
+      </div>
     </div>
   );
+}
+
+interface RecommendationOverviewData {
+  symptoms: string[];
+  specialties: Array<{ name: string; symptoms: string[] }>;
+  source: string | null;
+  hasEmergencySignal: boolean;
+}
+
+function RecommendationOverview({
+  overview,
+}: {
+  overview: RecommendationOverviewData;
+}) {
+  return (
+    <div className="space-y-3">
+      <div className="grid gap-3 md:grid-cols-3">
+        <section className="rounded-lg border border-sky-200 bg-sky-50 px-3.5 py-3">
+          <div className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-sky-800">
+            <Activity className="h-4 w-4" />
+            Triệu chứng phát hiện
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {overview.symptoms.length ? (
+              overview.symptoms.map((symptom) => (
+                <span
+                  key={symptom}
+                  className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-slate-800 ring-1 ring-sky-200"
+                >
+                  {symptom}
+                </span>
+              ))
+            ) : (
+              <p className="text-sm text-slate-600">
+                Cần mô tả thêm triệu chứng.
+              </p>
+            )}
+          </div>
+        </section>
+
+        <section className="rounded-lg border border-emerald-200 bg-emerald-50 px-3.5 py-3">
+          <div className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-emerald-800">
+            <Stethoscope className="h-4 w-4" />
+            Chuyên khoa phù hợp
+          </div>
+          <div className="space-y-2">
+            {overview.specialties.map((specialty) => (
+              <div key={specialty.name} className="rounded-md bg-white px-3 py-2 ring-1 ring-emerald-200">
+                <p className="text-sm font-bold text-slate-900">
+                  {specialty.name}
+                </p>
+                <p className="mt-0.5 text-xs text-slate-600">
+                  {specialty.symptoms.length
+                    ? specialty.symptoms.join(', ')
+                    : 'Cần thêm thông tin triệu chứng'}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section
+          className={
+            overview.hasEmergencySignal
+              ? 'rounded-lg border border-red-200 bg-red-50 px-3.5 py-3'
+              : 'rounded-lg border border-amber-200 bg-amber-50 px-3.5 py-3'
+          }
+        >
+          <div
+            className={
+              overview.hasEmergencySignal
+                ? 'mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-red-800'
+                : 'mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-amber-800'
+            }
+          >
+            <ShieldCheck className="h-4 w-4" />
+            Lời khuyên tiếp theo
+          </div>
+          <p className="text-sm leading-5 text-slate-700">
+            {overview.hasEmergencySignal
+              ? 'Có dấu hiệu cần xử trí sớm. Hãy liên hệ cơ sở y tế gần nhất hoặc cấp cứu nếu triệu chứng nặng lên.'
+              : 'Đọc danh sách bác sĩ bên dưới và chọn chuyên khoa phù hợp để được thăm khám. Kết quả chỉ mang tính tham khảo.'}
+          </p>
+          {overview.source ? (
+            <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-slate-600 ring-1 ring-slate-200">
+              <ClipboardList className="h-3.5 w-3.5" />
+              {overview.source}
+            </p>
+          ) : null}
+        </section>
+      </div>
+
+      <div className="flex items-center gap-2 border-t border-slate-200 pt-3 text-xs font-bold uppercase tracking-wide text-slate-500">
+        <ClipboardList className="h-4 w-4" />
+        Chi tiết gợi ý
+      </div>
+    </div>
+  );
+}
+
+function parseRecommendationOverview(
+  content: string,
+): RecommendationOverviewData | null {
+  const groupedLines = content
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => /^o\s+/.test(line) && line.includes(':'));
+
+  if (!groupedLines.length) {
+    return null;
+  }
+
+  const specialties = groupedLines.map((line) => {
+    const normalizedLine = line.replace(/^o\s+/, '');
+    const [name, ...symptomParts] = normalizedLine.split(':');
+    const symptoms = symptomParts
+      .join(':')
+      .split(',')
+      .map((symptom) => symptom.trim())
+      .filter(Boolean)
+      .filter((symptom) => !/mô tả|mo ta/i.test(symptom));
+
+    return {
+      name: name.trim(),
+      symptoms,
+    };
+  });
+
+  const symptoms = [
+    ...new Set(specialties.flatMap((specialty) => specialty.symptoms)),
+  ];
+  const sourceLine =
+    content
+      .split('\n')
+      .map((line) => line.trim())
+      .find((line) => line.includes(':') && /Ngu|phân|phÃ¢n/i.test(line)) ??
+    null;
+  const hasEmergencySignal =
+    /EMERGENCY|cấp cứu|cap cuu|cáº¥p cá»©u/i.test(content) ||
+    specialties.some((specialty) => /cấp cứu|cap cuu|cáº¥p cá»©u/i.test(specialty.name));
+
+  return {
+    symptoms,
+    specialties,
+    source: sourceLine,
+    hasEmergencySignal,
+  };
 }
 
 function getContactValue(line: string, label: string) {

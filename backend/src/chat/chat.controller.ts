@@ -12,11 +12,15 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AuthenticatedUser } from '../auth/auth.types';
 import { ChatService } from './chat.service';
 import { SendChatMessageDto } from './dto/send-chat-message.dto';
+import { UsersService } from '../users/users.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('chat')
 export class ChatController {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(
+    private readonly chatService: ChatService,
+    private readonly usersService: UsersService,
+  ) {}
 
   @Post('messages')
   sendMessage(
@@ -37,6 +41,16 @@ export class ChatController {
     @Param('sessionId', ParseIntPipe) sessionId: number,
   ) {
     return this.chatService.listMessages(user.id, sessionId);
+  }
+
+  @Post('admin/model-test')
+  async testModel(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() dto: SendChatMessageDto,
+  ) {
+    await this.usersService.assertAdmin(user.id);
+
+    return this.chatService.testModel(dto.message);
   }
 }
 

@@ -12,6 +12,13 @@ export interface AdminOverview {
   roleBreakdown: Array<{ label: string; value: number }>;
   statusBreakdown: Array<{ label: string; value: number }>;
   dailyActivity: Array<{ date: string; users: number; messages: number }>;
+  ai: {
+    totalConsultations: number;
+    unrecognizedCases: number;
+    topSymptoms: Array<{ name: string; count: number }>;
+    topSpecialties: Array<{ code: string; name: string; count: number }>;
+    sourceBreakdown: Array<{ label: 'NER' | 'Gemini'; value: number }>;
+  };
 }
 
 export interface AdminUser {
@@ -69,4 +76,25 @@ export function setUserEnabled(userId: number, isEnabled: boolean) {
       },
     },
   );
+}
+
+export interface AdminModelTestResponse {
+  symptoms: Array<{
+    name: string;
+    confidence: number;
+    specialty_code: string;
+  }>;
+  specialties: string[];
+  intent: string;
+  action: string;
+  analysisSource?: 'NER' | 'Gemini';
+}
+
+export function testAdminModel(message: string) {
+  return apiRequest<AdminModelTestResponse>('/chat/admin/model-test', {
+    method: 'POST',
+    json: {
+      message,
+    },
+  });
 }

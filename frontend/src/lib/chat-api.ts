@@ -79,6 +79,7 @@ export interface ChatAnalysis {
   specialties: string[];
   intent: ChatIntent;
   action: ChatAction;
+  repeatDetected?: boolean;
   recommendedSpecialty: ChatSpecialty | null;
   recommendedSpecialties: ChatSpecialtyWithDoctors[];
 }

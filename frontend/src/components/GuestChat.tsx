@@ -23,6 +23,59 @@ export function GuestChat() {
     setIsSending(true);
     setRequestCount((current) => current + 1);
 
+    const isRepeatedQuestion = messages.some(
+      (message) =>
+        message.role === "USER" &&
+        normalizeRepeatedMessage(message.content) ===
+          normalizeRepeatedMessage(content),
+    );
+    if (isRepeatedQuestion) {
+      const previousUserIndex = [...messages]
+        .map((message, index) => ({ message, index }))
+        .reverse()
+        .find(
+          ({ message }) =>
+            message.role === "USER" &&
+            normalizeRepeatedMessage(message.content) ===
+              normalizeRepeatedMessage(content),
+        )?.index;
+      const previousAssistantMessage =
+        previousUserIndex === undefined
+          ? undefined
+          : messages
+              .slice(previousUserIndex + 1)
+              .find((message) => message.role === "ASSISTANT");
+      const createdAt = new Date().toISOString();
+      const timestamp = Date.now();
+      setMessages((current) => [
+        ...current,
+        {
+          id: -timestamp,
+          sessionId: 0,
+          userId: null,
+          role: "USER",
+          content,
+          metadata: null,
+          createdAt,
+        },
+        {
+          id: -(timestamp + 1),
+          sessionId: 0,
+          userId: null,
+          role: "ASSISTANT",
+          content:
+            previousAssistantMessage?.content ??
+            "Mình đã ghi nhận câu hỏi này ở tin nhắn trước.",
+          metadata: previousAssistantMessage?.metadata ?? {
+            repeatDetected: true,
+          },
+          createdAt,
+        },
+      ]);
+      setIsSending(false);
+      return;
+    }
+
     const optimisticMessageId = -Date.now();
     const optimisticMessage: ChatMessage = {
       id: optimisticMessageId,
@@ -131,4 +184,16 @@ export function GuestChat() {
       </section>
     </main>
   );
+}
+
+function normalizeRepeatedMessage(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
 }

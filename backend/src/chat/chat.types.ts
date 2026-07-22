@@ -19,6 +19,7 @@ export interface ModelAnalyzeResponse {
   intent: ModelIntent;
   action: ModelAction;
   analysisSource?: 'NER' | 'Gemini';
+  repeatDetected?: boolean;
 }
 
 export interface SpecialtyHint {

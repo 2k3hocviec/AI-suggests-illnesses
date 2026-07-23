@@ -46,8 +46,19 @@ export interface AdminUsersResponse {
   totalPages: number;
 }
 
-export function getAdminOverview() {
-  return apiRequest<AdminOverview>('/users/admin/overview');
+export function getAdminOverview(params: { from?: string; to?: string } = {}) {
+  const query = new URLSearchParams();
+
+  if (params.from) {
+    query.set('from', params.from);
+  }
+
+  if (params.to) {
+    query.set('to', params.to);
+  }
+
+  const suffix = query.toString() ? `?${query.toString()}` : '';
+  return apiRequest<AdminOverview>(`/users/admin/overview${suffix}`);
 }
 
 export function listAdminUsers(params: { search?: string; page?: number }) {

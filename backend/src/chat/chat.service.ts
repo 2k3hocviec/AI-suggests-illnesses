@@ -1363,7 +1363,7 @@ ${content}`;
   private buildConversationReply(intent: ModelAnalyzeResponse["intent"]) {
     switch (intent) {
       case "GREETING":
-        return "Xin chào! Tôi có thể hỗ trợ bạn tìm chuyên khoa dựa trên triệu chứng. Bạn đang gặp vấn đề sức khỏe nào?";
+        return "Xin chào! Tôi có thể hỗ trợ bạn tìm bác sĩ phù hợp dựa trên các triệu chứng bạn nhập vào. Hãy mô tả vấn đề sức khỏe của bạn để bắt đầu.";
       case "THANKS":
         return "Không có gì. Tôi rất vui được hỗ trợ bạn!";
       case "GOODBYE":

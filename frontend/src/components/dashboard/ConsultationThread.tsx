@@ -56,9 +56,9 @@ export function ConsultationThread({
   return (
     <section
       ref={threadRef}
-      className="chat-scrollbar min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5 lg:px-10"
+      className="chat-scrollbar min-h-0 w-full max-w-full flex-1 overflow-x-hidden overflow-y-auto overscroll-contain px-4 py-5 lg:px-10"
     >
-      <div className="mx-auto flex max-w-5xl flex-col gap-5">
+      <div className="mx-auto flex min-w-0 w-full max-w-5xl flex-col gap-5">
         {isLoadingMessages ? (
           <div className="rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-sm text-slate-600 shadow-sm">
             Đang tải phiên chat...
@@ -70,9 +70,9 @@ export function ConsultationThread({
 
           if (message.role === 'USER') {
             return (
-              <div key={message.id} className="flex justify-end gap-5">
-                <div className="max-w-[76%]">
-                  <div className="rounded-bl-xl rounded-tl-xl rounded-tr-xl bg-[#073f87] px-4 py-3.5 text-sm leading-6 text-white shadow-sm lg:text-[15px]">
+              <div key={message.id} className="flex w-full min-w-0 justify-end gap-3 sm:gap-5">
+                <div className="w-fit min-w-0 max-w-[76%]">
+                  <div className="break-words rounded-bl-xl rounded-tl-xl rounded-tr-xl bg-[#073f87] px-4 py-3.5 text-sm leading-6 text-white shadow-sm lg:text-[15px]">
                     {message.content}
                   </div>
                   <p className="mt-2 text-right text-xs text-slate-600">
@@ -89,15 +89,15 @@ export function ConsultationThread({
           const isRecommendation = isStructuredRecommendation(message.content);
 
           return (
-            <div key={message.id} className="flex items-start gap-5">
+            <div key={message.id} className="flex w-full min-w-0 items-start gap-3 sm:gap-5">
               <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-700 text-white shadow-sm">
                 <Bot className="h-4 w-4" />
               </div>
               <div
                 className={
                   isRecommendation
-                    ? 'w-full max-w-[96%] lg:max-w-[94%]'
-                    : 'max-w-[76%]'
+                    ? 'min-w-0 flex-1'
+                    : 'w-fit min-w-0 max-w-[76%]'
                 }
               >
                 <div
@@ -183,8 +183,8 @@ function RecommendationResponse({
   const primarySpecialty = recommendation.specialties[0]?.name ?? 'Phù hợp';
 
   return (
-    <div className="space-y-4">
-      <div className="grid gap-3 md:grid-cols-3">
+    <div className="min-w-0 max-w-full space-y-4">
+      <div className="grid min-w-0 gap-3 md:grid-cols-3">
         <SummaryCard
           icon={Activity}
           title="Triệu chứng"
@@ -373,7 +373,7 @@ function SummaryCard({
 
   return (
     <section
-      className={`min-h-[142px] rounded-2xl border ${styles.border} ${styles.background} px-4 py-4`}
+      className={`min-h-[142px] min-w-0 max-w-full rounded-2xl border ${styles.border} ${styles.background} px-4 py-4`}
     >
       <div className={`mb-3 flex items-center gap-2 text-sm font-bold ${styles.icon}`}>
         <Icon className="h-4 w-4" />
@@ -386,11 +386,11 @@ function SummaryCard({
 
 function DoctorCard({ doctor }: { doctor: DoctorRecommendation }) {
   return (
-    <article className="rounded-2xl border border-slate-200 bg-white px-4 py-5 shadow-sm sm:px-5">
+    <article className="min-w-0 max-w-full rounded-2xl border border-slate-200 bg-white px-4 py-5 shadow-sm sm:px-5">
       <div className="flex flex-wrap items-start gap-3">
         <DoctorAvatar name={doctor.name} />
         <div className="min-w-0 flex-1">
-          <h4 className="text-lg font-bold text-slate-950">{doctor.name}</h4>
+          <h4 className="break-words text-lg font-bold text-slate-950">{doctor.name}</h4>
           <p className="mt-1 text-sm text-slate-600">
             {doctor.specialty ?? 'Bác sĩ chuyên khoa'}
             {doctor.experience ? ` · ${doctor.experience}` : ''}

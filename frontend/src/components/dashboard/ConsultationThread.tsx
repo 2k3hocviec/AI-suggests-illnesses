@@ -2,15 +2,24 @@
 
 import {
   Activity,
+  AlertTriangle,
+  Award,
   Bot,
+  Building2,
+  ChevronDown,
+  ChevronUp,
   ClipboardList,
+  Clock3,
   Mail,
+  MapPin,
   Phone,
   ShieldCheck,
+  Star,
   Stethoscope,
   UserCircle,
+  Video,
 } from 'lucide-react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export interface ThreadMessage {
   id: number | string;
@@ -47,9 +56,9 @@ export function ConsultationThread({
   return (
     <section
       ref={threadRef}
-      className="chat-scrollbar min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5 lg:px-10"
+      className="chat-scrollbar min-h-0 w-full max-w-full flex-1 overflow-x-hidden overflow-y-auto overscroll-contain px-4 py-5 lg:px-10"
     >
-      <div className="mx-auto flex max-w-5xl flex-col gap-5">
+      <div className="mx-auto flex min-w-0 w-full max-w-5xl flex-col gap-5">
         {isLoadingMessages ? (
           <div className="rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-sm text-slate-600 shadow-sm">
             Đang tải phiên chat...
@@ -61,9 +70,9 @@ export function ConsultationThread({
 
           if (message.role === 'USER') {
             return (
-              <div key={message.id} className="flex justify-end gap-5">
-                <div className="max-w-[76%]">
-                  <div className="rounded-bl-xl rounded-tl-xl rounded-tr-xl bg-[#073f87] px-4 py-3.5 text-sm leading-6 text-white shadow-sm lg:text-[15px]">
+              <div key={message.id} className="flex w-full min-w-0 justify-end gap-3 sm:gap-5">
+                <div className="w-fit min-w-0 max-w-[76%]">
+                  <div className="break-words rounded-bl-xl rounded-tl-xl rounded-tr-xl bg-[#073f87] px-4 py-3.5 text-sm leading-6 text-white shadow-sm lg:text-[15px]">
                     {message.content}
                   </div>
                   <p className="mt-2 text-right text-xs text-slate-600">
@@ -77,13 +86,27 @@ export function ConsultationThread({
             );
           }
 
+          const isRecommendation = isStructuredRecommendation(message.content);
+
           return (
-            <div key={message.id} className="flex items-start gap-5">
+            <div key={message.id} className="flex w-full min-w-0 items-start gap-3 sm:gap-5">
               <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-700 text-white shadow-sm">
                 <Bot className="h-4 w-4" />
               </div>
-              <div className="max-w-[76%]">
-                <div className="whitespace-pre-line rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-sm leading-6 shadow-sm lg:text-[15px]">
+              <div
+                className={
+                  isRecommendation
+                    ? 'min-w-0 flex-1'
+                    : 'w-fit min-w-0 max-w-[76%]'
+                }
+              >
+                <div
+                  className={
+                    isRecommendation
+                      ? 'rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:p-4 lg:p-5'
+                      : 'whitespace-pre-line rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-sm leading-6 shadow-sm lg:text-[15px]'
+                  }
+                >
                   <AssistantContent content={message.content} />
                 </div>
                 <p className="mt-2 text-xs text-slate-600">{time}</p>
@@ -108,248 +131,410 @@ export function ConsultationThread({
 }
 
 function AssistantContent({ content }: { content: string }) {
-  const overview = parseRecommendationOverview(content);
+  const recommendation = parseRecommendation(content);
 
-  return (
-    <div className="space-y-3">
-      {overview ? <RecommendationOverview overview={overview} /> : null}
-      <div className="space-y-1">
-        {content.split('\n').map((line, index) => {
-        const phone = getContactValue(line, 'Điện thoại:');
-        const email = getContactValue(line, 'Email:');
-        const trimmedLine = line.trim();
+  if (!recommendation) {
+    return <p className="whitespace-pre-line text-slate-700">{content}</p>;
+  }
 
-        if (phone && phone !== 'chưa cập nhật') {
-          return (
-            <div key={`${line}-${index}`} className="pt-1">
-              <a
-                href={`tel:${phone.replace(/\s+/g, '')}`}
-                className="inline-flex items-center gap-2 rounded-md bg-[#073f87] px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-[#052f66]"
-              >
-                <Phone className="h-3.5 w-3.5" />
-                Gọi điện
-              </a>
-              <span className="ml-2 text-slate-600">{phone}</span>
-            </div>
-          );
-        }
-
-        if (email && email !== 'chưa cập nhật') {
-          return (
-            <div key={`${line}-${index}`} className="pt-1">
-              <a
-                href={`mailto:${email}`}
-                className="inline-flex items-center gap-2 rounded-md border border-slate-300 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:bg-slate-50"
-              >
-                <Mail className="h-3.5 w-3.5" />
-                Gửi email
-              </a>
-              <span className="ml-2 text-slate-600">{email}</span>
-            </div>
-          );
-        }
-
-        if (!trimmedLine) {
-          return <div key={`${line}-${index}`} className="h-2" />;
-        }
-
-        if (trimmedLine === 'Kết quả tham khảo') {
-          return (
-            <h3
-              key={`${line}-${index}`}
-              className="text-base font-bold text-slate-950 lg:text-lg"
-            >
-              {trimmedLine}
-            </h3>
-          );
-        }
-
-        if (/^\d+\.\s/.test(trimmedLine)) {
-          return (
-            <h4
-              key={`${line}-${index}`}
-              className="pt-3 text-[15px] font-bold text-[#073b83] lg:text-base"
-            >
-              {trimmedLine}
-            </h4>
-          );
-        }
-
-        if (trimmedLine.startsWith('Điểm phù hợp:')) {
-          return (
-            <p
-              key={`${line}-${index}`}
-              className="font-bold text-emerald-700"
-            >
-              {trimmedLine}
-            </p>
-          );
-        }
-
-        if (trimmedLine.startsWith('Lý do đề xuất:')) {
-          return (
-            <p
-              key={`${line}-${index}`}
-              className="mt-1 rounded-md bg-emerald-50 px-3 py-2 font-medium text-emerald-800"
-            >
-              <span className="font-bold">Lý do đề xuất:</span>
-              {` ${trimmedLine.replace('Lý do đề xuất:', '').trim()}`}
-            </p>
-          );
-        }
-
-        if (trimmedLine.startsWith('Nguồn phân tích:')) {
-          const source = trimmedLine.replace('Nguồn phân tích:', '').trim();
-          const isGemini = source.toLowerCase() === 'gemini';
-
-          return (
-            <p
-              key={`${line}-${index}`}
-              className="mt-2 inline-flex w-fit rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600"
-            >
-              {isGemini ? 'Nguồn phân tích: Gemini' : 'Nguồn phân tích: NER'}
-            </p>
-          );
-        }
-
-        if (trimmedLine.startsWith('•')) {
-          const [label, ...rest] = trimmedLine.slice(1).split(':');
-          const value = rest.join(':').trim();
-
-          return (
-            <p key={`${line}-${index}`} className="pl-3 text-slate-700">
-              <span className="font-semibold text-slate-900">
-                • {label.trim()}:
-              </span>{' '}
-              {value}
-            </p>
-          );
-        }
-
-        return (
-          <p key={`${line}-${index}`} className="text-slate-700">
-            {trimmedLine}
-          </p>
-        );
-        })}
-      </div>
-    </div>
-  );
+  return <RecommendationResponse recommendation={recommendation} />;
 }
 
-interface RecommendationOverviewData {
+interface SpecialtySummary {
+  name: string;
   symptoms: string[];
-  specialties: Array<{ name: string; symptoms: string[] }>;
+}
+
+interface DoctorRecommendation {
+  id: number;
+  name: string;
+  score: number | null;
+  fitLabel: string | null;
+  specialty: string | null;
+  experience: string | null;
+  rating: string | null;
+  workplace: string | null;
+  address: string | null;
+  distance: string | null;
+  schedule: string | null;
+  consultationType: string | null;
+  phone: string | null;
+  email: string | null;
+  reason: string | null;
+}
+
+interface RecommendationData {
+  symptoms: string[];
+  specialties: SpecialtySummary[];
+  doctors: DoctorRecommendation[];
   source: string | null;
   hasEmergencySignal: boolean;
+  note: string;
 }
 
-function RecommendationOverview({
-  overview,
+function RecommendationResponse({
+  recommendation,
 }: {
-  overview: RecommendationOverviewData;
+  recommendation: RecommendationData;
 }) {
+  const [expandedDoctorId, setExpandedDoctorId] = useState<number | null>(
+    null,
+  );
+  const primarySpecialty = recommendation.specialties[0]?.name ?? 'Phù hợp';
+
   return (
-    <div className="space-y-3">
-      <div className="grid gap-3 md:grid-cols-3">
-        <section className="rounded-lg border border-sky-200 bg-sky-50 px-3.5 py-3">
-          <div className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-sky-800">
-            <Activity className="h-4 w-4" />
-            Triệu chứng phát hiện
-          </div>
-          <div className="flex flex-wrap gap-2">
-            {overview.symptoms.length ? (
-              overview.symptoms.map((symptom) => (
-                <span
-                  key={symptom}
-                  className="rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-slate-800 ring-1 ring-sky-200"
-                >
-                  {symptom}
-                </span>
-              ))
-            ) : (
-              <p className="text-sm text-slate-600">
-                Cần mô tả thêm triệu chứng.
-              </p>
-            )}
-          </div>
-        </section>
-
-        <section className="rounded-lg border border-emerald-200 bg-emerald-50 px-3.5 py-3">
-          <div className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-emerald-800">
-            <Stethoscope className="h-4 w-4" />
-            Chuyên khoa phù hợp
-          </div>
-          <div className="space-y-2">
-            {overview.specialties.map((specialty) => (
-              <div key={specialty.name} className="rounded-md bg-white px-3 py-2 ring-1 ring-emerald-200">
-                <p className="text-sm font-bold text-slate-900">
-                  {specialty.name}
-                </p>
-                <p className="mt-0.5 text-xs text-slate-600">
-                  {specialty.symptoms.length
-                    ? specialty.symptoms.join(', ')
-                    : 'Cần thêm thông tin triệu chứng'}
-                </p>
+    <div className="min-w-0 max-w-full space-y-4">
+      <div className="grid min-w-0 gap-3 md:grid-cols-3">
+        <SummaryCard
+          icon={Activity}
+          title="Triệu chứng"
+          tone="blue"
+          content={
+            recommendation.symptoms.length ? (
+              <div className="flex flex-wrap gap-2">
+                {recommendation.symptoms.map((symptom) => (
+                  <span
+                    key={symptom}
+                    className="rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-800"
+                  >
+                    {symptom}
+                  </span>
+                ))}
               </div>
-            ))}
-          </div>
-        </section>
-
-        <section
-          className={
-            overview.hasEmergencySignal
-              ? 'rounded-lg border border-red-200 bg-red-50 px-3.5 py-3'
-              : 'rounded-lg border border-amber-200 bg-amber-50 px-3.5 py-3'
+            ) : (
+              <span className="text-sm text-slate-500">
+                Chưa nhận diện rõ
+              </span>
+            )
           }
-        >
-          <div
-            className={
-              overview.hasEmergencySignal
-                ? 'mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-red-800'
-                : 'mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-wide text-amber-800'
-            }
-          >
-            <ShieldCheck className="h-4 w-4" />
-            Lời khuyên tiếp theo
-          </div>
-          <p className="text-sm leading-5 text-slate-700">
-            {overview.hasEmergencySignal
-              ? 'Có dấu hiệu cần xử trí sớm. Hãy liên hệ cơ sở y tế gần nhất hoặc cấp cứu nếu triệu chứng nặng lên.'
-              : 'Đọc danh sách bác sĩ bên dưới và chọn chuyên khoa phù hợp để được thăm khám. Kết quả chỉ mang tính tham khảo.'}
-          </p>
-          {overview.source ? (
-            <p className="mt-2 inline-flex items-center gap-1.5 rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-slate-600 ring-1 ring-slate-200">
-              <ClipboardList className="h-3.5 w-3.5" />
-              {overview.source}
+        />
+
+        <SummaryCard
+          icon={Stethoscope}
+          title="Chuyên khoa"
+          tone="green"
+          content={
+            <div className="space-y-1">
+              {recommendation.specialties.length ? (
+                recommendation.specialties.map((specialty) => (
+                  <div key={specialty.name}>
+                    <p className="text-base font-bold text-slate-900">
+                      {specialty.name}
+                    </p>
+                    <p className="text-sm text-slate-500">
+                      {specialty.symptoms.length
+                        ? specialty.symptoms.join(', ')
+                        : 'Theo triệu chứng đã cung cấp'}
+                    </p>
+                  </div>
+                ))
+              ) : (
+                <span className="text-sm text-slate-500">
+                  Cần thêm thông tin
+                </span>
+              )}
+            </div>
+          }
+        />
+
+        <SummaryCard
+          icon={recommendation.hasEmergencySignal ? AlertTriangle : ShieldCheck}
+          title="Lưu ý"
+          tone={recommendation.hasEmergencySignal ? 'red' : 'amber'}
+          content={
+            <p className="text-sm leading-6 text-slate-600">
+              {recommendation.hasEmergencySignal
+                ? 'Có dấu hiệu cần xử trí sớm. Hãy đến cơ sở y tế gần nhất hoặc gọi cấp cứu nếu triệu chứng nặng lên.'
+                : 'Chỉ mang tính tham khảo, không thay thế chẩn đoán bác sĩ.'}
             </p>
-          ) : null}
-        </section>
+          }
+        />
       </div>
 
-      <div className="flex items-center gap-2 border-t border-slate-200 pt-3 text-xs font-bold uppercase tracking-wide text-slate-500">
-        <ClipboardList className="h-4 w-4" />
-        Chi tiết gợi ý
+      <div className="flex items-center gap-2 px-1 pt-1 text-sm font-semibold text-slate-600">
+        <Stethoscope className="h-4 w-4 text-emerald-700" />
+        {recommendation.doctors.length
+          ? `${recommendation.doctors.length} bác sĩ phù hợp nhất`
+          : recommendation.hasEmergencySignal
+            ? 'Khuyến nghị xử trí khẩn cấp'
+            : `Gợi ý chuyên khoa ${primarySpecialty}`}
+      </div>
+
+      {recommendation.doctors.length ? (
+        <div className="space-y-3">
+          <DoctorCard doctor={recommendation.doctors[0]} />
+
+          {recommendation.doctors.slice(1).map((doctor) => {
+            const isExpanded = expandedDoctorId === doctor.id;
+
+            return (
+              <div key={doctor.id}>
+                <button
+                  type="button"
+                  onClick={() =>
+                    setExpandedDoctorId(isExpanded ? null : doctor.id)
+                  }
+                  aria-expanded={isExpanded}
+                  className="flex w-full items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left shadow-sm transition hover:border-emerald-300 hover:bg-emerald-50/30"
+                >
+                  <DoctorAvatar name={doctor.name} muted />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-sm font-bold text-slate-800">
+                      {doctor.name}
+                    </span>
+                    <span className="mt-1 block truncate text-xs text-slate-500">
+                      {doctor.specialty ?? primarySpecialty}
+                      {doctor.experience ? ` · ${doctor.experience}` : ''}
+                    </span>
+                  </span>
+                  <span className="hidden text-right sm:block">
+                    <span className="block text-lg font-bold text-emerald-700">
+                      {doctor.score !== null ? `${doctor.score}%` : '—'}
+                    </span>
+                    <span className="text-xs text-slate-500">
+                      {doctor.fitLabel ?? 'phù hợp'}
+                    </span>
+                  </span>
+                  {isExpanded ? (
+                    <ChevronUp className="h-5 w-5 text-slate-400" />
+                  ) : (
+                    <ChevronDown className="h-5 w-5 text-slate-400" />
+                  )}
+                </button>
+                {isExpanded ? (
+                  <div className="mt-3">
+                    <DoctorCard doctor={doctor} />
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <div
+          className={
+            recommendation.hasEmergencySignal
+              ? 'rounded-2xl border border-red-200 bg-red-50 px-4 py-4 text-sm leading-6 text-red-800'
+              : 'rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm leading-6 text-slate-600'
+          }
+        >
+          {recommendation.hasEmergencySignal
+            ? 'Không nên chờ gợi ý bác sĩ trên hệ thống. Hãy đến cơ sở y tế gần nhất hoặc gọi cấp cứu để được thăm khám kịp thời.'
+            : 'Chưa có dữ liệu bác sĩ phù hợp trong hệ thống.'}
+        </div>
+      )}
+
+      <div className="flex flex-wrap items-center gap-2 border-t border-slate-100 px-1 pt-3 text-xs leading-5 text-slate-500">
+        <ClipboardList className="h-4 w-4 shrink-0" />
+        <span>{recommendation.note}</span>
+        {recommendation.source ? (
+          <span className="inline-flex items-center rounded-full bg-slate-100 px-2 py-0.5 font-semibold text-slate-600">
+            Nguồn: {recommendation.source}
+          </span>
+        ) : null}
       </div>
     </div>
   );
 }
 
-function parseRecommendationOverview(
-  content: string,
-): RecommendationOverviewData | null {
-  const groupedLines = content
-    .split('\n')
+function SummaryCard({
+  icon: Icon,
+  title,
+  tone,
+  content,
+}: {
+  icon: typeof Activity;
+  title: string;
+  tone: 'blue' | 'green' | 'amber' | 'red';
+  content: React.ReactNode;
+}) {
+  const styles = {
+    blue: {
+      border: 'border-blue-100',
+      icon: 'text-blue-700',
+      background: 'bg-blue-50/40',
+    },
+    green: {
+      border: 'border-emerald-100',
+      icon: 'text-emerald-700',
+      background: 'bg-emerald-50/40',
+    },
+    amber: {
+      border: 'border-amber-100',
+      icon: 'text-amber-700',
+      background: 'bg-amber-50/40',
+    },
+    red: {
+      border: 'border-red-100',
+      icon: 'text-red-700',
+      background: 'bg-red-50/40',
+    },
+  }[tone];
+
+  return (
+    <section
+      className={`min-h-[142px] min-w-0 max-w-full rounded-2xl border ${styles.border} ${styles.background} px-4 py-4`}
+    >
+      <div className={`mb-3 flex items-center gap-2 text-sm font-bold ${styles.icon}`}>
+        <Icon className="h-4 w-4" />
+        {title}
+      </div>
+      {content}
+    </section>
+  );
+}
+
+function DoctorCard({ doctor }: { doctor: DoctorRecommendation }) {
+  return (
+    <article className="min-w-0 max-w-full rounded-2xl border border-slate-200 bg-white px-4 py-5 shadow-sm sm:px-5">
+      <div className="flex flex-wrap items-start gap-3">
+        <DoctorAvatar name={doctor.name} />
+        <div className="min-w-0 flex-1">
+          <h4 className="break-words text-lg font-bold text-slate-950">{doctor.name}</h4>
+          <p className="mt-1 text-sm text-slate-600">
+            {doctor.specialty ?? 'Bác sĩ chuyên khoa'}
+            {doctor.experience ? ` · ${doctor.experience}` : ''}
+          </p>
+        </div>
+        <div className="ml-auto text-right">
+          <p className="text-2xl font-bold text-emerald-700">
+            {doctor.score !== null ? `${doctor.score}%` : '—'}
+          </p>
+          <p className="text-xs font-medium text-slate-500">
+            {doctor.fitLabel ?? 'phù hợp'}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-5 grid gap-x-6 gap-y-3 sm:grid-cols-2">
+        <DoctorInfo icon={Star} label="Đánh giá" value={doctor.rating} />
+        <DoctorInfo
+          icon={Building2}
+          label="Nơi làm việc"
+          value={doctor.workplace}
+        />
+        <DoctorInfo icon={MapPin} label="Địa chỉ" value={doctor.address} />
+        {doctor.distance ? (
+          <DoctorInfo
+            icon={MapPin}
+            label="Khoảng cách khu vực"
+            value={doctor.distance}
+          />
+        ) : null}
+        <DoctorInfo
+          icon={Clock3}
+          label="Giờ làm việc"
+          value={doctor.schedule}
+        />
+        <DoctorInfo
+          icon={Video}
+          label="Hình thức"
+          value={doctor.consultationType}
+        />
+        <DoctorInfo icon={Phone} label="Điện thoại" value={doctor.phone} />
+        <DoctorInfo icon={Mail} label="Email" value={doctor.email} />
+      </div>
+
+      {doctor.reason ? (
+        <div className="mt-4 flex gap-2 rounded-xl bg-emerald-50 px-3 py-2.5 text-sm leading-5 text-emerald-800">
+          <Award className="mt-0.5 h-4 w-4 shrink-0" />
+          <span>
+            <strong>Lý do đề xuất:</strong> {doctor.reason}
+          </span>
+        </div>
+      ) : null}
+
+      <div className="mt-4 grid gap-2 sm:grid-cols-2">
+        {doctor.phone && doctor.phone !== 'chưa cập nhật' ? (
+          <a
+            href={`tel:${doctor.phone.replace(/\s+/g, '')}`}
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#073f87] px-3 text-sm font-semibold text-white transition hover:bg-[#052f66]"
+          >
+            <Phone className="h-4 w-4" />
+            Gọi điện
+          </a>
+        ) : null}
+        {doctor.email && doctor.email !== 'chưa cập nhật' ? (
+          <a
+            href={`mailto:${doctor.email}`}
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+          >
+            <Mail className="h-4 w-4" />
+            Gửi email
+          </a>
+        ) : null}
+      </div>
+
+      {(!doctor.phone || doctor.phone === 'chưa cập nhật') &&
+      (!doctor.email || doctor.email === 'chưa cập nhật') ? (
+        <p className="mt-3 text-xs text-slate-500">
+          Liên hệ: chưa cập nhật
+        </p>
+      ) : null}
+    </article>
+  );
+}
+
+function DoctorInfo({
+  icon: Icon,
+  label,
+  value,
+}: {
+  icon: typeof Star;
+  label: string;
+  value: string | null;
+}) {
+  return (
+    <div className="flex min-w-0 items-start gap-2 text-sm">
+      <Icon className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
+      <span className="min-w-0 flex-1">
+        <span className="block text-xs font-medium text-slate-500">{label}</span>
+        <span className="mt-0.5 block break-words font-medium text-slate-800">
+          {value || 'chưa cập nhật'}
+        </span>
+      </span>
+    </div>
+  );
+}
+
+function DoctorAvatar({ name, muted = false }: { name: string; muted?: boolean }) {
+  const initials = name
+    .replace(/^Bác sĩ\s+/i, '')
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(-2)
+    .map((part) => part[0])
+    .join('')
+    .toUpperCase();
+
+  return (
+    <span
+      className={
+        muted
+          ? 'flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-100 text-sm font-bold text-slate-500'
+          : 'flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-blue-100 text-lg font-bold text-blue-800'
+      }
+    >
+      {initials || 'BS'}
+    </span>
+  );
+}
+
+function parseRecommendation(content: string): RecommendationData | null {
+  const lines = content
+    .split(/\r?\n/)
     .map((line) => line.trim())
-    .filter((line) => /^o\s+/.test(line) && line.includes(':'));
+    .filter(Boolean);
+  const groupedLines = lines.filter(
+    (line) => /^o\s+/i.test(line) && line.includes(':'),
+  );
 
   if (!groupedLines.length) {
     return null;
   }
 
   const specialties = groupedLines.map((line) => {
-    const normalizedLine = line.replace(/^o\s+/, '');
-    const [name, ...symptomParts] = normalizedLine.split(':');
+    const [name, ...symptomParts] = line.replace(/^o\s+/i, '').split(':');
     const symptoms = symptomParts
       .join(':')
       .split(',')
@@ -357,41 +542,132 @@ function parseRecommendationOverview(
       .filter(Boolean)
       .filter((symptom) => !/mô tả|mo ta/i.test(symptom));
 
-    return {
-      name: name.trim(),
-      symptoms,
-    };
+    return { name: name.trim(), symptoms };
   });
 
-  const symptoms = [
-    ...new Set(specialties.flatMap((specialty) => specialty.symptoms)),
-  ];
-  const sourceLine =
-    content
-      .split('\n')
-      .map((line) => line.trim())
-      .find((line) => line.includes(':') && /Ngu|phân|phÃ¢n/i.test(line)) ??
-    null;
-  const hasEmergencySignal =
-    /EMERGENCY|cấp cứu|cap cuu|cáº¥p cá»©u/i.test(content) ||
-    specialties.some((specialty) => /cấp cứu|cap cuu|cáº¥p cá»©u/i.test(specialty.name));
+  const symptoms = unique(specialties.flatMap((specialty) => specialty.symptoms));
+  const source =
+    lines
+      .find((line) => /^Nguồn phân tích:/i.test(line))
+      ?.replace(/^Nguồn phân tích:/i, '')
+      .trim() ?? null;
+  const hasEmergencySignal = /EMERGENCY|cấp cứu|cap cuu|cáº¥p cá»©u/i.test(
+    content,
+  );
+  const doctors: DoctorRecommendation[] = [];
+  let activeSpecialty: string | null = null;
+  let currentDoctor: DoctorRecommendation | null = null;
+
+  const pushCurrentDoctor = () => {
+    if (currentDoctor) {
+      doctors.push(currentDoctor);
+      currentDoctor = null;
+    }
+  };
+
+  lines.forEach((line, index) => {
+    const specialtyHeader = line.match(/^Chuyên khoa:\s*(.+)$/i);
+    if (specialtyHeader) {
+      pushCurrentDoctor();
+      activeSpecialty = specialtyHeader[1].trim();
+      return;
+    }
+
+    const doctorHeader = line.match(/^\d+\.\s+(.+)$/);
+    if (doctorHeader) {
+      pushCurrentDoctor();
+      currentDoctor = {
+        id: index,
+        name: doctorHeader[1].trim(),
+        score: null,
+        fitLabel: null,
+        specialty: activeSpecialty,
+        experience: null,
+        rating: null,
+        workplace: null,
+        address: null,
+        distance: null,
+        schedule: null,
+        consultationType: null,
+        phone: null,
+        email: null,
+        reason: null,
+      };
+      return;
+    }
+
+    if (!currentDoctor) {
+      return;
+    }
+
+    const scoreLine = line.match(/^Điểm phù hợp:\s*(.+)$/i);
+    if (scoreLine) {
+      const scoreMatch = scoreLine[1].match(/(\d+(?:\.\d+)?)%/);
+      currentDoctor.score = scoreMatch ? Number(scoreMatch[1]) : null;
+      currentDoctor.fitLabel = scoreLine[1]
+        .replace(/\d+(?:\.\d+)?%\s*[—-]?\s*/i, '')
+        .trim();
+      return;
+    }
+
+    const reasonLine = line.match(/^Lý do đề xuất:\s*(.+)$/i);
+    if (reasonLine) {
+      currentDoctor.reason = reasonLine[1].trim();
+      return;
+    }
+
+    if (!line.startsWith('•')) {
+      return;
+    }
+
+    const separatorIndex = line.indexOf(':');
+    if (separatorIndex < 0) {
+      return;
+    }
+
+    const label = line.slice(1, separatorIndex).trim();
+    const value = line.slice(separatorIndex + 1).trim();
+    const fields: Record<
+      string,
+      Exclude<keyof DoctorRecommendation, 'id' | 'score'>
+    > = {
+      'Chuyên khoa': 'specialty',
+      'Kinh nghiệm': 'experience',
+      'Đánh giá': 'rating',
+      'Nơi làm việc': 'workplace',
+      'Địa chỉ': 'address',
+      'Khoảng cách khu vực': 'distance',
+      'Thời gian làm việc': 'schedule',
+      'Hình thức tư vấn': 'consultationType',
+      'Điện thoại': 'phone',
+      Email: 'email',
+    };
+    const field = fields[label];
+    if (field) {
+      currentDoctor[field] = value;
+    }
+  });
+
+  pushCurrentDoctor();
 
   return {
     symptoms,
     specialties,
-    source: sourceLine,
+    doctors,
+    source,
     hasEmergencySignal,
+    note: hasEmergencySignal
+      ? 'Các dấu hiệu cấp cứu cần được thăm khám trực tiếp, không thay thế hướng dẫn của nhân viên y tế.'
+      : 'Thông tin chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ.',
   };
 }
 
-function getContactValue(line: string, label: string) {
-  const normalizedLine = line.replace(/^•\s*/, '').trim();
+function isStructuredRecommendation(content: string) {
+  return /(^|\n)o\s+.+:/i.test(content);
+}
 
-  if (!normalizedLine.startsWith(label)) {
-    return null;
-  }
-
-  return normalizedLine.slice(label.length).trim();
+function unique(values: string[]) {
+  return [...new Set(values)];
 }
 
 function formatTime(value: string) {

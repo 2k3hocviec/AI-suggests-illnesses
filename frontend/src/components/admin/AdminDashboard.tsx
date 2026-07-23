@@ -3,9 +3,12 @@
 import {
   Activity,
   AlertTriangle,
+  CalendarDays,
   BarChart3,
   Bot,
   BrainCircuit,
+  ChevronLeft,
+  ChevronRight,
   FlaskConical,
   MessageSquareText,
   Power,
@@ -46,6 +49,9 @@ export function AdminDashboard() {
   const [modelResult, setModelResult] =
     useState<AdminModelTestResponse | null>(null);
   const [isTestingModel, setIsTestingModel] = useState(false);
+  const [activityStart, setActivityStart] = useState(() => getDefaultActivityStart());
+  const [isRefreshingActivity, setIsRefreshingActivity] = useState(false);
+  const [confirmingUser, setConfirmingUser] = useState<AdminUser | null>(null);
 
   useEffect(() => {
     async function verifyAdmin() {
@@ -58,7 +64,7 @@ export function AdminDashboard() {
         }
 
         setIsAuthorized(true);
-        await loadData();
+        await loadData(activityStart);
       } catch {
         localStorage.removeItem("accessToken");
         router.replace("/login");
@@ -81,14 +87,19 @@ export function AdminDashboard() {
     return () => window.clearTimeout(timeout);
   }, [isAuthorized, search]);
 
-  async function loadData() {
-    setIsLoading(true);
+  async function loadData(nextActivityStart = activityStart, showLoading = true) {
+    if (showLoading) {
+      setIsLoading(true);
+    } else {
+      setIsRefreshingActivity(true);
+    }
     setError(null);
 
     try {
+      const activityRange = getActivityRange(nextActivityStart);
       const [overviewData, usersData] = await Promise.all([
-        getAdminOverview(),
-        listAdminUsers({ page }),
+        getAdminOverview(activityRange),
+        listAdminUsers({ page, search }),
       ]);
       setOverview(overviewData);
       setUsers(usersData);
@@ -99,8 +110,22 @@ export function AdminDashboard() {
           : "Không thể tải dữ liệu quản trị.",
       );
     } finally {
-      setIsLoading(false);
+      if (showLoading) {
+        setIsLoading(false);
+      } else {
+        setIsRefreshingActivity(false);
+      }
     }
+  }
+
+  function handleActivityNavigate(direction: -1 | 1) {
+    const nextStart = addDays(activityStart, direction * 7);
+    if (direction > 0 && nextStart > getDefaultActivityStart()) {
+      return;
+    }
+
+    setActivityStart(nextStart);
+    void loadData(nextStart, false);
   }
 
   async function loadUsers(nextPage: number, nextSearch = search) {
@@ -210,7 +235,7 @@ export function AdminDashboard() {
           <div className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => void loadData()}
+              onClick={() => void loadData(activityStart)}
               className="inline-flex h-9 items-center gap-2 rounded-md border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
             >
               <RefreshCcw className="h-4 w-4" />
@@ -264,8 +289,14 @@ export function AdminDashboard() {
               />
             </div>
 
-            <div className="mt-5 grid gap-5 xl:grid-cols-[1.4fr_0.9fr]">
-              <ActivityChart data={overview.dailyActivity} />
+            <div className="mt-5 grid items-stretch gap-5 xl:grid-cols-[1.4fr_0.9fr]">
+              <ActivityChart
+                data={overview.dailyActivity}
+                isLoading={isRefreshingActivity}
+                onPrevious={() => handleActivityNavigate(-1)}
+                onNext={() => handleActivityNavigate(1)}
+                canGoNext={activityStart < getDefaultActivityStart()}
+              />
               <BreakdownPanel
                 roleBreakdown={overview.roleBreakdown}
                 statusBreakdown={overview.statusBreakdown}
@@ -307,12 +338,14 @@ export function AdminDashboard() {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[920px] text-left text-sm">
+            <table className="w-full min-w-[1120px] text-left text-sm">
               <thead className="bg-slate-50 text-xs uppercase text-slate-500">
                 <tr>
                   <th className="px-4 py-3">Người dùng</th>
                   <th className="px-4 py-3">Vai trò</th>
-                  <th className="px-4 py-3">Hoạt động</th>
+                  <th className="px-4 py-3">Đoạn chat</th>
+                  <th className="px-4 py-3">Tin nhắn</th>
+                  <th className="px-4 py-3">Request</th>
                   <th className="px-4 py-3">Địa chỉ</th>
                   <th className="px-4 py-3">Trạng thái</th>
                   <th className="px-4 py-3 text-right">Thao tác</th>
@@ -338,13 +371,20 @@ export function AdminDashboard() {
                       </span>
                     </td>
                     <td className="px-4 py-3 text-slate-600">
-                      <div>{user._count.chatSessions} đoạn chat</div>
-                      <div>{user._count.chatMessages} tin nhắn</div>
-                      <div>{user._count.consultationHistories} request</div>
+                      <TableMetric icon={MessageSquareText} value={user._count.chatSessions} />
                     </td>
-                    <td className="max-w-sm px-4 py-3 text-slate-600">
-                      <span className="block truncate">
-                        {user.address ?? "Chưa cập nhật"}
+                    <td className="px-4 py-3 text-slate-600">
+                      <TableMetric icon={Activity} value={user._count.chatMessages} />
+                    </td>
+                    <td className="px-4 py-3 text-slate-600">
+                      <TableMetric icon={Bot} value={user._count.consultationHistories} />
+                    </td>
+                    <td className="max-w-[260px] px-4 py-3 text-slate-600">
+                      <span
+                        className="block max-w-[230px] truncate"
+                        title={user.address ?? "Chưa cập nhật"}
+                      >
+                        {shortAddress(user.address)}
                       </span>
                     </td>
                     <td className="px-4 py-3">
@@ -362,7 +402,14 @@ export function AdminDashboard() {
                       <button
                         type="button"
                         disabled={updatingUserId === user.id}
-                        onClick={() => void handleToggleUser(user)}
+                        onClick={() => {
+                          if (user.isEnabled) {
+                            setConfirmingUser(user);
+                            return;
+                          }
+
+                          void handleToggleUser(user);
+                        }}
                         className={
                           user.isEnabled
                             ? "h-8 rounded-md border border-red-200 px-3 text-xs font-semibold text-red-600 transition hover:bg-red-50 disabled:opacity-50"
@@ -416,6 +463,51 @@ export function AdminDashboard() {
           </div>
         </div>
       </section>
+
+      {confirmingUser ? (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="disable-user-title"
+        >
+          <div className="w-full max-w-md rounded-xl border border-slate-200 bg-white p-5 shadow-2xl">
+            <div className="flex items-start gap-3">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-red-50 text-red-600">
+                <AlertTriangle className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 id="disable-user-title" className="text-base font-bold text-slate-900">
+                  Vô hiệu hóa tài khoản?
+                </h2>
+                <p className="mt-1 text-sm leading-6 text-slate-600">
+                  {confirmingUser.fullName} sẽ không thể đăng nhập hoặc sử dụng hệ thống cho đến khi được kích hoạt lại.
+                </p>
+              </div>
+            </div>
+            <div className="mt-5 flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => setConfirmingUser(null)}
+                className="h-9 rounded-md border border-slate-200 px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+              >
+                Hủy
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const user = confirmingUser;
+                  setConfirmingUser(null);
+                  void handleToggleUser(user);
+                }}
+                className="h-9 rounded-md bg-red-600 px-3 text-sm font-semibold text-white transition hover:bg-red-700"
+              >
+                Vô hiệu hóa
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </main>
   );
 }
@@ -443,12 +535,22 @@ function StatCard({
   );
 }
 
-function AiStatsPanel({ ai }: { ai: AdminOverview["ai"] }) {
-  const sourceTotal = Math.max(
-    1,
-    ai.sourceBreakdown.reduce((sum, item) => sum + item.value, 0),
+function TableMetric({
+  icon: Icon,
+  value,
+}: {
+  icon: ElementType;
+  value: number;
+}) {
+  return (
+    <span className="inline-flex items-center gap-1.5 font-semibold text-slate-700">
+      <Icon className="h-4 w-4 text-slate-400" />
+      {value}
+    </span>
   );
+}
 
+function AiStatsPanel({ ai }: { ai: AdminOverview["ai"] }) {
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-4">
       <div className="flex items-center gap-2">
@@ -491,38 +593,12 @@ function AiStatsPanel({ ai }: { ai: AdminOverview["ai"] }) {
         />
       </div>
 
-      <div className="mt-5">
-        <div className="text-xs font-semibold uppercase text-slate-400">
-          Tỷ lệ nguồn phân tích
-        </div>
-        <div className="mt-3 space-y-3">
-          {ai.sourceBreakdown.map((item) => {
-            const percent = Math.round((item.value / sourceTotal) * 100);
-
-            return (
-              <div key={item.label}>
-                <div className="mb-1 flex justify-between text-sm">
-                  <span className="font-medium text-slate-700">
-                    {item.label}
-                  </span>
-                  <span className="text-slate-500">
-                    {item.value} lượt · {percent}%
-                  </span>
-                </div>
-                <div className="h-2 rounded-full bg-slate-100">
-                  <div
-                    className={
-                      item.label === "NER"
-                        ? "h-2 rounded-full bg-brand-500"
-                        : "h-2 rounded-full bg-emerald-500"
-                    }
-                    style={{ width: `${percent}%` }}
-                  />
-                </div>
-              </div>
-            );
-          })}
-        </div>
+      <div className="mt-5 rounded-lg border border-slate-100 bg-slate-50/60 p-3">
+        <DonutChart
+          title="Tỷ lệ nguồn phân tích"
+          items={ai.sourceBreakdown}
+          colors={["#1976d2", "#10b981"]}
+        />
       </div>
     </div>
   );
@@ -657,6 +733,8 @@ function RankList({
   emptyText: string;
   items: Array<{ label: string; value: number; detail?: string }>;
 }) {
+  const maxValue = Math.max(1, ...items.map((item) => item.value));
+
   return (
     <div>
       <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase text-slate-400">
@@ -665,10 +743,16 @@ function RankList({
       </div>
       <div className="space-y-2">
         {items.length ? (
-          items.map((item) => (
+          items.map((item) => {
+            const intensity = item.value / maxValue;
+            const backgroundColor = `rgba(25, 118, 210, ${0.05 + intensity * 0.2})`;
+            const accentColor = `rgba(25, 118, 210, ${0.25 + intensity * 0.75})`;
+
+            return (
             <div
               key={`${item.label}-${item.detail ?? ""}`}
-              className="flex items-center justify-between rounded-md bg-slate-50 px-3 py-2"
+              className="flex items-center justify-between rounded-md border-l-4 px-3 py-2"
+              style={{ backgroundColor, borderLeftColor: accentColor }}
             >
               <div className="min-w-0">
                 <p className="truncate text-sm font-semibold text-slate-800">
@@ -679,10 +763,11 @@ function RankList({
                 ) : null}
               </div>
               <span className="ml-3 rounded-full bg-white px-2 py-1 text-xs font-bold text-slate-700 ring-1 ring-slate-200">
-                {item.value}
+                {item.value} ({Math.round(intensity * 100)}%)
               </span>
             </div>
-          ))
+            );
+          })
         ) : (
           <p className="rounded-md bg-slate-50 px-3 py-2 text-sm text-slate-500">
             {emptyText}
@@ -704,52 +789,116 @@ function ResultBadge({ label, value }: { label: string; value: string }) {
 
 function ActivityChart({
   data,
+  isLoading,
+  onPrevious,
+  onNext,
+  canGoNext,
 }: {
   data: AdminOverview["dailyActivity"];
+  isLoading: boolean;
+  onPrevious: () => void;
+  onNext: () => void;
+  canGoNext: boolean;
 }) {
-  const maxValue = Math.max(
-    1,
-    ...data.map((item) => Math.max(item.users, item.messages)),
-  );
-
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-4">
-      <div className="flex items-center gap-2">
-        <BarChart3 className="h-5 w-5 text-brand-600" />
-        <h2 className="text-base font-bold text-slate-900">
-          Hoạt động 7 ngày
-        </h2>
-      </div>
-      <div className="mt-5 flex h-56 items-end gap-3">
-        {data.map((item) => (
-          <div key={item.date} className="flex min-w-0 flex-1 flex-col gap-2">
-            <div className="flex h-44 items-end gap-1">
-              <div
-                className="w-full rounded-t bg-brand-500"
-                style={{ height: `${(item.messages / maxValue) * 100}%` }}
-                title={`${item.messages} tin nhắn`}
-              />
-              <div
-                className="w-full rounded-t bg-emerald-500"
-                style={{ height: `${(item.users / maxValue) * 100}%` }}
-                title={`${item.users} người dùng mới`}
-              />
-            </div>
-            <span className="truncate text-center text-[11px] text-slate-500">
-              {item.date.slice(5)}
-            </span>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <div className="flex items-center gap-2">
+            <BarChart3 className="h-5 w-5 text-brand-600" />
+            <h2 className="text-base font-bold text-slate-900">
+              Hoạt động theo ngày
+            </h2>
           </div>
-        ))}
+          <p className="mt-1 text-xs text-slate-500">
+            Theo dõi từng cửa sổ 7 ngày
+          </p>
+        </div>
+        <div className="flex items-center gap-1 rounded-md border border-slate-200 bg-slate-50 p-1">
+          <button
+            type="button"
+            aria-label="Xem 7 ngày trước"
+            title="7 ngày trước"
+            onClick={onPrevious}
+            disabled={isLoading}
+            className="flex h-8 w-8 items-center justify-center rounded text-slate-600 transition hover:bg-white hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </button>
+          <span className="inline-flex min-w-28 items-center justify-center gap-1.5 px-2 text-xs font-semibold text-slate-600">
+            <CalendarDays className="h-3.5 w-3.5 text-brand-600" />
+            {formatActivityRange(data)}
+          </span>
+          <button
+            type="button"
+            aria-label="Xem 7 ngày tiếp theo"
+            title="7 ngày tiếp theo"
+            onClick={onNext}
+            disabled={!canGoNext || isLoading}
+            className="flex h-8 w-8 items-center justify-center rounded text-slate-600 transition hover:bg-white hover:text-brand-700 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </button>
+        </div>
       </div>
-      <div className="mt-3 flex gap-4 text-xs text-slate-500">
-        <span className="inline-flex items-center gap-1">
-          <span className="h-2 w-2 rounded-sm bg-brand-500" />
-          Tin nhắn
+      <div className={`mt-5 grid gap-4 lg:grid-cols-2 ${isLoading ? "opacity-50" : ""}`}>
+        <MiniBarChart
+          data={data}
+          valueKey="messages"
+          title="Tin nhắn"
+          color="#1976d2"
+        />
+        <MiniBarChart
+          data={data}
+          valueKey="users"
+          title="Người dùng mới"
+          color="#10b981"
+        />
+      </div>
+    </div>
+  );
+}
+
+function MiniBarChart({
+  data,
+  valueKey,
+  title,
+  color,
+}: {
+  data: AdminOverview["dailyActivity"];
+  valueKey: "messages" | "users";
+  title: string;
+  color: string;
+}) {
+  const maxValue = Math.max(1, ...data.map((item) => item[valueKey]));
+
+  return (
+    <div className="rounded-lg border border-slate-100 bg-slate-50/60 p-3">
+      <div className="flex items-center justify-between text-sm font-semibold text-slate-700">
+        <span>{title}</span>
+        <span className="text-xs font-medium text-slate-400">
+          Cao nhất: {maxValue}
         </span>
-        <span className="inline-flex items-center gap-1">
-          <span className="h-2 w-2 rounded-sm bg-emerald-500" />
-          Người dùng mới
-        </span>
+      </div>
+      <div className="mt-4 flex h-44 items-end gap-2">
+        {data.map((item) => {
+          const value = item[valueKey];
+          const height = value ? Math.max((value / maxValue) * 100, 5) : 2;
+
+          return (
+            <div key={item.date} className="flex min-w-0 flex-1 flex-col items-center gap-1.5">
+              <span className="text-[10px] font-semibold text-slate-500">{value}</span>
+              <div className="flex h-32 w-full items-end rounded-t bg-slate-200/70">
+                <div
+                  className="w-full rounded-t transition-all"
+                  style={{ height: `${height}%`, backgroundColor: color }}
+                  title={`${value} ${title.toLowerCase()}`}
+                />
+              </div>
+              <span className="text-[10px] text-slate-500">{item.date.slice(5)}</span>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
@@ -765,49 +914,190 @@ function BreakdownPanel({
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-4">
       <h2 className="text-base font-bold text-slate-900">Cơ cấu tài khoản</h2>
-      <BreakdownList title="Vai trò" items={roleBreakdown} />
-      <BreakdownList title="Trạng thái" items={statusBreakdown} />
+      <div className="mt-4 space-y-6">
+        <DonutChart
+          title="Theo vai trò"
+          items={roleBreakdown}
+          colors={["#1976d2", "#94a3b8"]}
+        />
+        <div className="border-t border-slate-100 pt-5">
+          <DonutChart
+            title="Theo trạng thái"
+            items={statusBreakdown}
+            colors={["#10b981", "#ef4444"]}
+          />
+        </div>
+      </div>
     </div>
   );
 }
 
-function BreakdownList({
+function DonutChart({
   title,
   items,
+  colors,
 }: {
   title: string;
   items: Array<{ label: string; value: number }>;
+  colors: string[];
 }) {
-  const total = Math.max(
-    1,
-    items.reduce((sum, item) => sum + item.value, 0),
-  );
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const total = items.reduce((sum, item) => sum + item.value, 0);
+  const radius = 44;
+  const circumference = 2 * Math.PI * radius;
+  let offset = 0;
+  const selectedItem = selectedIndex === null ? null : items[selectedIndex];
 
   return (
-    <div className="mt-4">
-      <div className="text-xs font-semibold uppercase text-slate-400">
-        {title}
-      </div>
-      <div className="mt-2 space-y-3">
-        {items.map((item, index) => (
-          <div key={item.label}>
-            <div className="mb-1 flex justify-between text-sm">
-              <span className="font-medium text-slate-700">{item.label}</span>
-              <span className="text-slate-500">{item.value}</span>
-            </div>
-            <div className="h-2 rounded-full bg-slate-100">
-              <div
-                className={
-                  index === 0
-                    ? "h-2 rounded-full bg-brand-500"
-                    : "h-2 rounded-full bg-emerald-500"
-                }
-                style={{ width: `${(item.value / total) * 100}%` }}
-              />
-            </div>
+    <div>
+      <div className="text-xs font-semibold uppercase text-slate-400">{title}</div>
+      <div className="mt-3 flex max-w-[430px] items-center gap-4">
+        <div
+          className="relative h-28 w-28 shrink-0"
+          role="group"
+          aria-label={`${title}: ${total} tổng số`}
+        >
+          <svg viewBox="0 0 112 112" className="h-full w-full">
+            <circle
+              cx="56"
+              cy="56"
+              r={radius}
+              fill="none"
+              stroke="#e2e8f0"
+              strokeWidth="18"
+            />
+            {items.map((item, index) => {
+              const length = total
+                ? (item.value / total) * circumference
+                : 0;
+              const currentOffset = offset;
+              offset += length;
+
+              return (
+                <circle
+                  key={item.label}
+                  cx="56"
+                  cy="56"
+                  r={radius}
+                  fill="none"
+                  stroke={colors[index % colors.length]}
+                  strokeWidth={selectedIndex === index ? "22" : "18"}
+                  strokeDasharray={`${length} ${circumference - length}`}
+                  strokeDashoffset={-currentOffset}
+                  className="cursor-pointer transition-all hover:opacity-80"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`${item.label}: ${item.value}, ${total ? Math.round((item.value / total) * 100) : 0}%`}
+                  onClick={() =>
+                    setSelectedIndex((current) =>
+                      current === index ? null : index,
+                    )
+                  }
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      setSelectedIndex((current) =>
+                        current === index ? null : index,
+                      );
+                    }
+                  }}
+                />
+              );
+            })}
+          </svg>
+          <div className="pointer-events-none absolute left-1/2 top-1/2 flex h-[72px] w-[72px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center rounded-full bg-white text-center">
+            {selectedItem ? (
+              <>
+                <span className="max-w-[62px] text-[10px] font-semibold leading-3 text-slate-500">
+                  {selectedItem.label}
+                </span>
+                <span className="text-lg font-bold text-slate-900">
+                  {selectedItem.value}
+                </span>
+                <span className="text-[10px] text-slate-400">
+                  {total ? Math.round((selectedItem.value / total) * 100) : 0}%
+                </span>
+              </>
+            ) : (
+              <>
+                <span className="text-lg font-bold text-slate-900">{total}</span>
+                <span className="text-[10px] text-slate-400">tổng</span>
+              </>
+            )}
           </div>
-        ))}
+        </div>
+        <div className="min-w-[150px] flex-1 space-y-2">
+          {items.map((item, index) => (
+            <button
+              key={item.label}
+              type="button"
+              aria-pressed={selectedIndex === index}
+              onClick={() =>
+                setSelectedIndex((current) =>
+                  current === index ? null : index,
+                )
+              }
+              className={`flex w-full items-start justify-between gap-2 rounded-md px-1.5 py-1 text-left text-xs transition hover:bg-slate-50 ${selectedIndex === index ? "bg-slate-50 ring-1 ring-slate-200" : ""}`}
+            >
+              <span className="flex min-w-0 items-start gap-1.5 leading-4 text-slate-600">
+                <span
+                  className="mt-0.5 h-2.5 w-2.5 shrink-0 rounded-full"
+                  style={{ backgroundColor: colors[index % colors.length] }}
+                />
+                <span className="break-words">{item.label}</span>
+              </span>
+              <span className="shrink-0 font-semibold text-slate-700">
+                {item.value} · {total ? Math.round((item.value / total) * 100) : 0}%
+              </span>
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );
+}
+
+function getDefaultActivityStart() {
+  const start = new Date();
+  start.setUTCHours(0, 0, 0, 0);
+  start.setUTCDate(start.getUTCDate() - 6);
+  return start;
+}
+
+function getActivityRange(start: Date) {
+  return {
+    from: formatDateOnly(start),
+    to: formatDateOnly(addDays(start, 6)),
+  };
+}
+
+function addDays(value: Date, amount: number) {
+  const result = new Date(value);
+  result.setUTCDate(result.getUTCDate() + amount);
+  return result;
+}
+
+function formatDateOnly(value: Date) {
+  return value.toISOString().slice(0, 10);
+}
+
+function formatActivityRange(data: AdminOverview["dailyActivity"]) {
+  if (!data.length) {
+    return "Không có dữ liệu";
+  }
+
+  return `${data[0].date.slice(5)} – ${data[data.length - 1].date.slice(5)}`;
+}
+
+function shortAddress(address: string | null) {
+  if (!address) {
+    return "Chưa cập nhật";
+  }
+
+  const parts = address
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  return parts.length > 2 ? parts.slice(-2).join(", ") : address;
 }

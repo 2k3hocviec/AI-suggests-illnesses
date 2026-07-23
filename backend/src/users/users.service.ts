@@ -109,12 +109,13 @@ export class UsersService {
     };
   }
 
-  async getAdminOverview(adminId: number) {
+  async getAdminOverview(
+    adminId: number,
+    activityRange: { from?: string; to?: string } = {},
+  ) {
     await this.assertAdmin(adminId);
 
-    const since = new Date();
-    since.setDate(since.getDate() - 6);
-    since.setHours(0, 0, 0, 0);
+    const { startDate, endDate } = this.resolveActivityRange(activityRange);
 
     const [
       totalUsers,
@@ -142,7 +143,8 @@ export class UsersService {
       this.prisma.user.findMany({
         where: {
           createdAt: {
-            gte: since,
+            gte: startDate,
+            lte: endDate,
           },
         },
         select: {
@@ -152,7 +154,8 @@ export class UsersService {
       this.prisma.chatMessage.findMany({
         where: {
           createdAt: {
-            gte: since,
+            gte: startDate,
+            lte: endDate,
           },
         },
         select: {
@@ -234,7 +237,7 @@ export class UsersService {
         { label: 'Đang hoạt động', value: enabledUsers },
         { label: 'Đã vô hiệu', value: disabledUsers },
       ],
-      dailyActivity: this.buildDailyActivity(since, recentUsers, recentMessages),
+      dailyActivity: this.buildDailyActivity(startDate, recentUsers, recentMessages),
       ai: this.buildAiStats(
         consultationHistories,
         assistantMessages,
@@ -387,7 +390,7 @@ export class UsersService {
   ) {
     return Array.from({ length: 7 }, (_, index) => {
       const day = new Date(startDate);
-      day.setDate(startDate.getDate() + index);
+      day.setUTCDate(startDate.getUTCDate() + index);
       const key = day.toISOString().slice(0, 10);
 
       return {
@@ -400,5 +403,49 @@ export class UsersService {
         ).length,
       };
     });
+  }
+
+  private resolveActivityRange(range: { from?: string; to?: string }) {
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+
+    const defaultStart = new Date(today);
+    defaultStart.setUTCDate(defaultStart.getUTCDate() - 6);
+
+    const requestedStart = this.parseDateOnly(range.from);
+    const requestedEnd = this.parseDateOnly(range.to);
+    const startDate = requestedStart ?? defaultStart;
+    const endDate = requestedEnd ?? new Date(startDate);
+
+    if (!requestedEnd) {
+      endDate.setUTCDate(endDate.getUTCDate() + 6);
+    }
+
+    const maxEndDate = new Date(startDate);
+    maxEndDate.setUTCDate(maxEndDate.getUTCDate() + 6);
+
+    if (endDate < startDate) {
+      return {
+        startDate: defaultStart,
+        endDate: new Date(today.getTime() + 24 * 60 * 60 * 1000 - 1),
+      };
+    }
+
+    return {
+      startDate,
+      endDate:
+        endDate > maxEndDate
+          ? new Date(maxEndDate.getTime() + 24 * 60 * 60 * 1000 - 1)
+          : new Date(endDate.getTime() + 24 * 60 * 60 * 1000 - 1),
+    };
+  }
+
+  private parseDateOnly(value?: string) {
+    if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      return null;
+    }
+
+    const date = new Date(`${value}T00:00:00.000Z`);
+    return Number.isNaN(date.getTime()) ? null : date;
   }
 }

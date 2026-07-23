@@ -23,6 +23,59 @@ export function GuestChat() {
     setIsSending(true);
     setRequestCount((current) => current + 1);
 
+    const isRepeatedQuestion = messages.some(
+      (message) =>
+        message.role === "USER" &&
+        normalizeRepeatedMessage(message.content) ===
+          normalizeRepeatedMessage(content),
+    );
+    if (isRepeatedQuestion) {
+      const previousUserIndex = [...messages]
+        .map((message, index) => ({ message, index }))
+        .reverse()
+        .find(
+          ({ message }) =>
+            message.role === "USER" &&
+            normalizeRepeatedMessage(message.content) ===
+              normalizeRepeatedMessage(content),
+        )?.index;
+      const previousAssistantMessage =
+        previousUserIndex === undefined
+          ? undefined
+          : messages
+              .slice(previousUserIndex + 1)
+              .find((message) => message.role === "ASSISTANT");
+      const createdAt = new Date().toISOString();
+      const timestamp = Date.now();
+      setMessages((current) => [
+        ...current,
+        {
+          id: -timestamp,
+          sessionId: 0,
+          userId: null,
+          role: "USER",
+          content,
+          metadata: null,
+          createdAt,
+        },
+        {
+          id: -(timestamp + 1),
+          sessionId: 0,
+          userId: null,
+          role: "ASSISTANT",
+          content:
+            previousAssistantMessage?.content ??
+            "Mình đã ghi nhận câu hỏi này ở tin nhắn trước.",
+          metadata: previousAssistantMessage?.metadata ?? {
+            repeatDetected: true,
+          },
+          createdAt,
+        },
+      ]);
+      setIsSending(false);
+      return;
+    }
+
     const optimisticMessageId = -Date.now();
     const optimisticMessage: ChatMessage = {
       id: optimisticMessageId,
@@ -59,32 +112,32 @@ export function GuestChat() {
 
   return (
     <main className="flex h-[100dvh] max-h-[100dvh] flex-col overflow-hidden bg-[#f1f5f9] text-ink">
-      <header className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-5 lg:px-10">
-        <Link href="/" className="flex items-center gap-3">
-          <span className="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-600 text-white shadow-sm">
+      <header className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-3 sm:px-5 lg:px-10">
+        <Link href="/" className="flex min-w-0 items-center gap-2 sm:gap-3">
+          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-600 text-white shadow-sm sm:h-10 sm:w-10">
             <Stethoscope className="h-5 w-5" />
           </span>
-          <span>
-            <span className="block text-lg font-bold leading-none text-[#073b83]">
+          <span className="min-w-0">
+            <span className="block text-base font-bold leading-none text-[#073b83] sm:text-lg">
               HealthAI
             </span>
-            <span className="mt-1 block text-xs text-slate-500">
+            <span className="mt-1 block truncate text-[10px] text-slate-500 sm:text-xs">
               Tư vấn sức khỏe thông minh
             </span>
           </span>
         </Link>
 
-        <nav className="flex items-center gap-2 sm:gap-3">
+        <nav className="flex shrink-0 items-center gap-1.5 sm:gap-2 lg:gap-3">
           <Link
             href="/login"
-            className="inline-flex h-9 items-center gap-2 rounded-lg px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+            className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#073f87] px-2 text-xs font-semibold text-white transition hover:bg-[#052f66] sm:gap-2 sm:px-3 sm:text-sm"
           >
             <LogIn className="h-4 w-4" />
-            <span className="hidden sm:inline">Đăng nhập</span>
+            <span>Đăng nhập</span>
           </Link>
           <Link
             href="/register"
-            className="inline-flex h-9 items-center gap-2 rounded-lg bg-[#073f87] px-3 text-sm font-semibold text-white transition hover:bg-[#052f66]"
+            className="inline-flex h-9 items-center gap-1.5 rounded-lg bg-[#073f87] px-2 text-xs font-semibold text-white transition hover:bg-[#052f66] sm:gap-2 sm:px-3 sm:text-sm"
           >
             <UserPlus className="h-4 w-4" />
             <span>Đăng ký</span>
@@ -131,4 +184,16 @@ export function GuestChat() {
       </section>
     </main>
   );
+}
+
+function normalizeRepeatedMessage(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/đ/g, "d")
+    .replace(/Đ/g, "D")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
 }

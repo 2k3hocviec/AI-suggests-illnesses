@@ -108,6 +108,11 @@ interface PreparedChatResponse {
   primarySpecialty: RecommendedSpecialtyWithDoctors | undefined;
 }
 
+interface RepeatedQuestionContext {
+  analysis: ModelAnalyzeResponse;
+  assistantContent: string;
+}
+
 @Injectable()
 export class ChatService {
   constructor(
@@ -125,6 +130,10 @@ export class ChatService {
     }
 
     const session = await this.resolveSession(userId, dto.sessionId, content);
+    const repeatedQuestion = await this.findRepeatedQuestion(
+      session.id,
+      content,
+    );
     const userMessage = await this.prisma.chatMessage.create({
       data: {
         sessionId: session.id,
@@ -134,7 +143,13 @@ export class ChatService {
       },
     });
 
-    const prepared = await this.prepareChatResponse(content, userId);
+    const prepared = await this.prepareChatResponse(
+      content,
+      userId,
+      repeatedQuestion?.analysis,
+      repeatedQuestion?.assistantContent,
+      Boolean(repeatedQuestion),
+    );
     const {
       analysis,
       hasEmergencySpecialty,
@@ -142,13 +157,17 @@ export class ChatService {
       assistantContent,
       primarySpecialty,
     } = prepared;
+    const responseAnalysis: ModelAnalyzeResponse = {
+      ...analysis,
+      repeatDetected: Boolean(repeatedQuestion),
+    };
 
     const assistantMessage = await this.prisma.chatMessage.create({
       data: {
         sessionId: session.id,
         role: ChatRole.ASSISTANT,
         content: assistantContent,
-        metadata: analysis as unknown as Prisma.InputJsonValue,
+        metadata: responseAnalysis as unknown as Prisma.InputJsonValue,
       },
     });
 
@@ -168,12 +187,12 @@ export class ChatService {
         userMessageId: userMessage.id,
         originalMessage: content,
         extractedSymptoms:
-          analysis.symptoms as unknown as Prisma.InputJsonValue,
+          responseAnalysis.symptoms as unknown as Prisma.InputJsonValue,
         recommendedSpecialtyId: primarySpecialty?.id,
         emergency: hasEmergencySpecialty,
         emergencyLevel: hasEmergencySpecialty ? "EMERGENCY" : "NORMAL",
         emergencyReasons: hasEmergencySpecialty
-          ? (analysis.symptoms as unknown as Prisma.InputJsonValue)
+          ? (responseAnalysis.symptoms as unknown as Prisma.InputJsonValue)
           : undefined,
       },
     });
@@ -186,7 +205,7 @@ export class ChatService {
       userMessage,
       assistantMessage,
       analysis: {
-        ...analysis,
+        ...responseAnalysis,
         recommendedSpecialty: primarySpecialty ?? null,
         recommendedSpecialties: recommendedSpecialtiesWithDoctors,
       },
@@ -262,8 +281,11 @@ export class ChatService {
   private async prepareChatResponse(
     content: string,
     userId?: number,
+    cachedAnalysis?: ModelAnalyzeResponse,
+    cachedAssistantContent?: string,
+    isRepeatedQuestion = false,
   ): Promise<PreparedChatResponse> {
-    const analysis = await this.analyze(content);
+    const analysis = cachedAnalysis ?? (await this.analyze(content));
     const isMedicalRequest = analysis.action === "FIND_DOCTORS";
     const hasEmergencySpecialty =
       isMedicalRequest && this.hasEmergencySpecialty(analysis);
@@ -274,15 +296,17 @@ export class ChatService {
       ? []
       : hasEmergencySpecialty
         ? this.withoutDoctorSuggestions(recommendedSpecialties)
+        : isRepeatedQuestion
+          ? this.withoutDoctorSuggestions(recommendedSpecialties)
         : await this.attachDoctorsToSpecialties(
             userId,
             recommendedSpecialties,
             analysis,
           );
-    const assistantContent = this.buildAssistantReply(
-      analysis,
-      recommendedSpecialtiesWithDoctors,
-    );
+    const assistantContent =
+      isRepeatedQuestion && cachedAssistantContent
+        ? cachedAssistantContent
+        : this.buildAssistantReply(analysis, recommendedSpecialtiesWithDoctors);
     const [primarySpecialty] = recommendedSpecialtiesWithDoctors;
 
     return {
@@ -381,6 +405,85 @@ export class ChatService {
     }
 
     return session;
+  }
+
+  private async findRepeatedQuestion(
+    sessionId: number,
+    content: string,
+  ): Promise<RepeatedQuestionContext | null> {
+    const normalizedContent = this.normalizeRepeatedMessage(content);
+    if (!normalizedContent) {
+      return null;
+    }
+
+    const recentUserMessages = await this.prisma.chatMessage.findMany({
+      where: {
+        sessionId,
+        role: ChatRole.USER,
+      },
+      select: {
+        id: true,
+        content: true,
+      },
+      orderBy: {
+        id: "desc",
+      },
+      take: 6,
+    });
+    const previousMessage = recentUserMessages.find(
+      (message) =>
+        this.normalizeRepeatedMessage(message.content) === normalizedContent,
+    );
+
+    if (!previousMessage) {
+      return null;
+    }
+
+    const previousAssistantMessage =
+      await this.prisma.chatMessage.findFirst({
+        where: {
+          sessionId,
+          role: ChatRole.ASSISTANT,
+          id: {
+            gt: previousMessage.id,
+          },
+        },
+        select: {
+          metadata: true,
+          content: true,
+        },
+        orderBy: {
+          id: "asc",
+        },
+      });
+
+    if (!previousAssistantMessage?.metadata) {
+      return null;
+    }
+
+    try {
+      const rawMetadata = previousAssistantMessage.metadata as {
+        analysisSource?: unknown;
+      };
+      const analysis = this.normalizeModelAnalysis(
+        previousAssistantMessage.metadata,
+      );
+      const analysisSource =
+        rawMetadata.analysisSource === "NER" ||
+        rawMetadata.analysisSource === "Gemini"
+          ? rawMetadata.analysisSource
+          : undefined;
+
+      return {
+        analysis: {
+          ...analysis,
+          ...(analysisSource ? { analysisSource } : {}),
+        },
+        assistantContent: previousAssistantMessage.content,
+      };
+    } catch {
+      return null;
+    }
   }
 
   /*
@@ -1260,7 +1363,7 @@ ${content}`;
   private buildConversationReply(intent: ModelAnalyzeResponse["intent"]) {
     switch (intent) {
       case "GREETING":
-        return "Xin chào! Tôi có thể hỗ trợ bạn tìm chuyên khoa dựa trên triệu chứng. Bạn đang gặp vấn đề sức khỏe nào?";
+        return "Xin chào! Tôi có thể hỗ trợ bạn tìm bác sĩ phù hợp dựa trên các triệu chứng bạn nhập vào. Hãy mô tả vấn đề sức khỏe của bạn để bắt đầu.";
       case "THANKS":
         return "Không có gì. Tôi rất vui được hỗ trợ bạn!";
       case "GOODBYE":
@@ -1281,5 +1384,12 @@ ${content}`;
       .replace(/đ/g, "d")
       .replace(/Đ/g, "D")
       .toLowerCase();
+  }
+
+  private normalizeRepeatedMessage(value: string) {
+    return this.normalize(value)
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim()
+      .replace(/\s+/g, " ");
   }
 }

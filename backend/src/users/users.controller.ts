@@ -19,8 +19,12 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Get('admin/overview')
-  getAdminOverview(@CurrentUser() user: AuthenticatedUser) {
-    return this.usersService.getAdminOverview(user.id);
+  getAdminOverview(
+    @CurrentUser() user: AuthenticatedUser,
+    @Query('from') from?: string,
+    @Query('to') to?: string,
+  ) {
+    return this.usersService.getAdminOverview(user.id, { from, to });
   }
 
   @UseGuards(JwtAuthGuard)

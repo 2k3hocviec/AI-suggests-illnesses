@@ -9,7 +9,7 @@ const welcomeMessage: ThreadMessage = {
   id: 'welcome',
   role: 'ASSISTANT',
   content:
-    'Xin chào, tôi là HealthAI Assistant. Bạn hãy mô tả các triệu chứng đang gặp phải để tôi hỗ trợ gợi ý chuyên khoa phù hợp.',
+    'Xin chào! Tôi có thể hỗ trợ bạn tìm bác sĩ phù hợp dựa trên các triệu chứng bạn nhập vào. Hãy mô tả vấn đề sức khỏe của bạn để bắt đầu.',
   createdAt: new Date().toISOString(),
 };
 

@@ -11,7 +11,7 @@ export interface AuthUser {
   districtCode: number | null;
   wardCode: number | null;
   gender: string;
-  role: 'ADMIN' | 'USER';
+  role: 'ADMIN' | 'USER' | 'DOCTOR';
   isEnabled: boolean;
   dateOfBirth: string | null;
   createdAt: string;

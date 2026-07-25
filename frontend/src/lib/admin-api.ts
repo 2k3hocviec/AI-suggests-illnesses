@@ -27,7 +27,7 @@ export interface AdminUser {
   email: string;
   phoneNumber: string | null;
   address: string | null;
-  role: 'ADMIN' | 'USER';
+  role: 'ADMIN' | 'USER' | 'DOCTOR';
   isEnabled: boolean;
   createdAt: string;
   updatedAt: string;
@@ -87,6 +87,44 @@ export function setUserEnabled(userId: number, isEnabled: boolean) {
       },
     },
   );
+}
+
+export type DoctorConsultationType = 'OFFLINE' | 'ONLINE';
+
+export interface DoctorCreationOptions {
+  specialties: Array<{
+    id: number;
+    code: string;
+    name: string;
+  }>;
+  consultationTypes: DoctorConsultationType[];
+}
+
+export interface CreateDoctorAccountInput {
+  fullName: string;
+  email: string;
+  password: string;
+  specialtyId: number;
+  academicTitle?: string;
+  experienceYears?: number;
+  workplace?: string;
+  phoneNumber?: string;
+  address?: string;
+  city?: string;
+  workingTime?: string;
+  description?: string;
+  consultationType: DoctorConsultationType[];
+}
+
+export function getDoctorCreationOptions() {
+  return apiRequest<DoctorCreationOptions>('/users/admin/doctor-options');
+}
+
+export function createDoctorAccount(input: CreateDoctorAccountInput) {
+  return apiRequest('/users/admin/doctors', {
+    method: 'POST',
+    json: input,
+  });
 }
 
 export interface AdminModelTestResponse {

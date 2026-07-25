@@ -21,6 +21,9 @@ interface ConsultationChatProps {
   isLoadingMessages?: boolean;
   disabled?: boolean;
   onSend: (message: string) => Promise<void> | void;
+  onRequestDoctorChat?: (
+    doctorId: number,
+  ) => Promise<{ created: boolean }>;
 }
 
 export function ConsultationChat({
@@ -31,6 +34,7 @@ export function ConsultationChat({
   isLoadingMessages = false,
   disabled = false,
   onSend,
+  onRequestDoctorChat,
 }: ConsultationChatProps) {
   const threadMessages = useMemo<ThreadMessage[]>(
     () => [
@@ -51,6 +55,7 @@ export function ConsultationChat({
         messages={threadMessages}
         isThinking={isSending}
         isLoadingMessages={isLoadingMessages}
+        onRequestDoctorChat={onRequestDoctorChat}
       />
       {error ? (
         <p className="mx-auto w-full max-w-5xl px-4 pb-2 text-sm text-red-600 lg:px-10">

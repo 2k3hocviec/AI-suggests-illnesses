@@ -45,7 +45,13 @@ export function LoginForm() {
     try {
       const response = await login(values);
       localStorage.setItem('accessToken', response.accessToken);
-      router.push(response.user.role === 'ADMIN' ? '/admin' : '/chat');
+      router.push(
+        response.user.role === 'ADMIN'
+          ? '/admin'
+          : response.user.role === 'DOCTOR'
+            ? '/doctor'
+            : '/chat',
+      );
     } catch (error) {
       setServerError(
         error instanceof Error

@@ -983,6 +983,7 @@ async function seedUsers() {
     update: {
       fullName: 'System Admin',
       role: UserRole.ADMIN,
+      isEnabled: true,
       password,
       phoneNumber: '0900000000',
       streetAddress: adminLocation.streetAddress,
@@ -1011,6 +1012,7 @@ async function seedUsers() {
     update: {
       fullName: 'Demo User',
       role: UserRole.USER,
+      isEnabled: true,
       password,
       phoneNumber: '0900000001',
       streetAddress: demoUserLocation.streetAddress,
@@ -1142,12 +1144,127 @@ async function seedDoctors() {
   }
 }
 
+async function seedDoctorAccounts() {
+  const password = await bcrypt.hash('Password123!', 12);
+  const accountLimit = 100;
+  const doctors = await prisma.doctor.findMany({
+    where: {
+      status: 'ACTIVE',
+      email: { not: null },
+    },
+    select: {
+      id: true,
+      userId: true,
+      fullName: true,
+      email: true,
+      phoneNumber: true,
+      streetAddress: true,
+      address: true,
+      provinceCode: true,
+      districtCode: true,
+      wardCode: true,
+      specialtyId: true,
+    },
+    orderBy: [{ specialtyId: 'asc' }, { id: 'asc' }],
+  });
+
+  const targetCount = Math.min(accountLimit, doctors.length);
+  const groups = [...
+    doctors.reduce((result, doctor) => {
+      const group = result.get(doctor.specialtyId) ?? [];
+      group.push(doctor);
+      result.set(doctor.specialtyId, group);
+      return result;
+    }, new Map<number, typeof doctors>()),
+  ].map(([specialtyId, group]) => {
+    const exactCount = (group.length * targetCount) / doctors.length;
+    return {
+      specialtyId,
+      doctors: group.sort((first, second) => {
+        if (first.email === 'bs.anh.gastro@example.com') return -1;
+        if (second.email === 'bs.anh.gastro@example.com') return 1;
+        return first.id - second.id;
+      }),
+      accountCount: Math.floor(exactCount),
+      remainder: exactCount - Math.floor(exactCount),
+    };
+  });
+
+  let assignedCount = groups.reduce(
+    (total, group) => total + group.accountCount,
+    0,
+  );
+  for (const group of groups
+    .slice()
+    .sort((first, second) => second.remainder - first.remainder)) {
+    if (assignedCount >= targetCount) break;
+    group.accountCount += 1;
+    assignedCount += 1;
+  }
+
+  const selectedDoctors = groups.flatMap((group) =>
+    group.doctors.slice(0, group.accountCount),
+  );
+  const selectedDoctorIds = selectedDoctors.map((doctor) => doctor.id);
+
+  await prisma.doctor.updateMany({
+    where: {
+      status: 'ACTIVE',
+      userId: { not: null },
+      id: { notIn: selectedDoctorIds },
+    },
+    data: { userId: null },
+  });
+
+  for (const doctor of selectedDoctors) {
+    if (!doctor.email) continue;
+
+    const account = await prisma.user.upsert({
+      where: { email: doctor.email },
+      update: {
+        fullName: doctor.fullName,
+        role: UserRole.DOCTOR,
+        isEnabled: true,
+        password,
+        phoneNumber: doctor.phoneNumber,
+        streetAddress: doctor.streetAddress,
+        address: doctor.address,
+        provinceCode: doctor.provinceCode,
+        districtCode: doctor.districtCode,
+        wardCode: doctor.wardCode,
+      },
+      create: {
+        fullName: doctor.fullName,
+        email: doctor.email,
+        password,
+        role: UserRole.DOCTOR,
+        isEnabled: true,
+        gender: UserGender.UNKNOWN,
+        phoneNumber: doctor.phoneNumber,
+        streetAddress: doctor.streetAddress,
+        address: doctor.address,
+        provinceCode: doctor.provinceCode,
+        districtCode: doctor.districtCode,
+        wardCode: doctor.wardCode,
+      },
+    });
+
+    await prisma.doctor.update({
+      where: { id: doctor.id },
+      data: { userId: account.id },
+    });
+  }
+
+  console.log(`Seeded ${selectedDoctors.length} doctor accounts.`);
+}
+
 async function main() {
   await seedAdministrativeUnits();
   await seedUsers();
   await seedSpecialties();
   await seedSymptoms();
   await seedDoctors();
+  await seedDoctorAccounts();
 
   const [
     userCount,

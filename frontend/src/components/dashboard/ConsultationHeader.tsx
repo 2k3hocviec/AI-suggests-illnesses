@@ -4,11 +4,13 @@ import { MobileNavigationMenu } from "./MobileNavigationMenu";
 interface ConsultationHeaderProps {
   onNewChat?: () => void;
   onOpenHistory?: () => void;
+  onOpenDirectChat?: () => void;
 }
 
 export function ConsultationHeader({
   onNewChat,
   onOpenHistory,
+  onOpenDirectChat,
 }: ConsultationHeaderProps) {
   return (
     <header className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 bg-[#fbfaf9] px-5 lg:px-10">
@@ -16,6 +18,7 @@ export function ConsultationHeader({
         <MobileNavigationMenu
           onNewChat={onNewChat}
           onOpenHistory={onOpenHistory}
+          onOpenDirectChat={onOpenDirectChat}
         />
         <div className="flex min-w-0 items-center gap-2">
           <h2 className="truncate text-lg font-bold text-[#073b83] sm:text-xl lg:text-2xl">

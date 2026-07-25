@@ -1,15 +1,133 @@
 import {
   BadRequestException,
+  ConflictException,
   ForbiddenException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { UserRole } from '@prisma/client';
+import { ConsultationType, UserGender, UserRole } from '@prisma/client';
+import * as bcrypt from 'bcryptjs';
 import { PrismaService } from '../prisma/prisma.service';
+import { CreateDoctorAccountDto } from './dto/create-doctor-account.dto';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prisma: PrismaService) {}
+
+  async getDoctorCreationOptions(adminId: number) {
+    await this.assertAdmin(adminId);
+
+    const specialties = await this.prisma.specialty.findMany({
+      select: {
+        id: true,
+        code: true,
+        name: true,
+      },
+      orderBy: {
+        name: 'asc',
+      },
+    });
+
+    return {
+      specialties,
+      consultationTypes: Object.values(ConsultationType),
+    };
+  }
+
+  async createDoctorAccount(adminId: number, dto: CreateDoctorAccountDto) {
+    await this.assertAdmin(adminId);
+
+    const email = dto.email.trim().toLowerCase();
+    const existingUser = await this.prisma.user.findUnique({
+      where: { email },
+      select: { id: true },
+    });
+
+    if (existingUser) {
+      throw new ConflictException('Email tài khoản đã tồn tại');
+    }
+
+    const existingDoctor = await this.prisma.doctor.findFirst({
+      where: { email },
+      select: { id: true },
+    });
+
+    if (existingDoctor) {
+      throw new ConflictException('Email hồ sơ bác sĩ đã tồn tại');
+    }
+
+    const specialty = await this.prisma.specialty.findUnique({
+      where: { id: dto.specialtyId },
+      select: { id: true },
+    });
+
+    if (!specialty) {
+      throw new NotFoundException('Chuyên khoa không tồn tại');
+    }
+
+    const password = await bcrypt.hash(dto.password, 12);
+    const consultationType = dto.consultationType?.length
+      ? [...new Set(dto.consultationType)]
+      : [ConsultationType.ONLINE];
+
+    return this.prisma.$transaction(async (transaction) => {
+      const user = await transaction.user.create({
+        data: {
+          fullName: dto.fullName.trim(),
+          email,
+          password,
+          role: UserRole.DOCTOR,
+          gender: UserGender.UNKNOWN,
+          isEnabled: true,
+          phoneNumber: dto.phoneNumber?.trim() || null,
+          streetAddress: dto.address?.trim() || null,
+          address: dto.address?.trim() || null,
+        },
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+          role: true,
+          isEnabled: true,
+        },
+      });
+
+      const doctor = await transaction.doctor.create({
+        data: {
+          userId: user.id,
+          fullName: dto.fullName.trim(),
+          email,
+          academicTitle: dto.academicTitle?.trim() || null,
+          specialtyId: specialty.id,
+          experienceYears: dto.experienceYears ?? 0,
+          workplace: dto.workplace?.trim() || null,
+          phoneNumber: dto.phoneNumber?.trim() || null,
+          address: dto.address?.trim() || null,
+          city: dto.city?.trim() || null,
+          workingTime: dto.workingTime?.trim() || null,
+          description: dto.description?.trim() || null,
+          consultationType,
+          status: 'ACTIVE',
+        },
+        select: {
+          id: true,
+          fullName: true,
+          email: true,
+          specialty: {
+            select: {
+              id: true,
+              code: true,
+              name: true,
+            },
+          },
+          consultationType: true,
+          status: true,
+        },
+      });
+
+      return { user, doctor };
+    });
+  }
 
   async findById(id: number) {
     const user = await this.prisma.user.findUnique({
@@ -126,6 +244,7 @@ export class UsersService {
       modelRequests,
       adminUsers,
       normalUsers,
+      doctorUsers,
       recentUsers,
       recentMessages,
       consultationHistories,
@@ -140,6 +259,7 @@ export class UsersService {
       this.prisma.consultationHistory.count(),
       this.prisma.user.count({ where: { role: UserRole.ADMIN } }),
       this.prisma.user.count({ where: { role: UserRole.USER } }),
+      this.prisma.user.count({ where: { role: UserRole.DOCTOR } }),
       this.prisma.user.findMany({
         where: {
           createdAt: {
@@ -232,6 +352,7 @@ export class UsersService {
       roleBreakdown: [
         { label: 'Admin', value: adminUsers },
         { label: 'Người dùng', value: normalUsers },
+        { label: 'Bác sĩ', value: doctorUsers },
       ],
       statusBreakdown: [
         { label: 'Đang hoạt động', value: enabledUsers },

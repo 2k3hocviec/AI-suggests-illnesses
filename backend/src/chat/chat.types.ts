@@ -36,6 +36,7 @@ export interface RecommendedSpecialty {
 
 export interface RecommendedDoctor {
   id: number;
+  chatAvailable: boolean;
   fullName: string;
   academicTitle: string | null;
   experienceYears: number;

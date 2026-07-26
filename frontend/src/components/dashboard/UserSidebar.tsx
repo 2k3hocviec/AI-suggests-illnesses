@@ -1,14 +1,19 @@
 "use client";
 
-import { History, MessageSquareText, Stethoscope } from "lucide-react";
+import { History, MessagesSquare, MessageSquareText, Stethoscope } from "lucide-react";
 import { AiRobot3D } from "./AiRobot3D";
 
 interface UserSidebarProps {
   onNewChat?: () => void;
   onOpenHistory?: () => void;
+  onOpenDirectChat?: () => void;
 }
 
-export function UserSidebar({ onNewChat, onOpenHistory }: UserSidebarProps) {
+export function UserSidebar({
+  onNewChat,
+  onOpenHistory,
+  onOpenDirectChat,
+}: UserSidebarProps) {
   return (
     <aside className="hidden h-screen flex-col bg-[#f7f6f5] px-5 py-5 shadow-[4px_0_18px_rgba(15,23,42,0.05)] lg:flex">
       <div className="flex items-center gap-3">
@@ -39,6 +44,14 @@ export function UserSidebar({ onNewChat, onOpenHistory }: UserSidebarProps) {
         >
           <History className="h-5 w-5" />
           Lịch sử chat
+        </button>
+        <button
+          type="button"
+          onClick={onOpenDirectChat}
+          className="flex h-11 w-full items-center gap-3 rounded-lg px-4 text-left text-sm font-medium text-slate-700 transition hover:bg-white"
+        >
+          <MessagesSquare className="h-5 w-5" />
+          Chat với bác sĩ
         </button>
       </nav>
 

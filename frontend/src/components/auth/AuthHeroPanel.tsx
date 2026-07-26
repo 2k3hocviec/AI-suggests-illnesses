@@ -12,16 +12,16 @@ export async function AuthHeroPanel() {
   );
 
   return (
-    <section className="relative hidden min-h-screen overflow-hidden bg-slate-900 lg:block">
+    <section className="relative z-0 hidden min-h-screen overflow-hidden bg-slate-900 lg:block">
       <Image
         src={heroImageUrl}
         alt="Tòa nhà trung tâm y tế hiện đại"
         fill
         priority
         sizes="60vw"
-        className="object-cover"
+        className="pointer-events-none object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-950/72 via-slate-950/10 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/72 via-slate-950/10 to-transparent" />
       <div className="absolute bottom-12 left-12 max-w-xl text-white">
         <div className="mb-4 flex items-center gap-2 text-lg font-bold">
           <Activity className="h-5 w-5" />

@@ -10,6 +10,7 @@ import { UsersModule } from './users/users.module';
 import { PlatformStatsModule } from './platform-stats/platform-stats.module';
 import { ChatModule } from './chat/chat.module';
 import { AdministrativeUnitsModule } from './administrative-units/administrative-units.module';
+import { DirectChatModule } from './direct-chat/direct-chat.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { AdministrativeUnitsModule } from './administrative-units/administrative
     AdministrativeUnitsModule,
     PlatformStatsModule,
     ChatModule,
+    DirectChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],

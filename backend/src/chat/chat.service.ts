@@ -846,6 +846,7 @@ ${content}`;
       },
       select: {
         id: true,
+        userId: true,
         fullName: true,
         academicTitle: true,
         experienceYears: true,
@@ -922,6 +923,7 @@ ${content}`;
 
           return {
             id: doctor.id,
+            chatAvailable: Boolean(doctor.userId),
             fullName: doctor.fullName,
             academicTitle: doctor.academicTitle,
             experienceYears: doctor.experienceYears,
@@ -1339,7 +1341,7 @@ ${content}`;
             const recommendationReason =
               this.buildRecommendationReason(doctor);
 
-            return `${index + 1}. ${title}\n\nĐiểm phù hợp: ${scorePercent}% — ${suitabilityLabel}\n\n• Chuyên khoa: ${specialty.name}\n• Kinh nghiệm: ${doctor.experienceYears} năm\n• Đánh giá: ${doctor.rating ?? "chưa cập nhật"}/5\n• Nơi làm việc: ${doctor.workplace ?? "chưa cập nhật"}\n• Địa chỉ: ${doctor.address ?? doctor.city ?? "chưa cập nhật"}${distance}\n• Thời gian làm việc: ${workSchedule}\n• Hình thức tư vấn: ${consultationType}\n• Điện thoại: ${doctor.phoneNumber ?? "chưa cập nhật"}\n• Email: ${doctor.email ?? "chưa cập nhật"}\n\nLý do đề xuất: ${recommendationReason}`;
+            return `${index + 1}. ${title}\n\nĐiểm phù hợp: ${scorePercent}% — ${suitabilityLabel}\n\n• Mã bác sĩ: ${doctor.id}\n• Chuyên khoa: ${specialty.name}\n• Kinh nghiệm: ${doctor.experienceYears} năm\n• Đánh giá: ${doctor.rating ?? "chưa cập nhật"}/5\n• Nơi làm việc: ${doctor.workplace ?? "chưa cập nhật"}\n• Địa chỉ: ${doctor.address ?? doctor.city ?? "chưa cập nhật"}${distance}\n• Thời gian làm việc: ${workSchedule}\n• Hình thức tư vấn: ${consultationType}\n• Điện thoại: ${doctor.phoneNumber ?? "chưa cập nhật"}\n• Email: ${doctor.email ?? "chưa cập nhật"}\n• Chat trực tiếp: ${doctor.chatAvailable ? "Có" : "Chưa hỗ trợ"}\n\nLý do đề xuất: ${recommendationReason}`;
           })
           .join("\n\n");
 

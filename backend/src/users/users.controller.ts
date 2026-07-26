@@ -5,6 +5,7 @@ import {
   Param,
   ParseIntPipe,
   Patch,
+  Post,
   Query,
   UseGuards,
 } from '@nestjs/common';
@@ -12,10 +13,26 @@ import { AuthenticatedUser } from '../auth/auth.types';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { UsersService } from './users.service';
+import { CreateDoctorAccountDto } from './dto/create-doctor-account.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Get('admin/doctor-options')
+  getDoctorCreationOptions(@CurrentUser() user: AuthenticatedUser) {
+    return this.usersService.getDoctorCreationOptions(user.id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('admin/doctors')
+  createDoctorAccount(
+    @CurrentUser() user: AuthenticatedUser,
+    @Body() dto: CreateDoctorAccountDto,
+  ) {
+    return this.usersService.createDoctorAccount(user.id, dto);
+  }
 
   @UseGuards(JwtAuthGuard)
   @Get('admin/overview')

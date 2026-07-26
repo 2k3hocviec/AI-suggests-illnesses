@@ -17,6 +17,7 @@ enum UserGender {
 enum UserRole {
   ADMIN
   USER
+  DOCTOR
 }
 
 enum DoctorStatus {
@@ -39,6 +40,13 @@ enum ChatRole {
   USER
   ASSISTANT
   SYSTEM
+}
+
+enum DirectChatStatus {
+  PENDING
+  ACTIVE
+  REJECTED
+  CLOSED
 }
 
 model User {
@@ -66,9 +74,12 @@ model User {
   chatSessions          ChatSession[]
   chatMessages          ChatMessage[]
   authSessions          AuthSession[]
-  province              Province?             @relation("UserProvince", fields: [provinceCode], references: [code])
-  district              District?             @relation("UserDistrict", fields: [districtCode], references: [code])
-  ward                  Ward?                 @relation("UserWard", fields: [wardCode], references: [code])
+  doctorProfile         Doctor?                  @relation("DoctorAccount")
+  directChatRequests    DirectChatConversation[] @relation("DirectChatPatient")
+  directChatMessages    DirectChatMessage[]      @relation("DirectChatMessageSender")
+  province              Province?                @relation("UserProvince", fields: [provinceCode], references: [code])
+  district              District?                @relation("UserDistrict", fields: [districtCode], references: [code])
+  ward                  Ward?                    @relation("UserWard", fields: [wardCode], references: [code])
 
   @@index([provinceCode])
   @@index([districtCode])
@@ -168,6 +179,7 @@ model Ward {
 
 model Doctor {
   id               Int                @id @default(autoincrement())
+  userId           Int?               @unique @map("user_id")
   fullName         String             @map("full_name")
   academicTitle    String?            @map("academic_title")
   specialtyId      Int                @map("specialty_id")
@@ -190,11 +202,13 @@ model Doctor {
   createdAt        DateTime           @default(now()) @map("created_at")
   updatedAt        DateTime           @updatedAt @map("updated_at")
 
-  specialty  Specialty         @relation(fields: [specialtyId], references: [id])
-  province   Province?         @relation("DoctorProvince", fields: [provinceCode], references: [code])
-  district   District?         @relation("DoctorDistrict", fields: [districtCode], references: [code])
-  ward       Ward?             @relation("DoctorWard", fields: [wardCode], references: [code])
-  expertises DoctorExpertise[]
+  specialty               Specialty                @relation(fields: [specialtyId], references: [id])
+  user                    User?                    @relation("DoctorAccount", fields: [userId], references: [id], onDelete: SetNull)
+  province                Province?                @relation("DoctorProvince", fields: [provinceCode], references: [code])
+  district                District?                @relation("DoctorDistrict", fields: [districtCode], references: [code])
+  ward                    Ward?                    @relation("DoctorWard", fields: [wardCode], references: [code])
+  expertises              DoctorExpertise[]
+  directChatConversations DirectChatConversation[]
 
   @@index([specialtyId])
   @@index([city])
@@ -249,6 +263,44 @@ model ChatMessage {
   @@index([sessionId])
   @@index([userId])
   @@map("chat_messages")
+}
+
+model DirectChatConversation {
+  id          Int              @id @default(autoincrement())
+  patientId   Int              @map("patient_id")
+  doctorId    Int              @map("doctor_id")
+  status      DirectChatStatus @default(PENDING)
+  requestedAt DateTime         @default(now()) @map("requested_at")
+  respondedAt DateTime?        @map("responded_at")
+  closedAt    DateTime?        @map("closed_at")
+  updatedAt   DateTime         @default(now()) @updatedAt @map("updated_at")
+
+  patient  User                @relation("DirectChatPatient", fields: [patientId], references: [id], onDelete: Cascade)
+  doctor   Doctor              @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+  messages DirectChatMessage[]
+
+  @@index([patientId, status])
+  @@index([doctorId, status])
+  @@index([updatedAt])
+  @@map("direct_chat_conversations")
+}
+
+model DirectChatMessage {
+  id              Int       @id @default(autoincrement())
+  conversationId  Int       @map("conversation_id")
+  senderId        Int       @map("sender_id")
+  clientMessageId String    @unique @map("client_message_id")
+  content         String
+  createdAt       DateTime  @default(now()) @map("created_at")
+  readAt          DateTime? @map("read_at")
+
+  conversation DirectChatConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender       User                   @relation("DirectChatMessageSender", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+  @@index([senderId])
+  @@index([readAt])
+  @@map("direct_chat_messages")
 }
 
 model ConsultationHistory {

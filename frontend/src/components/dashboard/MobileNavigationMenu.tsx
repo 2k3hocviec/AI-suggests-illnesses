@@ -1,16 +1,18 @@
 "use client";
 
-import { History, Menu, MessageSquareText } from "lucide-react";
+import { History, Menu, MessagesSquare, MessageSquareText } from "lucide-react";
 import { useState } from "react";
 
 interface MobileNavigationMenuProps {
   onNewChat?: () => void;
   onOpenHistory?: () => void;
+  onOpenDirectChat?: () => void;
 }
 
 export function MobileNavigationMenu({
   onNewChat,
   onOpenHistory,
+  onOpenDirectChat,
 }: MobileNavigationMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -21,6 +23,11 @@ export function MobileNavigationMenu({
 
   function handleOpenHistory() {
     onOpenHistory?.();
+    setIsOpen(false);
+  }
+
+  function handleOpenDirectChat() {
+    onOpenDirectChat?.();
     setIsOpen(false);
   }
 
@@ -53,6 +60,14 @@ export function MobileNavigationMenu({
           >
             <History className="h-4 w-4" />
             Lịch sử chat
+          </button>
+          <button
+            type="button"
+            onClick={handleOpenDirectChat}
+            className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-medium text-slate-700 hover:bg-slate-100"
+          >
+            <MessagesSquare className="h-4 w-4" />
+            Chat với bác sĩ
           </button>
         </div>
       ) : null}

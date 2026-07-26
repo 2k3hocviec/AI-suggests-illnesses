@@ -1,0 +1,904 @@
+'use client';
+
+import {
+  ArrowLeft,
+  Check,
+  Circle,
+  Clock3,
+  LogOut,
+  MessageCircle,
+  RefreshCcw,
+  Send,
+  UserRound,
+  X,
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
+import { Socket } from 'socket.io-client';
+import { getMe, logout, AuthUser } from '@/lib/auth-api';
+import {
+  acceptDirectChatRequest,
+  createDirectChatSocket,
+  DirectChatConversation,
+  DirectChatMessage,
+  DirectChatNotification,
+  DirectChatSocketAck,
+  listDirectChatConversations,
+  listDirectChatMessages,
+  rejectDirectChatRequest,
+} from '@/lib/direct-chat-api';
+
+export function DirectChatDashboard() {
+  const router = useRouter();
+  const [me, setMe] = useState<AuthUser | null>(null);
+  const [conversations, setConversations] = useState<
+    DirectChatConversation[]
+  >([]);
+  const [activeConversationId, setActiveConversationId] = useState<
+    number | null
+  >(null);
+  const [messages, setMessages] = useState<DirectChatMessage[]>([]);
+  const [draft, setDraft] = useState('');
+  const [notification, setNotification] =
+    useState<DirectChatNotification | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingMessages, setIsLoadingMessages] = useState(false);
+  const [isConnected, setIsConnected] = useState(false);
+  const [processingRequestId, setProcessingRequestId] = useState<number | null>(
+    null,
+  );
+  const socketRef = useRef<Socket | null>(null);
+  const activeConversationIdRef = useRef<number | null>(null);
+  const meRef = useRef<AuthUser | null>(null);
+  const messageEndRef = useRef<HTMLDivElement>(null);
+
+  const loadConversations = useCallback(async () => {
+    const data = await listDirectChatConversations();
+    setConversations(data);
+    return data;
+  }, []);
+
+  useEffect(() => {
+    async function bootstrap() {
+      try {
+        const user = await getMe();
+        if (user.role === 'ADMIN') {
+          router.replace('/admin');
+          return;
+        }
+
+        if (user.role !== 'USER' && user.role !== 'DOCTOR') {
+          router.replace('/chat');
+          return;
+        }
+
+        meRef.current = user;
+        setMe(user);
+        await loadConversations();
+      } catch {
+        localStorage.removeItem('accessToken');
+        router.replace('/login');
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    void bootstrap();
+  }, [loadConversations, router]);
+
+  useEffect(() => {
+    if (!me) {
+      return;
+    }
+
+    const socket = createDirectChatSocket();
+    socketRef.current = socket;
+
+    const handleConnect = () => {
+      setIsConnected(true);
+      setError(null);
+      const activeId = activeConversationIdRef.current;
+      if (activeId) {
+        socket.emit('conversation:join', {
+          conversationId: activeId,
+        });
+      }
+    };
+    const handleDisconnect = () => setIsConnected(false);
+    const handleSocketError = (payload: { message?: string }) => {
+      setError(payload.message ?? 'Kết nối realtime không thành công.');
+    };
+    const handleRefresh = () => {
+      void loadConversations().catch(() => null);
+    };
+    const handleMessage = (message: DirectChatMessage) => {
+      if (activeConversationIdRef.current === message.conversationId) {
+        setMessages((current) => mergeMessage(current, message));
+
+        if (message.senderId !== meRef.current?.id) {
+          socket.emit('message:read', {
+            conversationId: message.conversationId,
+          });
+        }
+      }
+      void loadConversations().catch(() => null);
+    };
+    const handleRead = (payload: {
+      readerId: number;
+      readAt: string;
+      conversationId: number;
+    }) => {
+      if (activeConversationIdRef.current !== payload.conversationId) {
+        return;
+      }
+
+      setMessages((current) =>
+        current.map((message) =>
+          message.senderId !== payload.readerId && !message.readAt
+            ? { ...message, readAt: payload.readAt }
+            : message,
+        ),
+      );
+    };
+    const handleNotification = (payload: DirectChatNotification) => {
+      setNotification(payload);
+      void loadConversations().catch(() => null);
+    };
+
+    socket.on('connect', handleConnect);
+    socket.on('disconnect', handleDisconnect);
+    socket.on('socket:error', handleSocketError);
+    socket.on('request:new', handleRefresh);
+    socket.on('request:updated', handleRefresh);
+    socket.on('message:new', handleMessage);
+    socket.on('message:read', handleRead);
+    socket.on('notification:new', handleNotification);
+
+    return () => {
+      socket.removeAllListeners();
+      socket.disconnect();
+      socketRef.current = null;
+      setIsConnected(false);
+    };
+  }, [loadConversations, me]);
+
+  useEffect(() => {
+    activeConversationIdRef.current = activeConversationId;
+  }, [activeConversationId]);
+
+  useEffect(() => {
+    messageEndRef.current?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'end',
+    });
+  }, [messages]);
+
+  useEffect(() => {
+    if (!notification) {
+      return;
+    }
+
+    const timeout = window.setTimeout(() => setNotification(null), 6000);
+    return () => window.clearTimeout(timeout);
+  }, [notification]);
+
+  const activeConversation = useMemo(
+    () =>
+      conversations.find(
+        (conversation) => conversation.id === activeConversationId,
+      ) ?? null,
+    [activeConversationId, conversations],
+  );
+
+  const pendingConversations = conversations.filter(
+    (conversation) => conversation.status === 'PENDING',
+  );
+  const otherConversations = conversations.filter(
+    (conversation) => conversation.status !== 'PENDING',
+  );
+
+  async function handleOpenConversation(conversation: DirectChatConversation) {
+    if (conversation.status !== 'ACTIVE' && conversation.status !== 'CLOSED') {
+      return;
+    }
+
+    setError(null);
+    setIsLoadingMessages(true);
+    const previousId = activeConversationIdRef.current;
+    if (previousId && previousId !== conversation.id) {
+      socketRef.current?.emit('conversation:leave', {
+        conversationId: previousId,
+      });
+    }
+
+    try {
+      const nextMessages = await listDirectChatMessages(conversation.id);
+      activeConversationIdRef.current = conversation.id;
+      setActiveConversationId(conversation.id);
+      setMessages(nextMessages);
+      setConversations((current) =>
+        current.map((item) =>
+          item.id === conversation.id ? { ...item, unreadCount: 0 } : item,
+        ),
+      );
+      socketRef.current?.emit(
+        'conversation:join',
+        { conversationId: conversation.id },
+        (response: DirectChatSocketAck) => {
+          if (!response.ok) {
+            setError(response.error ?? 'Không thể vào phòng chat.');
+          }
+        },
+      );
+    } catch (requestError) {
+      setError(getErrorMessage(requestError, 'Không thể tải tin nhắn.'));
+    } finally {
+      setIsLoadingMessages(false);
+    }
+  }
+
+  async function handleAccept(conversation: DirectChatConversation) {
+    setProcessingRequestId(conversation.id);
+    setError(null);
+    try {
+      const accepted = await acceptDirectChatRequest(conversation.id);
+      await loadConversations();
+      await handleOpenConversation(accepted);
+    } catch (requestError) {
+      setError(
+        getErrorMessage(requestError, 'Không thể chấp nhận yêu cầu chat.'),
+      );
+    } finally {
+      setProcessingRequestId(null);
+    }
+  }
+
+  async function handleReject(conversation: DirectChatConversation) {
+    setProcessingRequestId(conversation.id);
+    setError(null);
+    try {
+      await rejectDirectChatRequest(conversation.id);
+      await loadConversations();
+    } catch (requestError) {
+      setError(
+        getErrorMessage(requestError, 'Không thể từ chối yêu cầu chat.'),
+      );
+    } finally {
+      setProcessingRequestId(null);
+    }
+  }
+
+  function handleSend(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const content = draft.trim();
+    const socket = socketRef.current;
+
+    if (!content || !activeConversation || !me || !socket?.connected) {
+      return;
+    }
+
+    const clientMessageId = crypto.randomUUID();
+    const optimisticMessage: DirectChatMessage = {
+      id: -Date.now(),
+      conversationId: activeConversation.id,
+      senderId: me.id,
+      clientMessageId,
+      content,
+      createdAt: new Date().toISOString(),
+      readAt: null,
+      sender: {
+        id: me.id,
+        fullName: me.fullName,
+        role: me.role,
+      },
+    };
+    setDraft('');
+    setMessages((current) => mergeMessage(current, optimisticMessage));
+
+    socket.emit(
+      'message:send',
+      {
+        conversationId: activeConversation.id,
+        content,
+        clientMessageId,
+      },
+      (response: DirectChatSocketAck<DirectChatMessage>) => {
+        if (!response.ok || !response.message) {
+          setMessages((current) =>
+            current.filter(
+              (message) => message.clientMessageId !== clientMessageId,
+            ),
+          );
+          setError(response.error ?? 'Không thể gửi tin nhắn.');
+          setDraft(content);
+          return;
+        }
+
+        setMessages((current) => mergeMessage(current, response.message!));
+      },
+    );
+  }
+
+  function handleLogout() {
+    localStorage.removeItem('accessToken');
+    void logout().catch(() => null);
+    window.location.replace('/login');
+  }
+
+  if (isLoading || !me) {
+    return (
+      <main className="flex min-h-screen items-center justify-center bg-slate-50 text-sm text-slate-600">
+        Đang tải hộp thư trực tiếp...
+      </main>
+    );
+  }
+
+  return (
+    <main className="flex h-[100dvh] min-w-0 flex-col overflow-hidden bg-slate-50 text-slate-900">
+      {notification ? (
+        <NotificationToast
+          notification={notification}
+          onClose={() => setNotification(null)}
+          onOpen={() => {
+            const conversation = conversations.find(
+              (item) => item.id === notification.conversationId,
+            );
+            if (conversation?.status === 'ACTIVE') {
+              void handleOpenConversation(conversation);
+              setNotification(null);
+            }
+          }}
+        />
+      ) : null}
+
+      <header className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 sm:px-6">
+        <div className="flex min-w-0 items-center gap-3">
+          <button
+            type="button"
+            onClick={() => router.push(me.role === 'DOCTOR' ? '/doctor' : '/chat')}
+            className="inline-flex h-9 shrink-0 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+            title={me.role === 'DOCTOR' ? 'Hộp thư bác sĩ' : 'Quay lại chat AI'}
+          >
+            <ArrowLeft className="h-4 w-4" />
+            <span className="hidden sm:inline">
+              {me.role === 'DOCTOR' ? 'Về hộp thư' : 'Quay lại chat AI'}
+            </span>
+          </button>
+          <div className="min-w-0">
+            <h1 className="truncate text-base font-bold text-[#073b83] sm:text-lg">
+              {me.role === 'DOCTOR'
+                ? 'Hộp thư tư vấn bác sĩ'
+                : 'Chat trực tiếp với bác sĩ'}
+            </h1>
+            <p className="flex items-center gap-1.5 text-xs text-slate-500">
+              <Circle
+                className={`h-2.5 w-2.5 fill-current ${
+                  isConnected ? 'text-emerald-500' : 'text-amber-500'
+                }`}
+              />
+              {isConnected ? 'Realtime đang kết nối' : 'Đang kết nối lại'}
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <span className="hidden max-w-44 truncate text-sm font-medium text-slate-600 sm:block">
+            {me.fullName}
+          </span>
+          <button
+            type="button"
+            onClick={handleLogout}
+            className="inline-flex h-9 items-center gap-2 rounded-lg border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+          >
+            <LogOut className="h-4 w-4" />
+            <span className="hidden sm:inline">Đăng xuất</span>
+          </button>
+        </div>
+      </header>
+
+      {error ? (
+        <div className="flex shrink-0 items-center justify-between bg-red-50 px-4 py-2 text-sm text-red-700">
+          <span>{error}</span>
+          <button type="button" onClick={() => setError(null)}>
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+      ) : null}
+
+      <div className="flex min-h-0 flex-1">
+        <aside
+          className={`min-h-0 w-full shrink-0 flex-col border-r border-slate-200 bg-white lg:flex lg:w-[360px] ${
+            activeConversation ? 'hidden' : 'flex'
+          }`}
+        >
+          <div className="flex items-center justify-between border-b border-slate-100 px-4 py-4">
+            <div>
+              <h2 className="font-bold text-slate-900">Cuộc trò chuyện</h2>
+              <p className="mt-0.5 text-xs text-slate-500">
+                {conversations.length} yêu cầu và phiên chat
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={() => void loadConversations()}
+              className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-500 transition hover:bg-slate-100"
+              title="Làm mới"
+            >
+              <RefreshCcw className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div className="chat-scrollbar min-h-0 flex-1 overflow-y-auto p-3">
+            {conversations.length === 0 ? (
+              <EmptyInbox isDoctor={me.role === 'DOCTOR'} />
+            ) : null}
+
+            {pendingConversations.length ? (
+              <section className="mb-4">
+                <h3 className="mb-2 px-1 text-xs font-bold uppercase tracking-wide text-amber-700">
+                  Đang chờ xác nhận
+                </h3>
+                <div className="space-y-2">
+                  {pendingConversations.map((conversation) => (
+                    <PendingConversationCard
+                      key={conversation.id}
+                      conversation={conversation}
+                      isDoctor={me.role === 'DOCTOR'}
+                      isProcessing={processingRequestId === conversation.id}
+                      onAccept={() => void handleAccept(conversation)}
+                      onReject={() => void handleReject(conversation)}
+                    />
+                  ))}
+                </div>
+              </section>
+            ) : null}
+
+            {otherConversations.length ? (
+              <section>
+                <h3 className="mb-2 px-1 text-xs font-bold uppercase tracking-wide text-slate-500">
+                  Phiên chat
+                </h3>
+                <div className="space-y-2">
+                  {otherConversations.map((conversation) => (
+                    <ConversationButton
+                      key={conversation.id}
+                      conversation={conversation}
+                      viewerRole={me.role}
+                      active={conversation.id === activeConversationId}
+                      onClick={() => void handleOpenConversation(conversation)}
+                    />
+                  ))}
+                </div>
+              </section>
+            ) : null}
+          </div>
+        </aside>
+
+        <section
+          className={`min-w-0 flex-1 flex-col bg-[#fbfaf9] lg:flex ${
+            activeConversation ? 'flex' : 'hidden'
+          }`}
+        >
+          {activeConversation ? (
+            <>
+              <ChatHeader
+                conversation={activeConversation}
+                viewerRole={me.role}
+                onBack={() => {
+                  socketRef.current?.emit('conversation:leave', {
+                    conversationId: activeConversation.id,
+                  });
+                  activeConversationIdRef.current = null;
+                  setActiveConversationId(null);
+                  setMessages([]);
+                }}
+              />
+              <div className="chat-scrollbar min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-8">
+                <div className="mx-auto flex w-full max-w-3xl flex-col gap-3">
+                  {isLoadingMessages ? (
+                    <p className="text-center text-sm text-slate-500">
+                      Đang tải tin nhắn...
+                    </p>
+                  ) : null}
+                  {!isLoadingMessages && messages.length === 0 ? (
+                    <div className="mx-auto mt-12 max-w-md rounded-2xl border border-dashed border-slate-300 bg-white px-5 py-6 text-center">
+                      <MessageCircle className="mx-auto h-8 w-8 text-emerald-600" />
+                      <p className="mt-3 text-sm font-semibold text-slate-800">
+                        Yêu cầu đã được chấp nhận
+                      </p>
+                      <p className="mt-1 text-sm leading-6 text-slate-500">
+                        Hãy gửi lời chào để bắt đầu cuộc trò chuyện trực tiếp.
+                      </p>
+                    </div>
+                  ) : null}
+                  {messages.map((message) => (
+                    <MessageBubble
+                      key={message.clientMessageId}
+                      message={message}
+                      own={message.senderId === me.id}
+                    />
+                  ))}
+                  <div ref={messageEndRef} />
+                </div>
+              </div>
+              <form
+                onSubmit={handleSend}
+                className="shrink-0 border-t border-slate-200 bg-white px-4 py-3 sm:px-8"
+              >
+                <div className="mx-auto flex w-full max-w-3xl items-end gap-2">
+                  <textarea
+                    value={draft}
+                    onChange={(event) => setDraft(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (
+                        event.key === 'Enter' &&
+                        !event.shiftKey &&
+                        !event.nativeEvent.isComposing
+                      ) {
+                        event.preventDefault();
+                        event.currentTarget.form?.requestSubmit();
+                      }
+                    }}
+                    rows={1}
+                    maxLength={2000}
+                    disabled={
+                      activeConversation.status !== 'ACTIVE' || !isConnected
+                    }
+                    placeholder={
+                      isConnected
+                        ? 'Nhập tin nhắn...'
+                        : 'Đang kết nối lại realtime...'
+                    }
+                    className="max-h-32 min-h-11 min-w-0 flex-1 resize-none rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100 disabled:bg-slate-100"
+                  />
+                  <button
+                    type="submit"
+                    disabled={
+                      !draft.trim() ||
+                      activeConversation.status !== 'ACTIVE' ||
+                      !isConnected
+                    }
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[#073f87] text-white transition hover:bg-[#052f66] disabled:cursor-not-allowed disabled:bg-slate-300"
+                    title="Gửi tin nhắn"
+                  >
+                    <Send className="h-4 w-4" />
+                  </button>
+                </div>
+              </form>
+            </>
+          ) : (
+            <div className="flex h-full items-center justify-center p-6">
+              <div className="max-w-sm text-center">
+                <MessageCircle className="mx-auto h-12 w-12 text-slate-300" />
+                <h2 className="mt-4 text-lg font-bold text-slate-800">
+                  Chọn một phiên chat
+                </h2>
+                <p className="mt-2 text-sm leading-6 text-slate-500">
+                  Tin nhắn mới sẽ được thông báo ngay khi hai bên đang đăng nhập.
+                </p>
+              </div>
+            </div>
+          )}
+        </section>
+      </div>
+    </main>
+  );
+}
+
+function PendingConversationCard({
+  conversation,
+  isDoctor,
+  isProcessing,
+  onAccept,
+  onReject,
+}: {
+  conversation: DirectChatConversation;
+  isDoctor: boolean;
+  isProcessing: boolean;
+  onAccept: () => void;
+  onReject: () => void;
+}) {
+  return (
+    <article className="rounded-xl border border-amber-200 bg-amber-50/70 p-3">
+      <div className="flex items-start gap-3">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-amber-700 ring-1 ring-amber-200">
+          <UserRound className="h-4 w-4" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-bold text-slate-900">
+            {isDoctor
+              ? conversation.patient.fullName
+              : conversation.doctor.fullName}
+          </p>
+          <p className="mt-1 flex items-center gap-1 text-xs text-slate-500">
+            <Clock3 className="h-3.5 w-3.5" />
+            {formatDateTime(conversation.requestedAt)}
+          </p>
+        </div>
+      </div>
+      {isDoctor ? (
+        <div className="mt-3 grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            disabled={isProcessing}
+            onClick={onAccept}
+            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg bg-emerald-600 text-xs font-semibold text-white transition hover:bg-emerald-700 disabled:opacity-60"
+          >
+            <Check className="h-3.5 w-3.5" />
+            Chấp nhận
+          </button>
+          <button
+            type="button"
+            disabled={isProcessing}
+            onClick={onReject}
+            className="inline-flex h-9 items-center justify-center gap-1.5 rounded-lg border border-red-200 bg-white text-xs font-semibold text-red-600 transition hover:bg-red-50 disabled:opacity-60"
+          >
+            <X className="h-3.5 w-3.5" />
+            Từ chối
+          </button>
+        </div>
+      ) : (
+        <p className="mt-3 rounded-lg bg-white px-3 py-2 text-xs font-medium text-amber-700 ring-1 ring-amber-100">
+          Đang chờ bác sĩ phản hồi
+        </p>
+      )}
+    </article>
+  );
+}
+
+function ConversationButton({
+  conversation,
+  viewerRole,
+  active,
+  onClick,
+}: {
+  conversation: DirectChatConversation;
+  viewerRole: AuthUser['role'];
+  active: boolean;
+  onClick: () => void;
+}) {
+  const counterpart =
+    viewerRole === 'DOCTOR'
+      ? conversation.patient.fullName
+      : conversation.doctor.fullName;
+
+  return (
+    <button
+      type="button"
+      disabled={conversation.status !== 'ACTIVE' && conversation.status !== 'CLOSED'}
+      onClick={onClick}
+      className={`w-full rounded-xl border p-3 text-left transition ${
+        active
+          ? 'border-brand-300 bg-brand-50'
+          : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
+      } disabled:cursor-default disabled:opacity-70`}
+    >
+      <div className="flex items-start gap-3">
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-sm font-bold text-blue-700">
+          {getInitials(counterpart)}
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="flex items-center justify-between gap-2">
+            <span className="truncate text-sm font-bold text-slate-900">
+              {counterpart}
+            </span>
+            {conversation.unreadCount > 0 ? (
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-red-500 px-1 text-[10px] font-bold text-white">
+                {conversation.unreadCount}
+              </span>
+            ) : null}
+          </span>
+          <span className="mt-1 block truncate text-xs text-slate-500">
+            {conversation.lastMessage?.content ??
+              getStatusLabel(conversation.status)}
+          </span>
+        </span>
+      </div>
+    </button>
+  );
+}
+
+function ChatHeader({
+  conversation,
+  viewerRole,
+  onBack,
+}: {
+  conversation: DirectChatConversation;
+  viewerRole: AuthUser['role'];
+  onBack: () => void;
+}) {
+  const counterpart =
+    viewerRole === 'DOCTOR'
+      ? conversation.patient.fullName
+      : conversation.doctor.fullName;
+
+  return (
+    <header className="flex h-16 shrink-0 items-center gap-3 border-b border-slate-200 bg-white px-4 sm:px-6">
+      <button
+        type="button"
+        onClick={onBack}
+        className="flex h-9 w-9 items-center justify-center rounded-lg text-slate-600 hover:bg-slate-100 lg:hidden"
+        title="Quay lại danh sách"
+      >
+        <ArrowLeft className="h-5 w-5" />
+      </button>
+      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-sm font-bold text-emerald-700">
+        {getInitials(counterpart)}
+      </span>
+      <div className="min-w-0">
+        <h2 className="truncate text-sm font-bold text-slate-900 sm:text-base">
+          {counterpart}
+        </h2>
+        <p className="truncate text-xs text-slate-500">
+          {viewerRole === 'DOCTOR'
+            ? conversation.patient.email
+            : `${conversation.doctor.specialty.name} · ${
+                conversation.doctor.workplace ?? 'Chưa cập nhật nơi làm việc'
+              }`}
+        </p>
+      </div>
+    </header>
+  );
+}
+
+function MessageBubble({
+  message,
+  own,
+}: {
+  message: DirectChatMessage;
+  own: boolean;
+}) {
+  return (
+    <div className={`flex ${own ? 'justify-end' : 'justify-start'}`}>
+      <div className="max-w-[82%] sm:max-w-[72%]">
+        <div
+          className={`break-words rounded-2xl px-4 py-2.5 text-sm leading-6 shadow-sm ${
+            own
+              ? 'rounded-br-md bg-[#073f87] text-white'
+              : 'rounded-bl-md border border-slate-200 bg-white text-slate-800'
+          }`}
+        >
+          {message.content}
+        </div>
+        <p
+          className={`mt-1 text-[11px] text-slate-400 ${
+            own ? 'text-right' : 'text-left'
+          }`}
+        >
+          {formatTime(message.createdAt)}
+          {own ? ` · ${message.readAt ? 'Đã xem' : 'Đã gửi'}` : ''}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function NotificationToast({
+  notification,
+  onClose,
+  onOpen,
+}: {
+  notification: DirectChatNotification;
+  onClose: () => void;
+  onOpen: () => void;
+}) {
+  return (
+    <div className="fixed right-3 top-3 z-[80] w-[calc(100%-1.5rem)] max-w-sm rounded-xl border border-emerald-200 bg-white p-4 shadow-2xl">
+      <div className="flex items-start gap-3">
+        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-emerald-700">
+          <MessageCircle className="h-4 w-4" />
+        </span>
+        <div className="min-w-0 flex-1">
+          <p className="text-sm font-bold text-slate-900">
+            {notification.title}
+          </p>
+          <p className="mt-1 break-words text-sm leading-5 text-slate-600">
+            {notification.message}
+          </p>
+          {notification.conversationId ? (
+            <button
+              type="button"
+              onClick={onOpen}
+              className="mt-2 text-xs font-bold text-emerald-700 hover:text-emerald-800"
+            >
+              Mở cuộc trò chuyện
+            </button>
+          ) : null}
+        </div>
+        <button
+          type="button"
+          onClick={onClose}
+          className="text-slate-400 hover:text-slate-700"
+          title="Đóng thông báo"
+        >
+          <X className="h-4 w-4" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function EmptyInbox({ isDoctor }: { isDoctor: boolean }) {
+  return (
+    <div className="mt-8 rounded-xl border border-dashed border-slate-300 px-4 py-8 text-center">
+      <MessageCircle className="mx-auto h-8 w-8 text-slate-300" />
+      <p className="mt-3 text-sm font-semibold text-slate-700">
+        Chưa có cuộc trò chuyện
+      </p>
+      <p className="mt-1 text-xs leading-5 text-slate-500">
+        {isDoctor
+          ? 'Yêu cầu mới từ người dùng sẽ xuất hiện tại đây.'
+          : 'Hãy gửi yêu cầu từ thẻ bác sĩ trong kết quả tư vấn AI.'}
+      </p>
+    </div>
+  );
+}
+
+function mergeMessage(
+  messages: DirectChatMessage[],
+  nextMessage: DirectChatMessage,
+) {
+  const merged = [
+    ...messages.filter(
+      (message) => message.clientMessageId !== nextMessage.clientMessageId,
+    ),
+    nextMessage,
+  ];
+
+  return merged.sort(
+    (first, second) =>
+      new Date(first.createdAt).getTime() -
+      new Date(second.createdAt).getTime(),
+  );
+}
+
+function getStatusLabel(status: DirectChatConversation['status']) {
+  switch (status) {
+    case 'ACTIVE':
+      return 'Đang hoạt động';
+    case 'REJECTED':
+      return 'Đã từ chối';
+    case 'CLOSED':
+      return 'Đã kết thúc';
+    default:
+      return 'Đang chờ xác nhận';
+  }
+}
+
+function getInitials(value: string) {
+  return value
+    .replace(/^Bác sĩ\s+/i, '')
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(-2)
+    .map((part) => part[0])
+    .join('')
+    .toUpperCase();
+}
+
+function formatDateTime(value: string) {
+  return new Intl.DateTimeFormat('vi-VN', {
+    day: '2-digit',
+    month: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(value));
+}
+
+function formatTime(value: string) {
+  return new Intl.DateTimeFormat('vi-VN', {
+    hour: '2-digit',
+    minute: '2-digit',
+  }).format(new Date(value));
+}
+
+function getErrorMessage(error: unknown, fallback: string) {
+  return error instanceof Error ? error.message : fallback;
+}

@@ -12,6 +12,7 @@ import {
   Clock3,
   Mail,
   MapPin,
+  MessageCircle,
   Phone,
   ShieldCheck,
   Star,
@@ -32,12 +33,16 @@ interface ConsultationThreadProps {
   messages: ThreadMessage[];
   isThinking?: boolean;
   isLoadingMessages?: boolean;
+  onRequestDoctorChat?: (
+    doctorId: number,
+  ) => Promise<{ created: boolean }>;
 }
 
 export function ConsultationThread({
   messages,
   isThinking = false,
   isLoadingMessages = false,
+  onRequestDoctorChat,
 }: ConsultationThreadProps) {
   const threadRef = useRef<HTMLElement>(null);
 
@@ -107,7 +112,10 @@ export function ConsultationThread({
                       : 'whitespace-pre-line rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-sm leading-6 shadow-sm lg:text-[15px]'
                   }
                 >
-                  <AssistantContent content={message.content} />
+                  <AssistantContent
+                    content={message.content}
+                    onRequestDoctorChat={onRequestDoctorChat}
+                  />
                 </div>
                 <p className="mt-2 text-xs text-slate-600">{time}</p>
               </div>
@@ -130,14 +138,27 @@ export function ConsultationThread({
   );
 }
 
-function AssistantContent({ content }: { content: string }) {
+function AssistantContent({
+  content,
+  onRequestDoctorChat,
+}: {
+  content: string;
+  onRequestDoctorChat?: (
+    doctorId: number,
+  ) => Promise<{ created: boolean }>;
+}) {
   const recommendation = parseRecommendation(content);
 
   if (!recommendation) {
     return <p className="whitespace-pre-line text-slate-700">{content}</p>;
   }
 
-  return <RecommendationResponse recommendation={recommendation} />;
+  return (
+    <RecommendationResponse
+      recommendation={recommendation}
+      onRequestDoctorChat={onRequestDoctorChat}
+    />
+  );
 }
 
 interface SpecialtySummary {
@@ -147,6 +168,7 @@ interface SpecialtySummary {
 
 interface DoctorRecommendation {
   id: number;
+  chatAvailable: boolean;
   name: string;
   score: number | null;
   fitLabel: string | null;
@@ -174,13 +196,56 @@ interface RecommendationData {
 
 function RecommendationResponse({
   recommendation,
+  onRequestDoctorChat,
 }: {
   recommendation: RecommendationData;
+  onRequestDoctorChat?: (
+    doctorId: number,
+  ) => Promise<{ created: boolean }>;
 }) {
   const [expandedDoctorId, setExpandedDoctorId] = useState<number | null>(
     null,
   );
+  const [requestingDoctorId, setRequestingDoctorId] = useState<number | null>(
+    null,
+  );
+  const [requestFeedback, setRequestFeedback] = useState<
+    Record<number, { tone: 'success' | 'error'; message: string }>
+  >({});
   const primarySpecialty = recommendation.specialties[0]?.name ?? 'Phù hợp';
+
+  async function handleRequestDoctorChat(doctorId: number) {
+    if (!onRequestDoctorChat) {
+      return;
+    }
+
+    setRequestingDoctorId(doctorId);
+    try {
+      const result = await onRequestDoctorChat(doctorId);
+      setRequestFeedback((current) => ({
+        ...current,
+        [doctorId]: {
+          tone: 'success',
+          message: result.created
+            ? 'Đã gửi yêu cầu. Hãy chờ bác sĩ chấp nhận.'
+            : 'Bạn đã có yêu cầu hoặc phiên chat với bác sĩ này.',
+        },
+      }));
+    } catch (error) {
+      setRequestFeedback((current) => ({
+        ...current,
+        [doctorId]: {
+          tone: 'error',
+          message:
+            error instanceof Error
+              ? error.message
+              : 'Không thể gửi yêu cầu chat.',
+        },
+      }));
+    } finally {
+      setRequestingDoctorId(null);
+    }
+  }
 
   return (
     <div className="min-w-0 max-w-full space-y-4">
@@ -262,7 +327,15 @@ function RecommendationResponse({
 
       {recommendation.doctors.length ? (
         <div className="space-y-3">
-          <DoctorCard doctor={recommendation.doctors[0]} />
+          <DoctorCard
+            doctor={recommendation.doctors[0]}
+            canRequestChat={Boolean(onRequestDoctorChat)}
+            isRequesting={requestingDoctorId === recommendation.doctors[0].id}
+            requestFeedback={requestFeedback[recommendation.doctors[0].id]}
+            onRequestChat={() =>
+              void handleRequestDoctorChat(recommendation.doctors[0].id)
+            }
+          />
 
           {recommendation.doctors.slice(1).map((doctor) => {
             const isExpanded = expandedDoctorId === doctor.id;
@@ -303,7 +376,15 @@ function RecommendationResponse({
                 </button>
                 {isExpanded ? (
                   <div className="mt-3">
-                    <DoctorCard doctor={doctor} />
+                    <DoctorCard
+                      doctor={doctor}
+                      canRequestChat={Boolean(onRequestDoctorChat)}
+                      isRequesting={requestingDoctorId === doctor.id}
+                      requestFeedback={requestFeedback[doctor.id]}
+                      onRequestChat={() =>
+                        void handleRequestDoctorChat(doctor.id)
+                      }
+                    />
                   </div>
                 ) : null}
               </div>
@@ -384,7 +465,19 @@ function SummaryCard({
   );
 }
 
-function DoctorCard({ doctor }: { doctor: DoctorRecommendation }) {
+function DoctorCard({
+  doctor,
+  canRequestChat,
+  isRequesting,
+  requestFeedback,
+  onRequestChat,
+}: {
+  doctor: DoctorRecommendation;
+  canRequestChat: boolean;
+  isRequesting: boolean;
+  requestFeedback?: { tone: 'success' | 'error'; message: string };
+  onRequestChat: () => void;
+}) {
   return (
     <article className="min-w-0 max-w-full rounded-2xl border border-slate-200 bg-white px-4 py-5 shadow-sm sm:px-5">
       <div className="flex flex-wrap items-start gap-3">
@@ -463,7 +556,34 @@ function DoctorCard({ doctor }: { doctor: DoctorRecommendation }) {
             Gửi email
           </a>
         ) : null}
+        {doctor.chatAvailable && canRequestChat ? (
+          <button
+            type="button"
+            disabled={isRequesting || requestFeedback?.tone === 'success'}
+            onClick={onRequestChat}
+            className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-3 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300 sm:col-span-2"
+          >
+            <MessageCircle className="h-4 w-4" />
+            {isRequesting
+              ? 'Đang gửi yêu cầu...'
+              : requestFeedback?.tone === 'success'
+                ? 'Đã gửi yêu cầu chat'
+                : 'Yêu cầu chat trực tiếp'}
+          </button>
+        ) : null}
       </div>
+
+      {requestFeedback ? (
+        <p
+          className={`mt-3 rounded-lg px-3 py-2 text-xs font-medium ${
+            requestFeedback.tone === 'success'
+              ? 'bg-emerald-50 text-emerald-700'
+              : 'bg-red-50 text-red-600'
+          }`}
+        >
+          {requestFeedback.message}
+        </p>
+      ) : null}
 
       {(!doctor.phone || doctor.phone === 'chưa cập nhật') &&
       (!doctor.email || doctor.email === 'chưa cập nhật') ? (
@@ -578,6 +698,7 @@ function parseRecommendation(content: string): RecommendationData | null {
       pushCurrentDoctor();
       currentDoctor = {
         id: index,
+        chatAvailable: false,
         name: doctorHeader[1].trim(),
         score: null,
         fitLabel: null,
@@ -627,9 +748,20 @@ function parseRecommendation(content: string): RecommendationData | null {
 
     const label = line.slice(1, separatorIndex).trim();
     const value = line.slice(separatorIndex + 1).trim();
+    if (label === 'Mã bác sĩ') {
+      const doctorId = Number(value);
+      if (Number.isInteger(doctorId) && doctorId > 0) {
+        currentDoctor.id = doctorId;
+      }
+      return;
+    }
+    if (label === 'Chat trực tiếp') {
+      currentDoctor.chatAvailable = /^có$/i.test(value);
+      return;
+    }
     const fields: Record<
       string,
-      Exclude<keyof DoctorRecommendation, 'id' | 'score'>
+      Exclude<keyof DoctorRecommendation, 'id' | 'score' | 'chatAvailable'>
     > = {
       'Chuyên khoa': 'specialty',
       'Kinh nghiệm': 'experience',

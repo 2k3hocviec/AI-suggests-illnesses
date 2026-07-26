@@ -16,6 +16,7 @@ import {
   Search,
   ShieldCheck,
   Stethoscope,
+  UserPlus,
   Users,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
@@ -32,6 +33,7 @@ import {
 } from "@/lib/admin-api";
 import { getMe, logout } from "@/lib/auth-api";
 import { LoadingOverlay } from "@/components/LoadingOverlay";
+import { CreateDoctorDialog } from "./CreateDoctorDialog";
 import { useRouter } from "next/navigation";
 
 export function AdminDashboard() {
@@ -52,6 +54,7 @@ export function AdminDashboard() {
   const [activityStart, setActivityStart] = useState(() => getDefaultActivityStart());
   const [isRefreshingActivity, setIsRefreshingActivity] = useState(false);
   const [confirmingUser, setConfirmingUser] = useState<AdminUser | null>(null);
+  const [isCreateDoctorOpen, setIsCreateDoctorOpen] = useState(false);
 
   useEffect(() => {
     async function verifyAdmin() {
@@ -235,6 +238,14 @@ export function AdminDashboard() {
           <div className="flex items-center gap-2">
             <button
               type="button"
+              onClick={() => setIsCreateDoctorOpen(true)}
+              className="inline-flex h-9 items-center gap-2 rounded-md bg-brand-600 px-3 text-sm font-semibold text-white transition hover:bg-brand-700"
+            >
+              <UserPlus className="h-4 w-4" />
+              Tạo bác sĩ
+            </button>
+            <button
+              type="button"
               onClick={() => void loadData(activityStart)}
               className="inline-flex h-9 items-center gap-2 rounded-md border border-slate-200 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
             >
@@ -367,7 +378,7 @@ export function AdminDashboard() {
                     </td>
                     <td className="px-4 py-3">
                       <span className="rounded-md bg-slate-100 px-2 py-1 text-xs font-semibold text-slate-700">
-                        {user.role}
+                        {formatUserRole(user.role)}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-slate-600">
@@ -463,6 +474,12 @@ export function AdminDashboard() {
           </div>
         </div>
       </section>
+
+      <CreateDoctorDialog
+        isOpen={isCreateDoctorOpen}
+        onClose={() => setIsCreateDoctorOpen(false)}
+        onCreated={() => loadData(activityStart, false)}
+      />
 
       {confirmingUser ? (
         <div
@@ -918,7 +935,7 @@ function BreakdownPanel({
         <DonutChart
           title="Theo vai trò"
           items={roleBreakdown}
-          colors={["#1976d2", "#94a3b8"]}
+          colors={["#1976d2", "#94a3b8", "#10b981"]}
         />
         <div className="border-t border-slate-100 pt-5">
           <DonutChart
@@ -1100,4 +1117,15 @@ function shortAddress(address: string | null) {
     .filter(Boolean);
 
   return parts.length > 2 ? parts.slice(-2).join(", ") : address;
+}
+
+function formatUserRole(role: AdminUser["role"]) {
+  switch (role) {
+    case "ADMIN":
+      return "Admin";
+    case "DOCTOR":
+      return "Bác sĩ";
+    default:
+      return "Người dùng";
+  }
 }

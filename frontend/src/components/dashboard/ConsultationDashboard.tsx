@@ -10,11 +10,13 @@ import {
   listChatSessions,
   sendChatMessage,
 } from '@/lib/chat-api';
+import { requestDoctorChat } from '@/lib/direct-chat-api';
 import { ChatHistoryDialog } from './ChatHistoryDialog';
 import { ConsultationChat } from './ConsultationChat';
 import { ConsultationHeader } from './ConsultationHeader';
 import { UserAppShell } from './UserAppShell';
 import { UserSidebar } from './UserSidebar';
+import { DirectChatNotificationListener } from '../direct-chat/DirectChatNotificationListener';
 
 export function ConsultationDashboard() {
   const router = useRouter();
@@ -22,6 +24,7 @@ export function ConsultationDashboard() {
   const [activeSessionId, setActiveSessionId] = useState<number>();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);
   const [isLoadingSessions, setIsLoadingSessions] = useState(false);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
@@ -34,6 +37,10 @@ export function ConsultationDashboard() {
 
         if (me.role === 'ADMIN') {
           router.replace('/admin');
+          return;
+        }
+        if (me.role === 'DOCTOR') {
+          router.replace('/doctor');
           return;
         }
 
@@ -63,6 +70,11 @@ export function ConsultationDashboard() {
     setActiveSessionId(undefined);
     setMessages([]);
     setError(null);
+    setNotice(null);
+  }
+
+  function handleOpenDirectChat() {
+    router.push('/direct-chat');
   }
 
   async function handleOpenHistory() {
@@ -92,6 +104,7 @@ export function ConsultationDashboard() {
 
   async function handleSend(content: string) {
     setError(null);
+    setNotice(null);
     setIsSending(true);
     const optimisticMessageId = -Date.now();
     const optimisticMessage: ChatMessage = {
@@ -126,25 +139,43 @@ export function ConsultationDashboard() {
     }
   }
 
+  async function handleRequestDoctorChat(doctorId: number) {
+    setError(null);
+    const result = await requestDoctorChat(doctorId);
+    setNotice(
+      result.created
+        ? 'Đã gửi yêu cầu chat trực tiếp. Bạn có thể theo dõi trong mục “Chat với bác sĩ”.'
+        : 'Yêu cầu này đã tồn tại. Bạn có thể mở mục “Chat với bác sĩ” để theo dõi.',
+    );
+    return {
+      created: result.created,
+    };
+  }
+
   return (
     <UserAppShell
       sidebar={
         <UserSidebar
           onNewChat={handleNewChat}
           onOpenHistory={handleOpenHistory}
+          onOpenDirectChat={handleOpenDirectChat}
         />
       }
     >
       <ConsultationHeader
         onNewChat={handleNewChat}
         onOpenHistory={handleOpenHistory}
+        onOpenDirectChat={handleOpenDirectChat}
       />
+      <DirectChatNotificationListener />
       <ConsultationChat
         messages={messages}
         error={error}
+        notice={notice}
         isSending={isSending}
         isLoadingMessages={isLoadingMessages}
         onSend={handleSend}
+        onRequestDoctorChat={handleRequestDoctorChat}
       />
       <ChatHistoryDialog
         isOpen={isHistoryOpen}

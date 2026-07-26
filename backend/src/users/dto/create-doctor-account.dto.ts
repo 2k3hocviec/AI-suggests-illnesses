@@ -1,7 +1,9 @@
-import { ConsultationType } from '@prisma/client';
+import { ConsultationType, UserGender } from '@prisma/client';
 import { Type } from 'class-transformer';
 import {
+  ArrayNotEmpty,
   IsArray,
+  IsDateString,
   IsEmail,
   IsEnum,
   IsInt,
@@ -25,6 +27,14 @@ export class CreateDoctorAccountDto {
   @MinLength(6)
   @MaxLength(120)
   password: string;
+
+  @IsOptional()
+  @IsDateString()
+  dateOfBirth?: string;
+
+  @IsOptional()
+  @IsEnum(UserGender)
+  gender?: UserGender;
 
   @Type(() => Number)
   @IsInt()
@@ -52,15 +62,30 @@ export class CreateDoctorAccountDto {
   @MaxLength(120)
   phoneNumber?: string;
 
-  @IsOptional()
   @IsString()
+  @MinLength(3)
   @MaxLength(255)
-  address?: string;
+  streetAddress: string;
+
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  provinceCode: number;
+
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  districtCode: number;
+
+  @Type(() => Number)
+  @IsInt()
+  @Min(1)
+  wardCode: number;
 
   @IsOptional()
   @IsString()
-  @MaxLength(120)
-  city?: string;
+  @MaxLength(500)
+  imageUrl?: string;
 
   @IsOptional()
   @IsString()
@@ -72,8 +97,8 @@ export class CreateDoctorAccountDto {
   @MaxLength(2000)
   description?: string;
 
-  @IsOptional()
   @IsArray()
+  @ArrayNotEmpty()
   @IsEnum(ConsultationType, { each: true })
-  consultationType?: ConsultationType[];
+  consultationType: ConsultationType[];
 }

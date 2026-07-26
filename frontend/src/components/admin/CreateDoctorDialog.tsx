@@ -1,25 +1,38 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { X, UserPlus } from "lucide-react";
+import {
+  District,
+  listDistricts,
+  listProvinces,
+  listWards,
+  Province,
+  Ward,
+} from "@/lib/administrative-units-api";
 import {
   createDoctorAccount,
   CreateDoctorAccountInput,
   DoctorCreationOptions,
   getDoctorCreationOptions,
 } from "@/lib/admin-api";
-import { X, UserPlus } from "lucide-react";
 
 const initialForm: CreateDoctorAccountInput = {
   fullName: "",
   email: "",
   password: "",
+  dateOfBirth: "",
+  gender: "UNKNOWN",
   specialtyId: 0,
   academicTitle: "",
   experienceYears: 0,
   workplace: "",
   phoneNumber: "",
-  address: "",
-  city: "",
+  streetAddress: "",
+  provinceCode: 0,
+  districtCode: 0,
+  wardCode: 0,
+  imageUrl: "",
   workingTime: "",
   description: "",
   consultationType: ["ONLINE"],
@@ -37,6 +50,9 @@ export function CreateDoctorDialog({
   onCreated,
 }: CreateDoctorDialogProps) {
   const [options, setOptions] = useState<DoctorCreationOptions | null>(null);
+  const [provinces, setProvinces] = useState<Province[]>([]);
+  const [districts, setDistricts] = useState<District[]>([]);
+  const [wards, setWards] = useState<Ward[]>([]);
   const [form, setForm] = useState<CreateDoctorAccountInput>(initialForm);
   const [isLoadingOptions, setIsLoadingOptions] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -48,28 +64,82 @@ export function CreateDoctorDialog({
       return;
     }
 
+    let cancelled = false;
     setForm(initialForm);
+    setDistricts([]);
+    setWards([]);
     setError(null);
     setSuccess(null);
     setIsLoadingOptions(true);
 
-    void getDoctorCreationOptions()
-      .then((data) => {
-        setOptions(data);
+    Promise.all([getDoctorCreationOptions(), listProvinces()])
+      .then(([doctorOptions, provinceList]) => {
+        if (cancelled) {
+          return;
+        }
+
+        setOptions(doctorOptions);
+        setProvinces(provinceList);
         setForm((current) => ({
           ...current,
-          specialtyId: current.specialtyId || data.specialties[0]?.id || 0,
+          specialtyId: current.specialtyId || doctorOptions.specialties[0]?.id || 0,
         }));
       })
       .catch((loadError) => {
-        setError(
-          loadError instanceof Error
-            ? loadError.message
-            : "Không thể tải danh sách chuyên khoa.",
-        );
+        if (!cancelled) {
+          setError(
+            loadError instanceof Error
+              ? loadError.message
+              : "Không thể tải dữ liệu tạo tài khoản bác sĩ.",
+          );
+        }
       })
-      .finally(() => setIsLoadingOptions(false));
+      .finally(() => {
+        if (!cancelled) {
+          setIsLoadingOptions(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!isOpen || !form.provinceCode) {
+      setDistricts([]);
+      setWards([]);
+      return;
+    }
+
+    setDistricts([]);
+    setWards([]);
+    setForm((current) =>
+      current.districtCode || current.wardCode
+        ? { ...current, districtCode: 0, wardCode: 0 }
+        : current,
+    );
+
+    listDistricts(form.provinceCode)
+      .then(setDistricts)
+      .catch(() => setError("Không thể tải danh sách quận/huyện."));
+  }, [form.provinceCode, isOpen]);
+
+  useEffect(() => {
+    if (!isOpen || !form.districtCode) {
+      setWards([]);
+      return;
+    }
+
+    setWards([]);
+    setForm((current) =>
+      current.wardCode ? { ...current, wardCode: 0 } : current,
+    );
+
+    listWards(form.districtCode)
+      .then(setWards)
+      .catch(() => setError("Không thể tải danh sách phường/xã."));
+  }, [form.districtCode, isOpen]);
 
   if (!isOpen) {
     return null;
@@ -106,6 +176,16 @@ export function CreateDoctorDialog({
       return;
     }
 
+    if (!form.streetAddress.trim()) {
+      setError("Vui lòng nhập địa chỉ chi tiết.");
+      return;
+    }
+
+    if (!form.provinceCode || !form.districtCode || !form.wardCode) {
+      setError("Vui lòng chọn đầy đủ tỉnh/thành, quận/huyện và phường/xã.");
+      return;
+    }
+
     if (!form.consultationType.length) {
       setError("Vui lòng chọn ít nhất một hình thức tư vấn.");
       return;
@@ -118,6 +198,14 @@ export function CreateDoctorDialog({
         fullName: form.fullName.trim(),
         email: form.email.trim(),
         password: form.password,
+        dateOfBirth: form.dateOfBirth || undefined,
+        academicTitle: form.academicTitle?.trim() || undefined,
+        workplace: form.workplace?.trim() || undefined,
+        phoneNumber: form.phoneNumber?.trim() || undefined,
+        streetAddress: form.streetAddress.trim(),
+        imageUrl: form.imageUrl?.trim() || undefined,
+        workingTime: form.workingTime?.trim() || undefined,
+        description: form.description?.trim() || undefined,
         experienceYears: Number(form.experienceYears) || 0,
       });
       await onCreated();
@@ -141,7 +229,7 @@ export function CreateDoctorDialog({
       aria-modal="true"
       aria-labelledby="create-doctor-title"
     >
-      <div className="flex max-h-[92vh] w-full max-w-4xl flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl">
+      <div className="flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl">
         <div className="flex items-start justify-between border-b border-slate-200 px-5 py-4">
           <div className="flex items-start gap-3">
             <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand-50 text-brand-700">
@@ -152,7 +240,7 @@ export function CreateDoctorDialog({
                 Tạo tài khoản bác sĩ
               </h2>
               <p className="mt-1 text-sm text-slate-500">
-                Tạo đồng thời tài khoản đăng nhập và hồ sơ bác sĩ.
+                Tạo tài khoản đăng nhập và hồ sơ bác sĩ đầy đủ thông tin chuyên môn, liên hệ, địa chỉ.
               </p>
             </div>
           </div>
@@ -178,7 +266,8 @@ export function CreateDoctorDialog({
             </p>
           ) : null}
 
-          <div className="grid gap-4 sm:grid-cols-2">
+          <SectionTitle title="Thông tin tài khoản và cá nhân" />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <FormField label="Họ và tên *">
               <input
                 required
@@ -209,6 +298,39 @@ export function CreateDoctorDialog({
                 placeholder="Tối thiểu 6 ký tự"
               />
             </FormField>
+            <FormField label="Ngày sinh">
+              <input
+                type="date"
+                value={form.dateOfBirth}
+                onChange={(event) => updateField("dateOfBirth", event.target.value)}
+                className={inputClassName}
+              />
+            </FormField>
+            <FormField label="Giới tính">
+              <select
+                value={form.gender}
+                onChange={(event) => updateField("gender", event.target.value as CreateDoctorAccountInput["gender"])}
+                className={inputClassName}
+              >
+                <option value="UNKNOWN">Chưa cập nhật</option>
+                <option value="MALE">Nam</option>
+                <option value="FEMALE">Nữ</option>
+                <option value="OTHER">Khác</option>
+              </select>
+            </FormField>
+            <FormField label="Số điện thoại">
+              <input
+                type="tel"
+                value={form.phoneNumber}
+                onChange={(event) => updateField("phoneNumber", event.target.value)}
+                className={inputClassName}
+                placeholder="090..."
+              />
+            </FormField>
+          </div>
+
+          <SectionTitle title="Thông tin chuyên môn" className="mt-6" />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <FormField label="Chuyên khoa *">
               <select
                 required
@@ -252,30 +374,6 @@ export function CreateDoctorDialog({
                 placeholder="Bệnh viện / phòng khám"
               />
             </FormField>
-            <FormField label="Số điện thoại">
-              <input
-                value={form.phoneNumber}
-                onChange={(event) => updateField("phoneNumber", event.target.value)}
-                className={inputClassName}
-                placeholder="090..."
-              />
-            </FormField>
-            <FormField label="Địa chỉ">
-              <input
-                value={form.address}
-                onChange={(event) => updateField("address", event.target.value)}
-                className={inputClassName}
-                placeholder="Địa chỉ phòng khám"
-              />
-            </FormField>
-            <FormField label="Tỉnh / thành phố">
-              <input
-                value={form.city}
-                onChange={(event) => updateField("city", event.target.value)}
-                className={inputClassName}
-                placeholder="TP. Hồ Chí Minh"
-              />
-            </FormField>
             <FormField label="Thời gian làm việc">
               <input
                 value={form.workingTime}
@@ -284,9 +382,79 @@ export function CreateDoctorDialog({
                 placeholder="Thứ Hai - Thứ Sáu, 08:00 - 17:00"
               />
             </FormField>
+            <FormField label="Ảnh đại diện (URL)">
+              <input
+                type="url"
+                value={form.imageUrl}
+                onChange={(event) => updateField("imageUrl", event.target.value)}
+                className={inputClassName}
+                placeholder="https://..."
+              />
+            </FormField>
           </div>
 
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <SectionTitle title="Địa chỉ làm việc" className="mt-6" />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <FormField label="Số nhà và tên đường *" className="lg:col-span-2">
+              <input
+                required
+                value={form.streetAddress}
+                onChange={(event) => updateField("streetAddress", event.target.value)}
+                className={inputClassName}
+                placeholder="Ví dụ: Số 12 Nguyễn Trãi"
+              />
+            </FormField>
+            <FormField label="Tỉnh / thành phố *">
+              <select
+                required
+                disabled={isLoadingOptions || !provinces.length}
+                value={form.provinceCode || ""}
+                onChange={(event) => updateField("provinceCode", Number(event.target.value))}
+                className={inputClassName}
+              >
+                <option value="">Chọn tỉnh/thành</option>
+                {provinces.map((province) => (
+                  <option key={province.code} value={province.code}>
+                    {province.name}
+                  </option>
+                ))}
+              </select>
+            </FormField>
+            <FormField label="Quận / huyện *">
+              <select
+                required
+                disabled={!form.provinceCode || !districts.length}
+                value={form.districtCode || ""}
+                onChange={(event) => updateField("districtCode", Number(event.target.value))}
+                className={inputClassName}
+              >
+                <option value="">Chọn quận/huyện</option>
+                {districts.map((district) => (
+                  <option key={district.code} value={district.code}>
+                    {district.name}
+                  </option>
+                ))}
+              </select>
+            </FormField>
+            <FormField label="Phường / xã *">
+              <select
+                required
+                disabled={!form.districtCode || !wards.length}
+                value={form.wardCode || ""}
+                onChange={(event) => updateField("wardCode", Number(event.target.value))}
+                className={inputClassName}
+              >
+                <option value="">Chọn phường/xã</option>
+                {wards.map((ward) => (
+                  <option key={ward.code} value={ward.code}>
+                    {ward.name}
+                  </option>
+                ))}
+              </select>
+            </FormField>
+          </div>
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
             <div>
               <p className="mb-2 text-sm font-semibold text-slate-700">Hình thức tư vấn *</p>
               <div className="flex flex-wrap gap-3">
@@ -336,17 +504,27 @@ export function CreateDoctorDialog({
 }
 
 const inputClassName =
-  "mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-brand-400 focus:ring-2 focus:ring-brand-100";
+  "mt-1 h-10 w-full rounded-md border border-slate-200 bg-white px-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-brand-400 focus:ring-2 focus:ring-brand-100 disabled:bg-slate-100";
+
+function SectionTitle({ title, className = "" }: { title: string; className?: string }) {
+  return (
+    <h3 className={`mb-3 border-b border-slate-100 pb-2 text-sm font-bold uppercase tracking-wide text-slate-700 ${className}`}>
+      {title}
+    </h3>
+  );
+}
 
 function FormField({
   label,
   children,
+  className = "",
 }: {
   label: string;
   children: React.ReactNode;
+  className?: string;
 }) {
   return (
-    <label className="block text-sm font-semibold text-slate-700">
+    <label className={`block text-sm font-semibold text-slate-700 ${className}`}>
       {label}
       {children}
     </label>

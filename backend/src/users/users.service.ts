@@ -7,12 +7,16 @@ import {
 } from '@nestjs/common';
 import { ConsultationType, UserGender, UserRole } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
+import { AdministrativeUnitsService } from '../administrative-units/administrative-units.service';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateDoctorAccountDto } from './dto/create-doctor-account.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly administrativeUnits: AdministrativeUnitsService,
+  ) {}
 
   async getDoctorCreationOptions(adminId: number) {
     await this.assertAdmin(adminId);
@@ -65,10 +69,9 @@ export class UsersService {
       throw new NotFoundException('Chuyên khoa không tồn tại');
     }
 
+    const address = await this.resolveDoctorAddress(dto);
     const password = await bcrypt.hash(dto.password, 12);
-    const consultationType = dto.consultationType?.length
-      ? [...new Set(dto.consultationType)]
-      : [ConsultationType.ONLINE];
+    const consultationType = [...new Set(dto.consultationType)];
 
     return this.prisma.$transaction(async (transaction) => {
       const user = await transaction.user.create({
@@ -77,11 +80,17 @@ export class UsersService {
           email,
           password,
           role: UserRole.DOCTOR,
-          gender: UserGender.UNKNOWN,
+          dateOfBirth: dto.dateOfBirth
+            ? new Date(dto.dateOfBirth)
+            : undefined,
+          gender: dto.gender ?? UserGender.UNKNOWN,
           isEnabled: true,
           phoneNumber: dto.phoneNumber?.trim() || null,
-          streetAddress: dto.address?.trim() || null,
-          address: dto.address?.trim() || null,
+          streetAddress: address.streetAddress,
+          address: address.address,
+          provinceCode: address.provinceCode,
+          districtCode: address.districtCode,
+          wardCode: address.wardCode,
         },
         select: {
           id: true,
@@ -102,17 +111,37 @@ export class UsersService {
           experienceYears: dto.experienceYears ?? 0,
           workplace: dto.workplace?.trim() || null,
           phoneNumber: dto.phoneNumber?.trim() || null,
-          address: dto.address?.trim() || null,
-          city: dto.city?.trim() || null,
+          streetAddress: address.streetAddress,
+          address: address.address,
+          city: address.city,
+          provinceCode: address.provinceCode,
+          districtCode: address.districtCode,
+          wardCode: address.wardCode,
           workingTime: dto.workingTime?.trim() || null,
           description: dto.description?.trim() || null,
+          imageUrl: dto.imageUrl?.trim() || null,
           consultationType,
           status: 'ACTIVE',
         },
         select: {
           id: true,
+          userId: true,
           fullName: true,
           email: true,
+          academicTitle: true,
+          experienceYears: true,
+          description: true,
+          phoneNumber: true,
+          workplace: true,
+          streetAddress: true,
+          address: true,
+          city: true,
+          provinceCode: true,
+          districtCode: true,
+          wardCode: true,
+          workingTime: true,
+          imageUrl: true,
+          rating: true,
           specialty: {
             select: {
               id: true,
@@ -127,6 +156,41 @@ export class UsersService {
 
       return { user, doctor };
     });
+  }
+
+  private async resolveDoctorAddress(dto: CreateDoctorAccountDto) {
+    const [provinces, districts, wards] = await Promise.all([
+      this.administrativeUnits.listProvinces(),
+      this.administrativeUnits.listDistricts(dto.provinceCode),
+      this.administrativeUnits.listWards(dto.districtCode),
+    ]);
+
+    const province = provinces.find((item) => item.code === dto.provinceCode);
+    const district = districts.find((item) => item.code === dto.districtCode);
+    const ward = wards.find((item) => item.code === dto.wardCode);
+
+    if (
+      !province ||
+      !district ||
+      district.provinceCode !== province.code ||
+      !ward ||
+      ward.provinceCode !== province.code ||
+      ward.districtCode !== district.code
+    ) {
+      throw new BadRequestException('Địa chỉ hành chính không hợp lệ');
+    }
+
+    const streetAddress = dto.streetAddress.trim();
+    const address = `${streetAddress}, ${ward.name}, ${district.name}, ${province.name}`;
+
+    return {
+      streetAddress,
+      address,
+      city: province.name,
+      provinceCode: province.code,
+      districtCode: district.code,
+      wardCode: ward.code,
+    };
   }
 
   async findById(id: number) {

@@ -60,7 +60,12 @@ export interface DirectChatMessage {
 }
 
 export interface DirectChatNotification {
-  type: 'REQUEST' | 'REQUEST_ACCEPTED' | 'REQUEST_REJECTED' | 'MESSAGE';
+  type:
+    | 'REQUEST'
+    | 'REQUEST_ACCEPTED'
+    | 'REQUEST_REJECTED'
+    | 'MESSAGE'
+    | 'CONVERSATION_CLOSED';
   title: string;
   message: string;
   conversationId?: number;
@@ -110,6 +115,24 @@ export function rejectDirectChatRequest(conversationId: number) {
     `/direct-chat/conversations/${conversationId}/reject`,
     {
       method: 'PATCH',
+    },
+  );
+}
+
+export function closeDirectChatConversation(conversationId: number) {
+  return apiRequest<DirectChatConversation>(
+    `/direct-chat/conversations/${conversationId}/close`,
+    {
+      method: 'PATCH',
+    },
+  );
+}
+
+export function deleteDirectChatConversation(conversationId: number) {
+  return apiRequest<{ id: number; deletedAt: string }>(
+    `/direct-chat/conversations/${conversationId}`,
+    {
+      method: 'DELETE',
     },
   );
 }

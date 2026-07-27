@@ -65,6 +65,7 @@ export interface ChatSession {
   createdAt: string;
   updatedAt: string;
   closedAt: string | null;
+  deletedAt: string | null;
   _count: {
     messages: number;
   };
@@ -124,4 +125,19 @@ export function listChatSessions() {
 
 export function listChatMessages(sessionId: number) {
   return apiRequest<ChatMessage[]>(`/chat/sessions/${sessionId}/messages`);
+}
+
+export function closeChatSession(sessionId: number) {
+  return apiRequest<ChatSession>(`/chat/sessions/${sessionId}/close`, {
+    method: 'PATCH',
+  });
+}
+
+export function deleteChatSession(sessionId: number) {
+  return apiRequest<{ id: number; deletedAt: string }>(
+    `/chat/sessions/${sessionId}`,
+    {
+      method: 'DELETE',
+    },
+  );
 }

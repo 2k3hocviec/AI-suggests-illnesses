@@ -238,6 +238,7 @@ model ChatSession {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
   closedAt  DateTime? @map("closed_at")
+  deletedAt DateTime? @map("deleted_at")
 
   user                  User?                 @relation(fields: [userId], references: [id], onDelete: SetNull)
   messages              ChatMessage[]
@@ -273,6 +274,8 @@ model DirectChatConversation {
   requestedAt DateTime         @default(now()) @map("requested_at")
   respondedAt DateTime?        @map("responded_at")
   closedAt    DateTime?        @map("closed_at")
+  patientDeletedAt DateTime?   @map("patient_deleted_at")
+  doctorDeletedAt  DateTime?   @map("doctor_deleted_at")
   updatedAt   DateTime         @default(now()) @updatedAt @map("updated_at")
 
   patient  User                @relation("DirectChatPatient", fields: [patientId], references: [id], onDelete: Cascade)

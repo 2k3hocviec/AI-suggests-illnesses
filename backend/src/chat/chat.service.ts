@@ -218,7 +218,9 @@ export class ChatService {
   async sendGuestMessage(dto: SendChatMessageDto) {
     const content = dto.message.trim();
     if (!content) {
-      throw new BadRequestException("Ná»™i dung tin nháº¯n khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng");
+      throw new BadRequestException(
+        "Ná»™i dung tin nháº¯n khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng",
+      );
     }
 
     const prepared = await this.prepareChatResponse(content);
@@ -298,11 +300,11 @@ export class ChatService {
         ? this.withoutDoctorSuggestions(recommendedSpecialties)
         : isRepeatedQuestion
           ? this.withoutDoctorSuggestions(recommendedSpecialties)
-        : await this.attachDoctorsToSpecialties(
-            userId,
-            recommendedSpecialties,
-            analysis,
-          );
+          : await this.attachDoctorsToSpecialties(
+              userId,
+              recommendedSpecialties,
+              analysis,
+            );
     const assistantContent =
       isRepeatedQuestion && cachedAssistantContent
         ? cachedAssistantContent
@@ -331,6 +333,7 @@ export class ChatService {
     return this.prisma.chatSession.findMany({
       where: {
         userId,
+        deletedAt: null,
       },
       select: {
         id: true,
@@ -339,6 +342,7 @@ export class ChatService {
         createdAt: true,
         updatedAt: true,
         closedAt: true,
+        deletedAt: true,
         _count: {
           select: {
             messages: true,
@@ -356,6 +360,7 @@ export class ChatService {
       where: {
         id: sessionId,
         userId,
+        deletedAt: null,
       },
     });
 
@@ -371,6 +376,58 @@ export class ChatService {
         createdAt: "asc",
       },
     });
+  }
+
+  /*
+  Đóng phiên chat theo yêu cầu.
+  */
+  async closeSession(userId: number, sessionId: number) {
+    const session = await this.prisma.chatSession.findFirst({
+      where: {
+        id: sessionId,
+        userId,
+        deletedAt: null,
+      },
+    });
+
+    if (!session) {
+      throw new ForbiddenException(
+        "Bạn không có quyền thao tác phiên chat này",
+      );
+    }
+
+    if (session.closedAt) {
+      return session;
+    }
+
+    return this.prisma.chatSession.update({
+      where: { id: sessionId },
+      data: { closedAt: new Date() },
+    });
+  }
+
+  async deleteSession(userId: number, sessionId: number) {
+    const session = await this.prisma.chatSession.findFirst({
+      where: {
+        id: sessionId,
+        userId,
+        deletedAt: null,
+      },
+    });
+
+    if (!session) {
+      throw new ForbiddenException(
+        "Bạn không có quyền thao tác phiên chat này",
+      );
+    }
+
+    const deletedAt = new Date();
+    await this.prisma.chatSession.update({
+      where: { id: sessionId },
+      data: { deletedAt },
+    });
+
+    return { id: sessionId, deletedAt };
   }
 
   /*
@@ -397,6 +454,7 @@ export class ChatService {
         id: sessionId,
         userId,
         closedAt: null,
+        deletedAt: null,
       },
     });
 
@@ -439,23 +497,22 @@ export class ChatService {
       return null;
     }
 
-    const previousAssistantMessage =
-      await this.prisma.chatMessage.findFirst({
-        where: {
-          sessionId,
-          role: ChatRole.ASSISTANT,
-          id: {
-            gt: previousMessage.id,
-          },
+    const previousAssistantMessage = await this.prisma.chatMessage.findFirst({
+      where: {
+        sessionId,
+        role: ChatRole.ASSISTANT,
+        id: {
+          gt: previousMessage.id,
         },
-        select: {
-          metadata: true,
-          content: true,
-        },
-        orderBy: {
-          id: "asc",
-        },
-      });
+      },
+      select: {
+        metadata: true,
+        content: true,
+      },
+      orderBy: {
+        id: "asc",
+      },
+    });
 
     if (!previousAssistantMessage?.metadata) {
       return null;
@@ -554,7 +611,9 @@ export class ChatService {
       "gemini-1.5-flash";
 
     if (!apiKey) {
-      throw new ServiceUnavailableException("Gemini API key chưa được cấu hình");
+      throw new ServiceUnavailableException(
+        "Gemini API key chưa được cấu hình",
+      );
     }
 
     const controller = new AbortController();
@@ -1338,8 +1397,7 @@ ${content}`;
               doctor.doctorScore,
             );
             const workSchedule = this.formatWorkSchedule(doctor.workingTime);
-            const recommendationReason =
-              this.buildRecommendationReason(doctor);
+            const recommendationReason = this.buildRecommendationReason(doctor);
 
             return `${index + 1}. ${title}\n\nĐiểm phù hợp: ${scorePercent}% — ${suitabilityLabel}\n\n• Mã bác sĩ: ${doctor.id}\n• Chuyên khoa: ${specialty.name}\n• Kinh nghiệm: ${doctor.experienceYears} năm\n• Đánh giá: ${doctor.rating ?? "chưa cập nhật"}/5\n• Nơi làm việc: ${doctor.workplace ?? "chưa cập nhật"}\n• Địa chỉ: ${doctor.address ?? doctor.city ?? "chưa cập nhật"}${distance}\n• Thời gian làm việc: ${workSchedule}\n• Hình thức tư vấn: ${consultationType}\n• Điện thoại: ${doctor.phoneNumber ?? "chưa cập nhật"}\n• Email: ${doctor.email ?? "chưa cập nhật"}\n• Chat trực tiếp: ${doctor.chatAvailable ? "Có" : "Chưa hỗ trợ"}\n\nLý do đề xuất: ${recommendationReason}`;
           })

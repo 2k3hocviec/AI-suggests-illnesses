@@ -141,10 +141,18 @@ export class DirectChatService {
     });
 
     if (existing) {
+      const restored = existing.patientDeletedAt
+        ? await this.prisma.directChatConversation.update({
+            where: { id: existing.id },
+            data: { patientDeletedAt: null },
+            include: conversationInclude,
+          })
+        : existing;
+
       return {
         created: false,
         doctorUserId: doctor.user.id,
-        conversation: await this.toConversationView(existing, patientId),
+        conversation: await this.toConversationView(restored, patientId),
       };
     }
 
@@ -173,12 +181,13 @@ export class DirectChatService {
     const user = await this.getEnabledUser(userId);
     const where: Prisma.DirectChatConversationWhereInput =
       user.role === UserRole.USER
-        ? { patientId: user.id }
+        ? { patientId: user.id, patientDeletedAt: null }
         : user.role === UserRole.DOCTOR
           ? {
               doctor: {
                 userId: user.id,
               },
+              doctorDeletedAt: null,
             }
           : {
               id: -1,
@@ -274,6 +283,58 @@ export class DirectChatService {
   }
 
   /*
+  Đóng phiên chat theo yêu cầu
+  */
+  async closeConversation(userId: number, conversationId: number) {
+    const conversation = await this.getConversationRecord(conversationId);
+    this.assertParticipant(userId, conversation);
+    this.assertConversationVisible(userId, conversation);
+
+    if (conversation.status === DirectChatStatus.CLOSED) {
+      return {
+        recipientId: this.getRecipientId(userId, conversation),
+        conversation: await this.toConversationView(conversation, userId),
+      };
+    }
+
+    if (conversation.status !== DirectChatStatus.ACTIVE) {
+      throw new ConflictException("Chỉ có thể đóng phiên chat đang hoạt động");
+    }
+
+    const updated = await this.prisma.directChatConversation.update({
+      where: { id: conversationId },
+      data: {
+        status: DirectChatStatus.CLOSED,
+        closedAt: new Date(),
+      },
+      include: conversationInclude,
+    });
+
+    return {
+      recipientId: this.getRecipientId(userId, updated),
+      conversation: await this.toConversationView(updated, userId),
+    };
+  }
+
+  async deleteConversation(userId: number, conversationId: number) {
+    const conversation = await this.getConversationRecord(conversationId);
+    this.assertParticipant(userId, conversation);
+
+    const deletedAt = new Date();
+    const data: Prisma.DirectChatConversationUpdateInput =
+      conversation.patientId === userId
+        ? { patientDeletedAt: deletedAt }
+        : { doctorDeletedAt: deletedAt };
+
+    await this.prisma.directChatConversation.update({
+      where: { id: conversationId },
+      data,
+    });
+
+    return { id: conversationId, deletedAt };
+  }
+
+  /*
   Lấy toàn bộ tin nhắn của một phiên chat:
     - Kiểm tra phiên chat có tồn tại không ?
     - Người đang xem có phải người dùng hoặc bác sĩ trong phiên chat không.
@@ -282,6 +343,7 @@ export class DirectChatService {
   async listMessages(userId: number, conversationId: number) {
     const conversation = await this.getConversationRecord(conversationId);
     this.assertParticipant(userId, conversation);
+    this.assertConversationVisible(userId, conversation);
     this.assertConversationReadable(conversation.status);
 
     return this.prisma.directChatMessage.findMany({
@@ -316,6 +378,7 @@ export class DirectChatService {
   async joinConversation(userId: number, conversationId: number) {
     const conversation = await this.getConversationRecord(conversationId);
     this.assertParticipant(userId, conversation);
+    this.assertConversationVisible(userId, conversation);
     this.assertConversationReadable(conversation.status);
 
     return {
@@ -357,6 +420,7 @@ export class DirectChatService {
 
     const conversation = await this.getConversationRecord(input.conversationId);
     this.assertParticipant(userId, conversation);
+    this.assertConversationVisible(userId, conversation);
 
     if (conversation.status !== DirectChatStatus.ACTIVE) {
       throw new ConflictException(
@@ -447,6 +511,7 @@ export class DirectChatService {
   async markRead(userId: number, conversationId: number) {
     const conversation = await this.getConversationRecord(conversationId);
     this.assertParticipant(userId, conversation);
+    this.assertConversationVisible(userId, conversation);
     this.assertConversationReadable(conversation.status);
 
     const readAt = new Date();
@@ -520,6 +585,23 @@ export class DirectChatService {
       throw new ForbiddenException(
         "Bạn không có quyền truy cập cuộc trò chuyện này",
       );
+    }
+  }
+
+  private assertConversationVisible(
+    userId: number,
+    conversation: ConversationRecord,
+  ) {
+    const isPatient = conversation.patientId === userId;
+    const isDoctor = conversation.doctor.userId === userId;
+    const isHidden = isPatient
+      ? Boolean(conversation.patientDeletedAt)
+      : isDoctor
+        ? Boolean(conversation.doctorDeletedAt)
+        : false;
+
+    if (isHidden) {
+      throw new NotFoundException("Cuộc trò chuyện không còn tồn tại");
     }
   }
 

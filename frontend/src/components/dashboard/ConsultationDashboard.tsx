@@ -6,6 +6,8 @@ import { getMe } from '@/lib/auth-api';
 import {
   ChatMessage,
   ChatSession,
+  closeChatSession,
+  deleteChatSession,
   listChatMessages,
   listChatSessions,
   sendChatMessage,
@@ -29,6 +31,7 @@ export function ConsultationDashboard() {
   const [isLoadingSessions, setIsLoadingSessions] = useState(false);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isClosingSession, setIsClosingSession] = useState(false);
 
   useEffect(() => {
     async function bootstrap() {
@@ -73,6 +76,51 @@ export function ConsultationDashboard() {
     setNotice(null);
   }
 
+  async function handleCloseSession(sessionId = activeSessionId) {
+    if (!sessionId) {
+      return;
+    }
+
+    setError(null);
+    setIsClosingSession(true);
+    try {
+      const closedSession = await closeChatSession(sessionId);
+      setSessions((current) =>
+        current.map((session) =>
+          session.id === sessionId
+            ? { ...session, closedAt: closedSession.closedAt }
+            : session,
+        ),
+      );
+      setNotice('Phiên chat đã được đóng. Bạn có thể mở lại nội dung trong lịch sử.');
+    } catch (requestError) {
+      setError(
+        getRequestErrorMessage(requestError, 'Không thể đóng phiên chat.'),
+      );
+    } finally {
+      setIsClosingSession(false);
+    }
+  }
+
+  async function handleDeleteSession(sessionId: number) {
+    setError(null);
+    try {
+      await deleteChatSession(sessionId);
+      setSessions((current) =>
+        current.filter((session) => session.id !== sessionId),
+      );
+      if (activeSessionId === sessionId) {
+        setActiveSessionId(undefined);
+        setMessages([]);
+      }
+      setNotice('Phiên chat đã được ẩn khỏi lịch sử của bạn.');
+    } catch (requestError) {
+      setError(
+        getRequestErrorMessage(requestError, 'Không thể ẩn phiên chat.'),
+      );
+    }
+  }
+
   function handleOpenDirectChat() {
     router.push('/direct-chat');
   }
@@ -103,6 +151,14 @@ export function ConsultationDashboard() {
   }
 
   async function handleSend(content: string) {
+    const activeSession = sessions.find(
+      (session) => session.id === activeSessionId,
+    );
+    if (activeSession?.closedAt) {
+      setError('Phiên chat đã đóng. Hãy bắt đầu một đoạn chat mới.');
+      return;
+    }
+
     setError(null);
     setNotice(null);
     setIsSending(true);
@@ -166,6 +222,11 @@ export function ConsultationDashboard() {
         onNewChat={handleNewChat}
         onOpenHistory={handleOpenHistory}
         onOpenDirectChat={handleOpenDirectChat}
+        activeSession={sessions.find(
+          (session) => session.id === activeSessionId,
+        )}
+        onCloseSession={() => void handleCloseSession()}
+        isClosingSession={isClosingSession}
       />
       <DirectChatNotificationListener />
       <ConsultationChat
@@ -174,6 +235,9 @@ export function ConsultationDashboard() {
         notice={notice}
         isSending={isSending}
         isLoadingMessages={isLoadingMessages}
+        isClosed={Boolean(
+          sessions.find((session) => session.id === activeSessionId)?.closedAt,
+        )}
         onSend={handleSend}
         onRequestDoctorChat={handleRequestDoctorChat}
       />
@@ -184,6 +248,8 @@ export function ConsultationDashboard() {
         isLoading={isLoadingSessions}
         onClose={() => setIsHistoryOpen(false)}
         onSelectSession={handleSelectSession}
+        onCloseSession={handleCloseSession}
+        onDeleteSession={handleDeleteSession}
       />
     </UserAppShell>
   );

@@ -19,6 +19,7 @@ interface ConsultationChatProps {
   notice?: string | null;
   isSending?: boolean;
   isLoadingMessages?: boolean;
+  isClosed?: boolean;
   disabled?: boolean;
   onSend: (message: string) => Promise<void> | void;
   onRequestDoctorChat?: (
@@ -32,6 +33,7 @@ export function ConsultationChat({
   notice,
   isSending = false,
   isLoadingMessages = false,
+  isClosed = false,
   disabled = false,
   onSend,
   onRequestDoctorChat,
@@ -67,9 +69,14 @@ export function ConsultationChat({
           {notice}
         </p>
       ) : null}
+      {isClosed ? (
+        <p className="mx-auto w-full max-w-5xl px-4 pb-2 text-center text-sm font-medium text-amber-700 lg:px-10">
+          Phiên chat đã đóng. Bạn vẫn có thể xem lại nội dung hoặc bắt đầu đoạn chat mới.
+        </p>
+      ) : null}
       <ChatComposer
         onSend={onSend}
-        disabled={disabled || isSending || isLoadingMessages}
+        disabled={disabled || isClosed || isSending || isLoadingMessages}
       />
     </>
   );

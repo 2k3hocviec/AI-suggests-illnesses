@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseIntPipe,
@@ -91,6 +92,30 @@ export class DirectChatController {
       false,
     );
     return result.conversation;
+  }
+
+  @Patch("conversations/:conversationId/close")
+  async closeConversation(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param("conversationId", ParseIntPipe) conversationId: number,
+  ) {
+    const result = await this.directChatService.closeConversation(
+      user.id,
+      conversationId,
+    );
+    this.directChatGateway.notifyConversationClosed(
+      result.recipientId,
+      result.conversation,
+    );
+    return result.conversation;
+  }
+
+  @Delete("conversations/:conversationId")
+  deleteConversation(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param("conversationId", ParseIntPipe) conversationId: number,
+  ) {
+    return this.directChatService.deleteConversation(user.id, conversationId);
   }
 
   /*

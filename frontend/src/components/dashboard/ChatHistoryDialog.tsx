@@ -1,6 +1,7 @@
 'use client';
 
-import { History, X } from 'lucide-react';
+import { Archive, History, Trash2, X } from 'lucide-react';
+import { useState } from 'react';
 import { ChatSession } from '@/lib/chat-api';
 
 interface ChatHistoryDialogProps {
@@ -10,6 +11,8 @@ interface ChatHistoryDialogProps {
   isLoading?: boolean;
   onClose: () => void;
   onSelectSession: (sessionId: number) => void;
+  onCloseSession: (sessionId: number) => Promise<void> | void;
+  onDeleteSession: (sessionId: number) => Promise<void> | void;
 }
 
 export function ChatHistoryDialog({
@@ -19,7 +22,13 @@ export function ChatHistoryDialog({
   isLoading = false,
   onClose,
   onSelectSession,
+  onCloseSession,
+  onDeleteSession,
 }: ChatHistoryDialogProps) {
+  const [processingSessionId, setProcessingSessionId] = useState<number | null>(
+    null,
+  );
+
   if (!isOpen) {
     return null;
   }
@@ -27,6 +36,24 @@ export function ChatHistoryDialog({
   function handleSelectSession(sessionId: number) {
     onSelectSession(sessionId);
     onClose();
+  }
+
+  async function handleCloseSession(sessionId: number) {
+    setProcessingSessionId(sessionId);
+    try {
+      await onCloseSession(sessionId);
+    } finally {
+      setProcessingSessionId(null);
+    }
+  }
+
+  async function handleDeleteSession(sessionId: number) {
+    setProcessingSessionId(sessionId);
+    try {
+      await onDeleteSession(sessionId);
+    } finally {
+      setProcessingSessionId(null);
+    }
   }
 
   return (
@@ -83,8 +110,8 @@ export function ChatHistoryDialog({
                   <th className="w-44 border-b border-slate-200 px-4 py-3">
                     Cập nhật
                   </th>
-                  <th className="w-28 border-b border-slate-200 px-5 py-3 text-right">
-                    Chọn
+                  <th className="w-56 border-b border-slate-200 px-5 py-3 text-right">
+                    Thao tác
                   </th>
                 </tr>
               </thead>
@@ -116,17 +143,49 @@ export function ChatHistoryDialog({
                         {formatSessionTime(session.updatedAt)}
                       </td>
                       <td className="border-b border-slate-100 px-5 py-3 text-right">
-                        <button
-                          type="button"
-                          onClick={() => handleSelectSession(session.id)}
-                          className={
-                            isActive
-                              ? 'rounded-md bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white'
-                              : 'rounded-md border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-brand-500 hover:text-brand-700'
-                          }
-                        >
-                          {isActive ? 'Đang xem' : 'Mở'}
-                        </button>
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            type="button"
+                            onClick={() => handleSelectSession(session.id)}
+                            className={
+                              isActive
+                                ? 'rounded-md bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white'
+                                : 'rounded-md border border-slate-300 px-3 py-1.5 text-xs font-semibold text-slate-700 transition hover:border-brand-500 hover:text-brand-700'
+                            }
+                          >
+                            {isActive ? 'Đang xem' : 'Mở'}
+                          </button>
+                          {!session.closedAt ? (
+                            <button
+                              type="button"
+                              disabled={processingSessionId === session.id}
+                              onClick={() => void handleCloseSession(session.id)}
+                              className="inline-flex h-8 items-center gap-1 rounded-md border border-amber-200 px-2 text-xs font-semibold text-amber-700 transition hover:bg-amber-50 disabled:opacity-50"
+                              title="Đóng phiên chat"
+                            >
+                              <Archive className="h-3.5 w-3.5" />
+                              Đóng
+                            </button>
+                          ) : null}
+                          <button
+                            type="button"
+                            disabled={processingSessionId === session.id}
+                            onClick={() => {
+                              if (
+                                window.confirm(
+                                  'Ẩn phiên chat này khỏi lịch sử? Nội dung vẫn được lưu trong hệ thống.',
+                                )
+                              ) {
+                                void handleDeleteSession(session.id);
+                              }
+                            }}
+                            className="inline-flex h-8 items-center gap-1 rounded-md border border-red-200 px-2 text-xs font-semibold text-red-600 transition hover:bg-red-50 disabled:opacity-50"
+                            title="Ẩn khỏi lịch sử"
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                            Xóa
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   );

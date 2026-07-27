@@ -113,8 +113,7 @@ export interface CreateDoctorAccountInput {
   phoneNumber?: string;
   streetAddress: string;
   provinceCode: number;
-  districtCode: number;
-  wardCode: number;
+  communeCode: number;
   imageUrl?: string;
   workingTime?: string;
   description?: string;

@@ -3,12 +3,10 @@
 import { useEffect, useState } from "react";
 import { X, UserPlus } from "lucide-react";
 import {
-  District,
-  listDistricts,
+  Commune,
+  listCommunes,
   listProvinces,
-  listWards,
   Province,
-  Ward,
 } from "@/lib/administrative-units-api";
 import {
   createDoctorAccount,
@@ -30,8 +28,7 @@ const initialForm: CreateDoctorAccountInput = {
   phoneNumber: "",
   streetAddress: "",
   provinceCode: 0,
-  districtCode: 0,
-  wardCode: 0,
+  communeCode: 0,
   imageUrl: "",
   workingTime: "",
   description: "",
@@ -51,8 +48,7 @@ export function CreateDoctorDialog({
 }: CreateDoctorDialogProps) {
   const [options, setOptions] = useState<DoctorCreationOptions | null>(null);
   const [provinces, setProvinces] = useState<Province[]>([]);
-  const [districts, setDistricts] = useState<District[]>([]);
-  const [wards, setWards] = useState<Ward[]>([]);
+  const [communes, setCommunes] = useState<Commune[]>([]);
   const [form, setForm] = useState<CreateDoctorAccountInput>(initialForm);
   const [isLoadingOptions, setIsLoadingOptions] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -66,8 +62,7 @@ export function CreateDoctorDialog({
 
     let cancelled = false;
     setForm(initialForm);
-    setDistricts([]);
-    setWards([]);
+    setCommunes([]);
     setError(null);
     setSuccess(null);
     setIsLoadingOptions(true);
@@ -107,39 +102,23 @@ export function CreateDoctorDialog({
 
   useEffect(() => {
     if (!isOpen || !form.provinceCode) {
-      setDistricts([]);
-      setWards([]);
+      setCommunes([]);
       return;
     }
 
-    setDistricts([]);
-    setWards([]);
+    setCommunes([]);
     setForm((current) =>
-      current.districtCode || current.wardCode
-        ? { ...current, districtCode: 0, wardCode: 0 }
+      current.communeCode
+        ? { ...current, communeCode: 0 }
         : current,
     );
 
-    listDistricts(form.provinceCode)
-      .then(setDistricts)
-      .catch(() => setError("Không thể tải danh sách quận/huyện."));
+    listCommunes(form.provinceCode)
+      .then(setCommunes)
+      .catch(() => setError("Không thể tải danh sách xã/phường."));
   }, [form.provinceCode, isOpen]);
 
-  useEffect(() => {
-    if (!isOpen || !form.districtCode) {
-      setWards([]);
-      return;
-    }
 
-    setWards([]);
-    setForm((current) =>
-      current.wardCode ? { ...current, wardCode: 0 } : current,
-    );
-
-    listWards(form.districtCode)
-      .then(setWards)
-      .catch(() => setError("Không thể tải danh sách phường/xã."));
-  }, [form.districtCode, isOpen]);
 
   if (!isOpen) {
     return null;
@@ -181,8 +160,8 @@ export function CreateDoctorDialog({
       return;
     }
 
-    if (!form.provinceCode || !form.districtCode || !form.wardCode) {
-      setError("Vui lòng chọn đầy đủ tỉnh/thành, quận/huyện và phường/xã.");
+    if (!form.provinceCode || !form.communeCode) {
+      setError("Vui lòng chọn đầy đủ tỉnh/thành và xã/phường.");
       return;
     }
 
@@ -394,7 +373,7 @@ export function CreateDoctorDialog({
           </div>
 
           <SectionTitle title="Địa chỉ làm việc" className="mt-6" />
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <FormField label="Số nhà và tên đường *" className="lg:col-span-2">
               <input
                 required
@@ -420,38 +399,23 @@ export function CreateDoctorDialog({
                 ))}
               </select>
             </FormField>
-            <FormField label="Quận / huyện *">
+            <FormField label="Xã / phường *">
               <select
                 required
-                disabled={!form.provinceCode || !districts.length}
-                value={form.districtCode || ""}
-                onChange={(event) => updateField("districtCode", Number(event.target.value))}
+                disabled={!form.provinceCode || !communes.length}
+                value={form.communeCode || ""}
+                onChange={(event) => updateField("communeCode", Number(event.target.value))}
                 className={inputClassName}
               >
-                <option value="">Chọn quận/huyện</option>
-                {districts.map((district) => (
-                  <option key={district.code} value={district.code}>
-                    {district.name}
+                <option value="">Chọn xã/phường</option>
+                {communes.map((commune) => (
+                  <option key={commune.code} value={commune.code}>
+                    {commune.name}
                   </option>
                 ))}
               </select>
             </FormField>
-            <FormField label="Phường / xã *">
-              <select
-                required
-                disabled={!form.districtCode || !wards.length}
-                value={form.wardCode || ""}
-                onChange={(event) => updateField("wardCode", Number(event.target.value))}
-                className={inputClassName}
-              >
-                <option value="">Chọn phường/xã</option>
-                {wards.map((ward) => (
-                  <option key={ward.code} value={ward.code}>
-                    {ward.name}
-                  </option>
-                ))}
-              </select>
-            </FormField>
+
           </div>
 
           <div className="mt-6 grid gap-4 sm:grid-cols-2">

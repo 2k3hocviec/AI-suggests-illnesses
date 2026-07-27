@@ -55,6 +55,8 @@ export function AdminDashboard() {
   const [isRefreshingActivity, setIsRefreshingActivity] = useState(false);
   const [confirmingUser, setConfirmingUser] = useState<AdminUser | null>(null);
   const [isCreateDoctorOpen, setIsCreateDoctorOpen] = useState(false);
+  const currentUsersPage = users?.page ?? page;
+  const totalUsersPages = Math.max(users?.totalPages ?? 1, 1);
 
   useEffect(() => {
     async function verifyAdmin() {
@@ -106,6 +108,7 @@ export function AdminDashboard() {
       ]);
       setOverview(overviewData);
       setUsers(usersData);
+      setPage(usersData.page);
     } catch (loadError) {
       setError(
         loadError instanceof Error
@@ -138,6 +141,7 @@ export function AdminDashboard() {
         search: nextSearch,
       });
       setUsers(usersData);
+      setPage(usersData.page);
     } catch (loadError) {
       setError(
         loadError instanceof Error
@@ -443,14 +447,18 @@ export function AdminDashboard() {
           <div className="flex items-center justify-between border-t border-slate-200 px-4 py-3 text-sm text-slate-600">
             <span>
               Tổng {users?.total ?? 0} người dùng, trang {users?.page ?? 1}/
-              {users?.totalPages ?? 1}
+              {totalUsersPages}
             </span>
             <div className="flex gap-2">
               <button
                 type="button"
-                disabled={!users || users.page <= 1}
+                disabled={!users || currentUsersPage <= 1}
                 onClick={() => {
-                  const nextPage = Math.max(page - 1, 1);
+                  if (!users || currentUsersPage <= 1) {
+                    return;
+                  }
+
+                  const nextPage = Math.max(currentUsersPage - 1, 1);
                   setPage(nextPage);
                   void loadUsers(nextPage);
                 }}
@@ -460,9 +468,16 @@ export function AdminDashboard() {
               </button>
               <button
                 type="button"
-                disabled={!users || users.page >= users.totalPages}
+                disabled={!users || currentUsersPage >= totalUsersPages}
                 onClick={() => {
-                  const nextPage = page + 1;
+                  if (!users || currentUsersPage >= totalUsersPages) {
+                    return;
+                  }
+
+                  const nextPage = Math.min(
+                    currentUsersPage + 1,
+                    totalUsersPages,
+                  );
                   setPage(nextPage);
                   void loadUsers(nextPage);
                 }}

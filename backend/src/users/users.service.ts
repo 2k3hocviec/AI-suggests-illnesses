@@ -89,8 +89,7 @@ export class UsersService {
           streetAddress: address.streetAddress,
           address: address.address,
           provinceCode: address.provinceCode,
-          districtCode: address.districtCode,
-          wardCode: address.wardCode,
+          communeCode: address.communeCode,
         },
         select: {
           id: true,
@@ -115,8 +114,7 @@ export class UsersService {
           address: address.address,
           city: address.city,
           provinceCode: address.provinceCode,
-          districtCode: address.districtCode,
-          wardCode: address.wardCode,
+          communeCode: address.communeCode,
           workingTime: dto.workingTime?.trim() || null,
           description: dto.description?.trim() || null,
           imageUrl: dto.imageUrl?.trim() || null,
@@ -137,8 +135,7 @@ export class UsersService {
           address: true,
           city: true,
           provinceCode: true,
-          districtCode: true,
-          wardCode: true,
+          communeCode: true,
           workingTime: true,
           imageUrl: true,
           rating: true,
@@ -159,37 +156,27 @@ export class UsersService {
   }
 
   private async resolveDoctorAddress(dto: CreateDoctorAccountDto) {
-    const [provinces, districts, wards] = await Promise.all([
+    const [provinces, communes] = await Promise.all([
       this.administrativeUnits.listProvinces(),
-      this.administrativeUnits.listDistricts(dto.provinceCode),
-      this.administrativeUnits.listWards(dto.districtCode),
+      this.administrativeUnits.listCommunes(dto.provinceCode),
     ]);
 
     const province = provinces.find((item) => item.code === dto.provinceCode);
-    const district = districts.find((item) => item.code === dto.districtCode);
-    const ward = wards.find((item) => item.code === dto.wardCode);
+    const commune = communes.find((item) => item.code === dto.communeCode);
 
-    if (
-      !province ||
-      !district ||
-      district.provinceCode !== province.code ||
-      !ward ||
-      ward.provinceCode !== province.code ||
-      ward.districtCode !== district.code
-    ) {
+    if (!province || !commune || commune.provinceCode !== province.code) {
       throw new BadRequestException('Địa chỉ hành chính không hợp lệ');
     }
 
     const streetAddress = dto.streetAddress.trim();
-    const address = `${streetAddress}, ${ward.name}, ${district.name}, ${province.name}`;
+    const address = `${streetAddress}, ${commune.name}, ${province.name}`;
 
     return {
       streetAddress,
       address,
       city: province.name,
       provinceCode: province.code,
-      districtCode: district.code,
-      wardCode: ward.code,
+      communeCode: commune.code,
     };
   }
 

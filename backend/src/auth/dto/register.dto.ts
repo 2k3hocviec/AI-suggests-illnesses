@@ -40,8 +40,5 @@ export class RegisterDto {
   provinceCode: number;
 
   @IsInt()
-  districtCode: number;
-
-  @IsInt()
-  wardCode: number;
+  communeCode: number;
 }

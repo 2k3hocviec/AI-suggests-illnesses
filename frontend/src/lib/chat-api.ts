@@ -26,8 +26,7 @@ export interface ChatDoctor {
   address: string | null;
   city: string | null;
   provinceCode: number | null;
-  districtCode: number | null;
-  wardCode: number | null;
+  communeCode: number | null;
   phoneNumber: string | null;
   email: string | null;
   workingTime: string | null;

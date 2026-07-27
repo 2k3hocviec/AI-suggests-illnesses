@@ -8,8 +8,7 @@ export interface AuthUser {
   streetAddress: string | null;
   address: string | null;
   provinceCode: number | null;
-  districtCode: number | null;
-  wardCode: number | null;
+  communeCode: number | null;
   gender: string;
   role: 'ADMIN' | 'USER' | 'DOCTOR';
   isEnabled: boolean;
@@ -47,8 +46,7 @@ export interface RegisterRequest {
   gender?: 'MALE' | 'FEMALE' | 'OTHER' | 'UNKNOWN';
   streetAddress: string;
   provinceCode: number;
-  districtCode: number;
-  wardCode: number;
+  communeCode: number;
 }
 
 export interface UpdateProfileRequest {
@@ -59,8 +57,7 @@ export interface UpdateProfileRequest {
   gender?: 'MALE' | 'FEMALE' | 'OTHER' | 'UNKNOWN';
   streetAddress?: string;
   provinceCode?: number;
-  districtCode?: number;
-  wardCode?: number;
+  communeCode?: number;
 }
 
 export interface ForgotPasswordRequest {

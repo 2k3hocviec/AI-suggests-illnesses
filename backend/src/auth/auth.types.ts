@@ -24,8 +24,7 @@ export interface PublicUser {
   streetAddress: string | null;
   address: string | null;
   provinceCode: number | null;
-  districtCode: number | null;
-  wardCode: number | null;
+  communeCode: number | null;
   gender: UserGender;
   role: UserRole;
   isEnabled: boolean;

@@ -75,12 +75,7 @@ export class CreateDoctorAccountDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  districtCode: number;
-
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  wardCode: number;
+  communeCode: number;
 
   @IsOptional()
   @IsString()

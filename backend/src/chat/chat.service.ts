@@ -78,18 +78,16 @@ const MEDICAL_SPECIALTY_CODES = new Set([
 const CONVERSATION_INTENTS = new Set(["GREETING", "THANKS", "GOODBYE"]);
 
 const ADMINISTRATIVE_MATCH_LABELS = {
-  SAME_STREET: "Cùng số nhà/tên đường",
-  SAME_WARD: "Cùng phường/xã",
-  SAME_DISTRICT: "Cùng quận/huyện",
-  SAME_CITY: "Cùng tỉnh/thành phố",
+  SAME_STREET: "Cùng đường/tổ dân phố",
+  SAME_COMMUNE: "Cùng xã/phường",
+  SAME_PROVINCE: "Cùng tỉnh/thành",
   DIFFERENT_AREA: "Khác khu vực",
 } as const;
 
 interface AdministrativeLocation {
   streetAddress: string | null;
   provinceCode: number | null;
-  districtCode: number | null;
-  wardCode: number | null;
+  communeCode: number | null;
 }
 
 interface DoctorDistance {
@@ -219,7 +217,7 @@ export class ChatService {
     const content = dto.message.trim();
     if (!content) {
       throw new BadRequestException(
-        "Ná»™i dung tin nháº¯n khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng",
+        "Nội dung tin nhắn không được để trống",
       );
     }
 
@@ -914,8 +912,7 @@ ${content}`;
         address: true,
         city: true,
         provinceCode: true,
-        districtCode: true,
-        wardCode: true,
+        communeCode: true,
         phoneNumber: true,
         email: true,
         workingTime: true,
@@ -991,8 +988,7 @@ ${content}`;
             address: doctor.address,
             city: doctor.city,
             provinceCode: doctor.provinceCode,
-            districtCode: doctor.districtCode,
-            wardCode: doctor.wardCode,
+            communeCode: doctor.communeCode,
             phoneNumber: doctor.phoneNumber,
             email: doctor.email,
             workingTime: doctor.workingTime,
@@ -1063,8 +1059,7 @@ ${content}`;
       },
       select: {
         provinceCode: true,
-        districtCode: true,
-        wardCode: true,
+        communeCode: true,
         streetAddress: true,
       },
     });
@@ -1075,8 +1070,7 @@ ${content}`;
 
     return {
       provinceCode: user.provinceCode,
-      districtCode: user.districtCode,
-      wardCode: user.wardCode,
+      communeCode: user.communeCode,
       streetAddress: user.streetAddress,
     };
   }
@@ -1164,8 +1158,7 @@ ${content}`;
       address: string | null;
       city: string | null;
       provinceCode: number | null;
-      districtCode: number | null;
-      wardCode: number | null;
+      communeCode: number | null;
     }>,
   ) {
     const result = new Map<number, DoctorDistance>();
@@ -1179,8 +1172,7 @@ ${content}`;
         this.calculateAdministrativeDistance(userLocation, {
           streetAddress: doctor.streetAddress,
           provinceCode: doctor.provinceCode,
-          districtCode: doctor.districtCode,
-          wardCode: doctor.wardCode,
+          communeCode: doctor.communeCode,
         }),
       );
     }
@@ -1197,21 +1189,15 @@ ${content}`;
       doctorLocation.provinceCode &&
       userLocation.provinceCode === doctorLocation.provinceCode,
     );
-    const sameDistrict = Boolean(
+    const sameCommune = Boolean(
       sameProvince &&
-      userLocation.districtCode &&
-      doctorLocation.districtCode &&
-      userLocation.districtCode === doctorLocation.districtCode,
-    );
-    const sameWard = Boolean(
-      sameDistrict &&
-      userLocation.wardCode &&
-      doctorLocation.wardCode &&
-      userLocation.wardCode === doctorLocation.wardCode,
+      userLocation.communeCode &&
+      doctorLocation.communeCode &&
+      userLocation.communeCode === doctorLocation.communeCode,
     );
 
     if (
-      sameWard &&
+      sameCommune &&
       this.isSameStreetAddress(
         userLocation.streetAddress,
         doctorLocation.streetAddress,
@@ -1223,24 +1209,17 @@ ${content}`;
       );
     }
 
-    if (sameWard) {
+    if (sameCommune) {
       return this.buildAdministrativeDistance(
-        ADMINISTRATIVE_MATCH_LABELS.SAME_WARD,
-        0.65,
-      );
-    }
-
-    if (sameDistrict) {
-      return this.buildAdministrativeDistance(
-        ADMINISTRATIVE_MATCH_LABELS.SAME_DISTRICT,
-        0.4,
+        ADMINISTRATIVE_MATCH_LABELS.SAME_COMMUNE,
+        0.8,
       );
     }
 
     if (sameProvince) {
       return this.buildAdministrativeDistance(
-        ADMINISTRATIVE_MATCH_LABELS.SAME_CITY,
-        0.2,
+        ADMINISTRATIVE_MATCH_LABELS.SAME_PROVINCE,
+        0.3,
       );
     }
 
@@ -1358,7 +1337,7 @@ ${content}`;
           ? [...new Set(symptoms)].join(", ")
           : "cần mô tả thêm triệu chứng";
 
-        return `o   ${specialty.name}: ${symptomText}`;
+        return `• ${specialty.name}: ${symptomText}`;
       });
 
       if (

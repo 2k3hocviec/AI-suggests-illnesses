@@ -52,8 +52,7 @@ export class AuthService {
         streetAddress: address.streetAddress,
         address: address.address,
         provinceCode: address.provinceCode,
-        districtCode: address.districtCode,
-        wardCode: address.wardCode,
+        communeCode: address.communeCode,
       },
     });
 
@@ -64,14 +63,10 @@ export class AuthService {
   }
 
   private async resolveRegisterAddress(dto: RegisterDto) {
-    const [districts, wards] = await Promise.all([
-      this.administrativeUnits.listDistricts(dto.provinceCode),
-      this.administrativeUnits.listWards(dto.districtCode),
-    ]);
-    const district = districts.find((item) => item.code === dto.districtCode);
-    const ward = wards.find((item) => item.code === dto.wardCode);
+    const communes = await this.administrativeUnits.listCommunes(dto.provinceCode);
+    const commune = communes.find((item) => item.code === dto.communeCode);
 
-    if (!district || !ward || ward.provinceCode !== dto.provinceCode) {
+    if (!commune || commune.provinceCode !== dto.provinceCode) {
       throw new BadRequestException('Địa chỉ hành chính không hợp lệ');
     }
 
@@ -85,10 +80,9 @@ export class AuthService {
 
     return {
       streetAddress: dto.streetAddress.trim(),
-      address: `${dto.streetAddress.trim()}, ${ward.name}, ${district.name}, ${province.name}`,
+      address: `${dto.streetAddress.trim()}, ${commune.name}, ${province.name}`,
       provinceCode: province.code,
-      districtCode: district.code,
-      wardCode: ward.code,
+      communeCode: commune.code,
     };
   }
 
@@ -151,8 +145,7 @@ export class AuthService {
         streetAddress: address?.streetAddress,
         address: address?.address,
         provinceCode: address?.provinceCode,
-        districtCode: address?.districtCode,
-        wardCode: address?.wardCode,
+        communeCode: address?.communeCode,
       },
     });
 
@@ -163,8 +156,7 @@ export class AuthService {
     const shouldUpdateAddress =
       dto.streetAddress !== undefined ||
       dto.provinceCode !== undefined ||
-      dto.districtCode !== undefined ||
-      dto.wardCode !== undefined;
+      dto.communeCode !== undefined;
 
     if (!shouldUpdateAddress) {
       return null;
@@ -172,21 +164,16 @@ export class AuthService {
 
     const streetAddress = dto.streetAddress?.trim() || user.streetAddress;
     const provinceCode = dto.provinceCode ?? user.provinceCode;
-    const districtCode = dto.districtCode ?? user.districtCode;
-    const wardCode = dto.wardCode ?? user.wardCode;
+    const communeCode = dto.communeCode ?? user.communeCode;
 
-    if (!streetAddress || !provinceCode || !districtCode || !wardCode) {
+    if (!streetAddress || !provinceCode || !communeCode) {
       throw new BadRequestException('Vui lòng nhập đầy đủ địa chỉ');
     }
 
-    const [districts, wards] = await Promise.all([
-      this.administrativeUnits.listDistricts(provinceCode),
-      this.administrativeUnits.listWards(districtCode),
-    ]);
-    const district = districts.find((item) => item.code === districtCode);
-    const ward = wards.find((item) => item.code === wardCode);
+    const communes = await this.administrativeUnits.listCommunes(provinceCode);
+    const commune = communes.find((item) => item.code === communeCode);
 
-    if (!district || !ward || ward.provinceCode !== provinceCode) {
+    if (!commune || commune.provinceCode !== provinceCode) {
       throw new BadRequestException('Địa chỉ hành chính không hợp lệ');
     }
 
@@ -200,10 +187,9 @@ export class AuthService {
 
     return {
       streetAddress,
-      address: `${streetAddress}, ${ward.name}, ${district.name}, ${province.name}`,
+      address: `${streetAddress}, ${commune.name}, ${province.name}`,
       provinceCode: province.code,
-      districtCode: district.code,
-      wardCode: ward.code,
+      communeCode: commune.code,
     };
   }
 
@@ -451,8 +437,7 @@ export class AuthService {
       streetAddress: user.streetAddress,
       address: user.address,
       provinceCode: user.provinceCode,
-      districtCode: user.districtCode,
-      wardCode: user.wardCode,
+      communeCode: user.communeCode,
       gender: user.gender,
       role: user.role,
       isEnabled: user.isEnabled,

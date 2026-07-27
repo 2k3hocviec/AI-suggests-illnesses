@@ -645,8 +645,15 @@ function parseRecommendation(content: string): RecommendationData | null {
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter(Boolean);
-  const groupedLines = lines.filter(
-    (line) => /^o\s+/i.test(line) && line.includes(':'),
+  const firstDoctorSectionIndex = lines.findIndex((line) =>
+    /^Chuyên khoa:\s*/i.test(line),
+  );
+  const summaryLines =
+    firstDoctorSectionIndex >= 0
+      ? lines.slice(0, firstDoctorSectionIndex)
+      : lines;
+  const groupedLines = summaryLines.filter(
+    (line) => /^(?:•|o)\s+/i.test(line) && line.includes(':'),
   );
 
   if (!groupedLines.length) {
@@ -654,7 +661,9 @@ function parseRecommendation(content: string): RecommendationData | null {
   }
 
   const specialties = groupedLines.map((line) => {
-    const [name, ...symptomParts] = line.replace(/^o\s+/i, '').split(':');
+    const [name, ...symptomParts] = line
+      .replace(/^(?:•|o)\s+/i, '')
+      .split(':');
     const symptoms = symptomParts
       .join(':')
       .split(',')
@@ -671,7 +680,7 @@ function parseRecommendation(content: string): RecommendationData | null {
       .find((line) => /^Nguồn phân tích:/i.test(line))
       ?.replace(/^Nguồn phân tích:/i, '')
       .trim() ?? null;
-  const hasEmergencySignal = /EMERGENCY|cấp cứu|cap cuu|cáº¥p cá»©u/i.test(
+  const hasEmergencySignal = /EMERGENCY|cấp cứu|cap cuu/i.test(
     content,
   );
   const doctors: DoctorRecommendation[] = [];
@@ -737,17 +746,18 @@ function parseRecommendation(content: string): RecommendationData | null {
       return;
     }
 
-    if (!line.startsWith('•')) {
+    if (!/^(?:•|o)\s+/i.test(line)) {
       return;
     }
 
-    const separatorIndex = line.indexOf(':');
+    const bulletLine = line.replace(/^(?:•|o)\s+/i, '');
+    const separatorIndex = bulletLine.indexOf(':');
     if (separatorIndex < 0) {
       return;
     }
 
-    const label = line.slice(1, separatorIndex).trim();
-    const value = line.slice(separatorIndex + 1).trim();
+    const label = bulletLine.slice(0, separatorIndex).trim();
+    const value = bulletLine.slice(separatorIndex + 1).trim();
     if (label === 'Mã bác sĩ') {
       const doctorId = Number(value);
       if (Number.isInteger(doctorId) && doctorId > 0) {
@@ -795,7 +805,7 @@ function parseRecommendation(content: string): RecommendationData | null {
 }
 
 function isStructuredRecommendation(content: string) {
-  return /(^|\n)o\s+.+:/i.test(content);
+  return /(^|\n)(?:•|o)\s+.+:/i.test(content);
 }
 
 function unique(values: string[]) {

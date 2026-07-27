@@ -311,7 +311,7 @@ export function DirectChatDashboard() {
   async function handleDeleteConversation(conversation: DirectChatConversation) {
     if (
       !window.confirm(
-        'Ẩn cuộc trò chuyện này khỏi hộp thư của bạn? Tin nhắn vẫn được lưu trong hệ thống.',
+        'Xóa cuộc trò chuyện khỏi hộp thư của bạn? Kênh sẽ được đóng với cả hai bên, còn lịch sử vẫn được lưu.',
       )
     ) {
       return;
@@ -787,8 +787,10 @@ function ConversationButton({
             ) : null}
           </span>
           <span className="mt-1 block truncate text-xs text-slate-500">
-            {conversation.lastMessage?.content ??
-              getStatusLabel(conversation.status)}
+            {conversation.status === 'CLOSED'
+              ? 'Phiên chat đã được đóng'
+              : conversation.lastMessage?.content ??
+                getStatusLabel(conversation.status)}
           </span>
         </span>
       </div>
@@ -850,6 +852,11 @@ function ChatHeader({
               }`}
         </p>
       </div>
+      {conversation.status === 'CLOSED' ? (
+        <span className="hidden rounded-full bg-slate-100 px-2 py-1 text-[11px] font-semibold text-slate-600 sm:inline-flex">
+          Đã đóng
+        </span>
+      ) : null}
       <div className="flex shrink-0 items-center gap-1">
         {conversation.status === 'ACTIVE' ? (
           <button

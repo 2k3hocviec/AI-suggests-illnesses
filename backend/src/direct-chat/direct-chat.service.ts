@@ -316,6 +316,10 @@ export class DirectChatService {
     };
   }
 
+  /*
+  Xóa mềm cuộc hội thoại, hoạt đóng:
+    - Khi đó ở bác sĩ hoặc user cũng sẽ đóng phiên trả chuyện để tránh lỗi khi cuộc trò chuyện đã xóa mà vẫn còn người chat làm người còn lại không nhận được tin nhắn
+  */
   async deleteConversation(userId: number, conversationId: number) {
     const conversation = await this.getConversationRecord(conversationId);
     this.assertParticipant(userId, conversation);
@@ -323,15 +327,31 @@ export class DirectChatService {
     const deletedAt = new Date();
     const data: Prisma.DirectChatConversationUpdateInput =
       conversation.patientId === userId
-        ? { patientDeletedAt: deletedAt }
-        : { doctorDeletedAt: deletedAt };
+        ? {
+            patientDeletedAt: deletedAt,
+            status: DirectChatStatus.CLOSED,
+            closedAt: conversation.closedAt ?? deletedAt,
+            deletedAt,
+          }
+        : {
+            doctorDeletedAt: deletedAt,
+            status: DirectChatStatus.CLOSED,
+            closedAt: conversation.closedAt ?? deletedAt,
+            deletedAt,
+          };
 
-    await this.prisma.directChatConversation.update({
+    const updated = await this.prisma.directChatConversation.update({
       where: { id: conversationId },
       data,
+      include: conversationInclude,
     });
 
-    return { id: conversationId, deletedAt };
+    return {
+      id: conversationId,
+      deletedAt,
+      recipientId: this.getRecipientId(userId, updated),
+      conversation: await this.toConversationView(updated, userId),
+    };
   }
 
   /*
@@ -678,6 +698,7 @@ export class DirectChatService {
       requestedAt: conversation.requestedAt,
       respondedAt: conversation.respondedAt,
       closedAt: conversation.closedAt,
+      deletedAt: conversation.deletedAt,
       updatedAt: conversation.updatedAt,
       patient: conversation.patient,
       doctor: {

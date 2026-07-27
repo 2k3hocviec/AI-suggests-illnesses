@@ -37,6 +37,7 @@ export interface DirectChatConversation {
   requestedAt: string;
   respondedAt: string | null;
   closedAt: string | null;
+  deletedAt: string | null;
   updatedAt: string;
   patient: DirectChatPerson;
   doctor: DirectChatDoctor;

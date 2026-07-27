@@ -111,11 +111,19 @@ export class DirectChatController {
   }
 
   @Delete("conversations/:conversationId")
-  deleteConversation(
+  async deleteConversation(
     @CurrentUser() user: AuthenticatedUser,
     @Param("conversationId", ParseIntPipe) conversationId: number,
   ) {
-    return this.directChatService.deleteConversation(user.id, conversationId);
+    const result = await this.directChatService.deleteConversation(
+      user.id,
+      conversationId,
+    );
+    this.directChatGateway.notifyConversationClosed(
+      result.recipientId,
+      result.conversation,
+    );
+    return result.conversation;
   }
 
   /*

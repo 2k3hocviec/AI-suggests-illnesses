@@ -274,6 +274,7 @@ model DirectChatConversation {
   requestedAt DateTime         @default(now()) @map("requested_at")
   respondedAt DateTime?        @map("responded_at")
   closedAt    DateTime?        @map("closed_at")
+  deletedAt   DateTime?        @map("deleted_at")
   patientDeletedAt DateTime?   @map("patient_deleted_at")
   doctorDeletedAt  DateTime?   @map("doctor_deleted_at")
   updatedAt   DateTime         @default(now()) @updatedAt @map("updated_at")

@@ -1,5 +1,5 @@
 import { ConsultationType, UserGender } from '@prisma/client';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   ArrayNotEmpty,
   IsArray,
@@ -13,6 +13,23 @@ import {
   Min,
   MinLength,
 } from 'class-validator';
+
+function parseConsultationTypes(value: unknown) {
+  if (Array.isArray(value)) {
+    return value;
+  }
+
+  if (typeof value !== 'string') {
+    return value;
+  }
+
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed : [value];
+  } catch {
+    return [value];
+  }
+}
 
 export class CreateDoctorAccountDto {
   @IsString()
@@ -75,12 +92,7 @@ export class CreateDoctorAccountDto {
   @Type(() => Number)
   @IsInt()
   @Min(1)
-  districtCode: number;
-
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  wardCode: number;
+  communeCode: number;
 
   @IsOptional()
   @IsString()
@@ -100,5 +112,6 @@ export class CreateDoctorAccountDto {
   @IsArray()
   @ArrayNotEmpty()
   @IsEnum(ConsultationType, { each: true })
+  @Transform(({ value }) => parseConsultationTypes(value))
   consultationType: ConsultationType[];
 }

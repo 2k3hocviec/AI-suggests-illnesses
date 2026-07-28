@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
@@ -6,9 +7,13 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UploadedFile,
+  UseInterceptors,
   Query,
   UseGuards,
 } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { memoryStorage } from 'multer';
 import { AuthenticatedUser } from '../auth/auth.types';
 import { CurrentUser } from '../auth/current-user.decorator';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -27,11 +32,31 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Post('admin/doctors')
+  @UseInterceptors(
+    FileInterceptor('image', {
+      storage: memoryStorage(),
+      limits: { fileSize: 5 * 1024 * 1024 },
+      fileFilter: (_request, file, callback) => {
+        if (!/^image\/(jpeg|png|webp|gif)$/i.test(file.mimetype)) {
+          callback(
+            new BadRequestException(
+              'Ảnh phải có định dạng JPG, PNG, WEBP hoặc GIF',
+            ),
+            false,
+          );
+          return;
+        }
+
+        callback(null, true);
+      },
+    }),
+  )
   createDoctorAccount(
     @CurrentUser() user: AuthenticatedUser,
     @Body() dto: CreateDoctorAccountDto,
+    @UploadedFile() image?: Express.Multer.File,
   ) {
-    return this.usersService.createDoctorAccount(user.id, dto);
+    return this.usersService.createDoctorAccount(user.id, dto, image);
   }
 
   @UseGuards(JwtAuthGuard)

@@ -2,6 +2,7 @@
 
 import {
   ArrowLeft,
+  Archive,
   Check,
   Circle,
   Clock3,
@@ -9,6 +10,7 @@ import {
   MessageCircle,
   RefreshCcw,
   Send,
+  Trash2,
   UserRound,
   X,
 } from 'lucide-react';
@@ -25,11 +27,13 @@ import { Socket } from 'socket.io-client';
 import { getMe, logout, AuthUser } from '@/lib/auth-api';
 import {
   acceptDirectChatRequest,
+  closeDirectChatConversation,
   createDirectChatSocket,
   DirectChatConversation,
   DirectChatMessage,
   DirectChatNotification,
   DirectChatSocketAck,
+  deleteDirectChatConversation,
   listDirectChatConversations,
   listDirectChatMessages,
   rejectDirectChatRequest,
@@ -158,6 +162,7 @@ export function DirectChatDashboard() {
     socket.on('socket:error', handleSocketError);
     socket.on('request:new', handleRefresh);
     socket.on('request:updated', handleRefresh);
+    socket.on('conversation:closed', handleRefresh);
     socket.on('message:new', handleMessage);
     socket.on('message:read', handleRead);
     socket.on('notification:new', handleNotification);
@@ -276,6 +281,66 @@ export function DirectChatDashboard() {
     }
   }
 
+  async function handleCloseConversation() {
+    if (!activeConversation || activeConversation.status !== 'ACTIVE') {
+      return;
+    }
+
+    if (
+      !window.confirm(
+        'Đóng cuộc trò chuyện này? Hai bên vẫn xem được lịch sử nhưng không thể gửi tin nhắn mới.',
+      )
+    ) {
+      return;
+    }
+
+    setProcessingRequestId(activeConversation.id);
+    setError(null);
+    try {
+      await closeDirectChatConversation(activeConversation.id);
+      await loadConversations();
+    } catch (requestError) {
+      setError(
+        getErrorMessage(requestError, 'Không thể đóng cuộc trò chuyện.'),
+      );
+    } finally {
+      setProcessingRequestId(null);
+    }
+  }
+
+  async function handleDeleteConversation(conversation: DirectChatConversation) {
+    if (
+      !window.confirm(
+        'Xóa cuộc trò chuyện khỏi hộp thư của bạn? Kênh sẽ được đóng với cả hai bên, còn lịch sử vẫn được lưu.',
+      )
+    ) {
+      return;
+    }
+
+    setProcessingRequestId(conversation.id);
+    setError(null);
+    try {
+      await deleteDirectChatConversation(conversation.id);
+      socketRef.current?.emit('conversation:leave', {
+        conversationId: conversation.id,
+      });
+      setConversations((current) =>
+        current.filter((item) => item.id !== conversation.id),
+      );
+      if (activeConversationIdRef.current === conversation.id) {
+        activeConversationIdRef.current = null;
+        setActiveConversationId(null);
+        setMessages([]);
+      }
+    } catch (requestError) {
+      setError(
+        getErrorMessage(requestError, 'Không thể ẩn cuộc trò chuyện.'),
+      );
+    } finally {
+      setProcessingRequestId(null);
+    }
+  }
+
   function handleSend(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const content = draft.trim();
@@ -351,7 +416,10 @@ export function DirectChatDashboard() {
             const conversation = conversations.find(
               (item) => item.id === notification.conversationId,
             );
-            if (conversation?.status === 'ACTIVE') {
+            if (
+              conversation?.status === 'ACTIVE' ||
+              conversation?.status === 'CLOSED'
+            ) {
               void handleOpenConversation(conversation);
               setNotification(null);
             }
@@ -454,6 +522,7 @@ export function DirectChatDashboard() {
                       isProcessing={processingRequestId === conversation.id}
                       onAccept={() => void handleAccept(conversation)}
                       onReject={() => void handleReject(conversation)}
+                      onDelete={() => void handleDeleteConversation(conversation)}
                     />
                   ))}
                 </div>
@@ -473,6 +542,7 @@ export function DirectChatDashboard() {
                       viewerRole={me.role}
                       active={conversation.id === activeConversationId}
                       onClick={() => void handleOpenConversation(conversation)}
+                      onDelete={() => void handleDeleteConversation(conversation)}
                     />
                   ))}
                 </div>
@@ -491,6 +561,7 @@ export function DirectChatDashboard() {
               <ChatHeader
                 conversation={activeConversation}
                 viewerRole={me.role}
+                isProcessing={processingRequestId === activeConversation.id}
                 onBack={() => {
                   socketRef.current?.emit('conversation:leave', {
                     conversationId: activeConversation.id,
@@ -499,6 +570,8 @@ export function DirectChatDashboard() {
                   setActiveConversationId(null);
                   setMessages([]);
                 }}
+                onClose={() => void handleCloseConversation()}
+                onDelete={() => void handleDeleteConversation(activeConversation)}
               />
               <div className="chat-scrollbar min-h-0 flex-1 overflow-y-auto px-4 py-5 sm:px-8">
                 <div className="mx-auto flex w-full max-w-3xl flex-col gap-3">
@@ -552,9 +625,11 @@ export function DirectChatDashboard() {
                       activeConversation.status !== 'ACTIVE' || !isConnected
                     }
                     placeholder={
-                      isConnected
-                        ? 'Nhập tin nhắn...'
-                        : 'Đang kết nối lại realtime...'
+                      activeConversation.status === 'CLOSED'
+                        ? 'Cuộc trò chuyện đã đóng'
+                        : isConnected
+                          ? 'Nhập tin nhắn...'
+                          : 'Đang kết nối lại realtime...'
                     }
                     className="max-h-32 min-h-11 min-w-0 flex-1 resize-none rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100 disabled:bg-slate-100"
                   />
@@ -598,19 +673,23 @@ function PendingConversationCard({
   isProcessing,
   onAccept,
   onReject,
+  onDelete,
 }: {
   conversation: DirectChatConversation;
   isDoctor: boolean;
   isProcessing: boolean;
   onAccept: () => void;
   onReject: () => void;
+  onDelete: () => void;
 }) {
   return (
     <article className="rounded-xl border border-amber-200 bg-amber-50/70 p-3">
       <div className="flex items-start gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-amber-700 ring-1 ring-amber-200">
-          <UserRound className="h-4 w-4" />
-        </span>
+        <PersonAvatar
+          name={isDoctor ? conversation.patient.fullName : conversation.doctor.fullName}
+          imageUrl={isDoctor ? null : conversation.doctor.imageUrl}
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-xs font-bold text-amber-700 ring-1 ring-amber-200"
+        />
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-bold text-slate-900">
             {isDoctor
@@ -649,6 +728,15 @@ function PendingConversationCard({
           Đang chờ bác sĩ phản hồi
         </p>
       )}
+      <button
+        type="button"
+        disabled={isProcessing}
+        onClick={onDelete}
+        className="mt-2 inline-flex h-8 w-full items-center justify-center gap-1.5 rounded-lg border border-slate-200 bg-white text-xs font-semibold text-slate-500 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600 disabled:opacity-60"
+      >
+        <Trash2 className="h-3.5 w-3.5" />
+        Ẩn yêu cầu
+      </button>
     </article>
   );
 }
@@ -658,11 +746,13 @@ function ConversationButton({
   viewerRole,
   active,
   onClick,
+  onDelete,
 }: {
   conversation: DirectChatConversation;
   viewerRole: AuthUser['role'];
   active: boolean;
   onClick: () => void;
+  onDelete: () => void;
 }) {
   const counterpart =
     viewerRole === 'DOCTOR'
@@ -670,20 +760,25 @@ function ConversationButton({
       : conversation.doctor.fullName;
 
   return (
-    <button
-      type="button"
-      disabled={conversation.status !== 'ACTIVE' && conversation.status !== 'CLOSED'}
-      onClick={onClick}
-      className={`w-full rounded-xl border p-3 text-left transition ${
+    <div
+      className={`flex w-full items-stretch gap-2 rounded-xl border p-2 transition ${
         active
           ? 'border-brand-300 bg-brand-50'
           : 'border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50'
-      } disabled:cursor-default disabled:opacity-70`}
+      }`}
     >
+      <button
+        type="button"
+        disabled={conversation.status !== 'ACTIVE' && conversation.status !== 'CLOSED'}
+        onClick={onClick}
+        className="min-w-0 flex-1 rounded-lg p-1 text-left disabled:cursor-default disabled:opacity-70"
+      >
       <div className="flex items-start gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-sm font-bold text-blue-700">
-          {getInitials(counterpart)}
-        </span>
+        <PersonAvatar
+          name={counterpart}
+          imageUrl={viewerRole === 'DOCTOR' ? null : conversation.doctor.imageUrl}
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-sm font-bold text-blue-700"
+        />
         <span className="min-w-0 flex-1">
           <span className="flex items-center justify-between gap-2">
             <span className="truncate text-sm font-bold text-slate-900">
@@ -696,23 +791,40 @@ function ConversationButton({
             ) : null}
           </span>
           <span className="mt-1 block truncate text-xs text-slate-500">
-            {conversation.lastMessage?.content ??
-              getStatusLabel(conversation.status)}
+            {conversation.status === 'CLOSED'
+              ? 'Phiên chat đã được đóng'
+              : conversation.lastMessage?.content ??
+                getStatusLabel(conversation.status)}
           </span>
         </span>
       </div>
-    </button>
+      </button>
+      <button
+        type="button"
+        onClick={onDelete}
+        className="flex h-9 w-9 shrink-0 items-center justify-center self-start rounded-lg text-slate-400 transition hover:bg-red-50 hover:text-red-600"
+        title="Ẩn khỏi hộp thư"
+      >
+        <Trash2 className="h-4 w-4" />
+      </button>
+    </div>
   );
 }
 
 function ChatHeader({
   conversation,
   viewerRole,
+  isProcessing,
   onBack,
+  onClose,
+  onDelete,
 }: {
   conversation: DirectChatConversation;
   viewerRole: AuthUser['role'];
+  isProcessing: boolean;
   onBack: () => void;
+  onClose: () => void;
+  onDelete: () => void;
 }) {
   const counterpart =
     viewerRole === 'DOCTOR'
@@ -729,10 +841,12 @@ function ChatHeader({
       >
         <ArrowLeft className="h-5 w-5" />
       </button>
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-sm font-bold text-emerald-700">
-        {getInitials(counterpart)}
-      </span>
-      <div className="min-w-0">
+      <PersonAvatar
+        name={counterpart}
+        imageUrl={viewerRole === 'DOCTOR' ? null : conversation.doctor.imageUrl}
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-sm font-bold text-emerald-700"
+      />
+      <div className="min-w-0 flex-1">
         <h2 className="truncate text-sm font-bold text-slate-900 sm:text-base">
           {counterpart}
         </h2>
@@ -743,6 +857,35 @@ function ChatHeader({
                 conversation.doctor.workplace ?? 'Chưa cập nhật nơi làm việc'
               }`}
         </p>
+      </div>
+      {conversation.status === 'CLOSED' ? (
+        <span className="hidden rounded-full bg-slate-100 px-2 py-1 text-[11px] font-semibold text-slate-600 sm:inline-flex">
+          Đã đóng
+        </span>
+      ) : null}
+      <div className="flex shrink-0 items-center gap-1">
+        {conversation.status === 'ACTIVE' ? (
+          <button
+            type="button"
+            disabled={isProcessing}
+            onClick={onClose}
+            className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-amber-200 px-2 text-xs font-semibold text-amber-700 transition hover:bg-amber-50 disabled:opacity-50 sm:px-3 sm:text-sm"
+            title="Đóng cuộc trò chuyện"
+          >
+            <Archive className="h-4 w-4" />
+            <span className="hidden sm:inline">Đóng chat</span>
+          </button>
+        ) : null}
+        <button
+          type="button"
+          disabled={isProcessing}
+          onClick={onDelete}
+          className="inline-flex h-9 items-center gap-1.5 rounded-lg border border-red-200 px-2 text-xs font-semibold text-red-600 transition hover:bg-red-50 disabled:opacity-50 sm:px-3 sm:text-sm"
+          title="Ẩn khỏi hộp thư"
+        >
+          <Trash2 className="h-4 w-4" />
+          <span className="hidden sm:inline">Xóa</span>
+        </button>
       </div>
     </header>
   );
@@ -870,6 +1013,39 @@ function getStatusLabel(status: DirectChatConversation['status']) {
     default:
       return 'Đang chờ xác nhận';
   }
+}
+
+function PersonAvatar({
+  name,
+  imageUrl,
+  className,
+}: {
+  name: string;
+  imageUrl: string | null;
+  className: string;
+}) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const showImage = Boolean(imageUrl) && !imageFailed;
+
+  useEffect(() => {
+    setImageFailed(false);
+  }, [imageUrl]);
+
+  return (
+    <span className={`relative overflow-hidden ${className}`} title={name}>
+      {showImage ? (
+        <img
+          src={imageUrl ?? undefined}
+          alt={`Ảnh đại diện của ${name}`}
+          className="h-full w-full object-cover"
+          loading="lazy"
+          onError={() => setImageFailed(true)}
+        />
+      ) : (
+        getInitials(name) || <UserRound className="h-4 w-4" />
+      )}
+    </span>
+  );
 }
 
 function getInitials(value: string) {

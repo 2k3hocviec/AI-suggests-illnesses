@@ -78,18 +78,16 @@ const MEDICAL_SPECIALTY_CODES = new Set([
 const CONVERSATION_INTENTS = new Set(["GREETING", "THANKS", "GOODBYE"]);
 
 const ADMINISTRATIVE_MATCH_LABELS = {
-  SAME_STREET: "Cùng số nhà/tên đường",
-  SAME_WARD: "Cùng phường/xã",
-  SAME_DISTRICT: "Cùng quận/huyện",
-  SAME_CITY: "Cùng tỉnh/thành phố",
+  SAME_STREET: "Cùng đường/tổ dân phố",
+  SAME_COMMUNE: "Cùng xã/phường",
+  SAME_PROVINCE: "Cùng tỉnh/thành",
   DIFFERENT_AREA: "Khác khu vực",
 } as const;
 
 interface AdministrativeLocation {
   streetAddress: string | null;
   provinceCode: number | null;
-  districtCode: number | null;
-  wardCode: number | null;
+  communeCode: number | null;
 }
 
 interface DoctorDistance {
@@ -167,7 +165,10 @@ export class ChatService {
         sessionId: session.id,
         role: ChatRole.ASSISTANT,
         content: assistantContent,
-        metadata: responseAnalysis as unknown as Prisma.InputJsonValue,
+        metadata: {
+          ...responseAnalysis,
+          recommendedSpecialties: recommendedSpecialtiesWithDoctors,
+        } as unknown as Prisma.InputJsonValue,
       },
     });
 
@@ -218,7 +219,9 @@ export class ChatService {
   async sendGuestMessage(dto: SendChatMessageDto) {
     const content = dto.message.trim();
     if (!content) {
-      throw new BadRequestException("Ná»™i dung tin nháº¯n khÃ´ng Ä‘Æ°á»£c Ä‘á»ƒ trá»‘ng");
+      throw new BadRequestException(
+        "Nội dung tin nhắn không được để trống",
+      );
     }
 
     const prepared = await this.prepareChatResponse(content);
@@ -262,7 +265,10 @@ export class ChatService {
       userId: null,
       role: ChatRole.ASSISTANT,
       content: assistantContent,
-      metadata: analysis as unknown as Prisma.JsonValue,
+      metadata: {
+        ...analysis,
+        recommendedSpecialties: recommendedSpecialtiesWithDoctors,
+      } as unknown as Prisma.JsonValue,
       createdAt,
     };
 
@@ -298,11 +304,11 @@ export class ChatService {
         ? this.withoutDoctorSuggestions(recommendedSpecialties)
         : isRepeatedQuestion
           ? this.withoutDoctorSuggestions(recommendedSpecialties)
-        : await this.attachDoctorsToSpecialties(
-            userId,
-            recommendedSpecialties,
-            analysis,
-          );
+          : await this.attachDoctorsToSpecialties(
+              userId,
+              recommendedSpecialties,
+              analysis,
+            );
     const assistantContent =
       isRepeatedQuestion && cachedAssistantContent
         ? cachedAssistantContent
@@ -331,6 +337,7 @@ export class ChatService {
     return this.prisma.chatSession.findMany({
       where: {
         userId,
+        deletedAt: null,
       },
       select: {
         id: true,
@@ -339,6 +346,7 @@ export class ChatService {
         createdAt: true,
         updatedAt: true,
         closedAt: true,
+        deletedAt: true,
         _count: {
           select: {
             messages: true,
@@ -356,6 +364,7 @@ export class ChatService {
       where: {
         id: sessionId,
         userId,
+        deletedAt: null,
       },
     });
 
@@ -371,6 +380,58 @@ export class ChatService {
         createdAt: "asc",
       },
     });
+  }
+
+  /*
+  Đóng phiên chat theo yêu cầu.
+  */
+  async closeSession(userId: number, sessionId: number) {
+    const session = await this.prisma.chatSession.findFirst({
+      where: {
+        id: sessionId,
+        userId,
+        deletedAt: null,
+      },
+    });
+
+    if (!session) {
+      throw new ForbiddenException(
+        "Bạn không có quyền thao tác phiên chat này",
+      );
+    }
+
+    if (session.closedAt) {
+      return session;
+    }
+
+    return this.prisma.chatSession.update({
+      where: { id: sessionId },
+      data: { closedAt: new Date() },
+    });
+  }
+
+  async deleteSession(userId: number, sessionId: number) {
+    const session = await this.prisma.chatSession.findFirst({
+      where: {
+        id: sessionId,
+        userId,
+        deletedAt: null,
+      },
+    });
+
+    if (!session) {
+      throw new ForbiddenException(
+        "Bạn không có quyền thao tác phiên chat này",
+      );
+    }
+
+    const deletedAt = new Date();
+    await this.prisma.chatSession.update({
+      where: { id: sessionId },
+      data: { deletedAt },
+    });
+
+    return { id: sessionId, deletedAt };
   }
 
   /*
@@ -397,6 +458,7 @@ export class ChatService {
         id: sessionId,
         userId,
         closedAt: null,
+        deletedAt: null,
       },
     });
 
@@ -439,23 +501,22 @@ export class ChatService {
       return null;
     }
 
-    const previousAssistantMessage =
-      await this.prisma.chatMessage.findFirst({
-        where: {
-          sessionId,
-          role: ChatRole.ASSISTANT,
-          id: {
-            gt: previousMessage.id,
-          },
+    const previousAssistantMessage = await this.prisma.chatMessage.findFirst({
+      where: {
+        sessionId,
+        role: ChatRole.ASSISTANT,
+        id: {
+          gt: previousMessage.id,
         },
-        select: {
-          metadata: true,
-          content: true,
-        },
-        orderBy: {
-          id: "asc",
-        },
-      });
+      },
+      select: {
+        metadata: true,
+        content: true,
+      },
+      orderBy: {
+        id: "asc",
+      },
+    });
 
     if (!previousAssistantMessage?.metadata) {
       return null;
@@ -554,7 +615,9 @@ export class ChatService {
       "gemini-1.5-flash";
 
     if (!apiKey) {
-      throw new ServiceUnavailableException("Gemini API key chưa được cấu hình");
+      throw new ServiceUnavailableException(
+        "Gemini API key chưa được cấu hình",
+      );
     }
 
     const controller = new AbortController();
@@ -848,6 +911,7 @@ ${content}`;
         id: true,
         userId: true,
         fullName: true,
+        imageUrl: true,
         academicTitle: true,
         experienceYears: true,
         workplace: true,
@@ -855,8 +919,7 @@ ${content}`;
         address: true,
         city: true,
         provinceCode: true,
-        districtCode: true,
-        wardCode: true,
+        communeCode: true,
         phoneNumber: true,
         email: true,
         workingTime: true,
@@ -925,6 +988,7 @@ ${content}`;
             id: doctor.id,
             chatAvailable: Boolean(doctor.userId),
             fullName: doctor.fullName,
+            imageUrl: doctor.imageUrl,
             academicTitle: doctor.academicTitle,
             experienceYears: doctor.experienceYears,
             workplace: doctor.workplace,
@@ -932,8 +996,7 @@ ${content}`;
             address: doctor.address,
             city: doctor.city,
             provinceCode: doctor.provinceCode,
-            districtCode: doctor.districtCode,
-            wardCode: doctor.wardCode,
+            communeCode: doctor.communeCode,
             phoneNumber: doctor.phoneNumber,
             email: doctor.email,
             workingTime: doctor.workingTime,
@@ -1004,8 +1067,7 @@ ${content}`;
       },
       select: {
         provinceCode: true,
-        districtCode: true,
-        wardCode: true,
+        communeCode: true,
         streetAddress: true,
       },
     });
@@ -1016,8 +1078,7 @@ ${content}`;
 
     return {
       provinceCode: user.provinceCode,
-      districtCode: user.districtCode,
-      wardCode: user.wardCode,
+      communeCode: user.communeCode,
       streetAddress: user.streetAddress,
     };
   }
@@ -1105,8 +1166,7 @@ ${content}`;
       address: string | null;
       city: string | null;
       provinceCode: number | null;
-      districtCode: number | null;
-      wardCode: number | null;
+      communeCode: number | null;
     }>,
   ) {
     const result = new Map<number, DoctorDistance>();
@@ -1120,8 +1180,7 @@ ${content}`;
         this.calculateAdministrativeDistance(userLocation, {
           streetAddress: doctor.streetAddress,
           provinceCode: doctor.provinceCode,
-          districtCode: doctor.districtCode,
-          wardCode: doctor.wardCode,
+          communeCode: doctor.communeCode,
         }),
       );
     }
@@ -1138,21 +1197,15 @@ ${content}`;
       doctorLocation.provinceCode &&
       userLocation.provinceCode === doctorLocation.provinceCode,
     );
-    const sameDistrict = Boolean(
+    const sameCommune = Boolean(
       sameProvince &&
-      userLocation.districtCode &&
-      doctorLocation.districtCode &&
-      userLocation.districtCode === doctorLocation.districtCode,
-    );
-    const sameWard = Boolean(
-      sameDistrict &&
-      userLocation.wardCode &&
-      doctorLocation.wardCode &&
-      userLocation.wardCode === doctorLocation.wardCode,
+      userLocation.communeCode &&
+      doctorLocation.communeCode &&
+      userLocation.communeCode === doctorLocation.communeCode,
     );
 
     if (
-      sameWard &&
+      sameCommune &&
       this.isSameStreetAddress(
         userLocation.streetAddress,
         doctorLocation.streetAddress,
@@ -1164,24 +1217,17 @@ ${content}`;
       );
     }
 
-    if (sameWard) {
+    if (sameCommune) {
       return this.buildAdministrativeDistance(
-        ADMINISTRATIVE_MATCH_LABELS.SAME_WARD,
-        0.65,
-      );
-    }
-
-    if (sameDistrict) {
-      return this.buildAdministrativeDistance(
-        ADMINISTRATIVE_MATCH_LABELS.SAME_DISTRICT,
-        0.4,
+        ADMINISTRATIVE_MATCH_LABELS.SAME_COMMUNE,
+        0.8,
       );
     }
 
     if (sameProvince) {
       return this.buildAdministrativeDistance(
-        ADMINISTRATIVE_MATCH_LABELS.SAME_CITY,
-        0.2,
+        ADMINISTRATIVE_MATCH_LABELS.SAME_PROVINCE,
+        0.3,
       );
     }
 
@@ -1299,7 +1345,7 @@ ${content}`;
           ? [...new Set(symptoms)].join(", ")
           : "cần mô tả thêm triệu chứng";
 
-        return `o   ${specialty.name}: ${symptomText}`;
+        return `• ${specialty.name}: ${symptomText}`;
       });
 
       if (
@@ -1338,8 +1384,7 @@ ${content}`;
               doctor.doctorScore,
             );
             const workSchedule = this.formatWorkSchedule(doctor.workingTime);
-            const recommendationReason =
-              this.buildRecommendationReason(doctor);
+            const recommendationReason = this.buildRecommendationReason(doctor);
 
             return `${index + 1}. ${title}\n\nĐiểm phù hợp: ${scorePercent}% — ${suitabilityLabel}\n\n• Mã bác sĩ: ${doctor.id}\n• Chuyên khoa: ${specialty.name}\n• Kinh nghiệm: ${doctor.experienceYears} năm\n• Đánh giá: ${doctor.rating ?? "chưa cập nhật"}/5\n• Nơi làm việc: ${doctor.workplace ?? "chưa cập nhật"}\n• Địa chỉ: ${doctor.address ?? doctor.city ?? "chưa cập nhật"}${distance}\n• Thời gian làm việc: ${workSchedule}\n• Hình thức tư vấn: ${consultationType}\n• Điện thoại: ${doctor.phoneNumber ?? "chưa cập nhật"}\n• Email: ${doctor.email ?? "chưa cập nhật"}\n• Chat trực tiếp: ${doctor.chatAvailable ? "Có" : "Chưa hỗ trợ"}\n\nLý do đề xuất: ${recommendationReason}`;
           })

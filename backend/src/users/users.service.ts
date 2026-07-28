@@ -9,6 +9,7 @@ import { ConsultationType, UserGender, UserRole } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import { AdministrativeUnitsService } from '../administrative-units/administrative-units.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { CreateDoctorAccountDto } from './dto/create-doctor-account.dto';
 
 @Injectable()
@@ -16,6 +17,7 @@ export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly administrativeUnits: AdministrativeUnitsService,
+    private readonly cloudinary: CloudinaryService,
   ) {}
 
   async getDoctorCreationOptions(adminId: number) {
@@ -38,7 +40,11 @@ export class UsersService {
     };
   }
 
-  async createDoctorAccount(adminId: number, dto: CreateDoctorAccountDto) {
+  async createDoctorAccount(
+    adminId: number,
+    dto: CreateDoctorAccountDto,
+    image?: Express.Multer.File,
+  ) {
     await this.assertAdmin(adminId);
 
     const email = dto.email.trim().toLowerCase();
@@ -70,6 +76,9 @@ export class UsersService {
     }
 
     const address = await this.resolveDoctorAddress(dto);
+    const uploadedImage = image
+      ? await this.cloudinary.uploadDoctorImage(image)
+      : null;
     const password = await bcrypt.hash(dto.password, 12);
     const consultationType = [...new Set(dto.consultationType)];
 
@@ -89,8 +98,7 @@ export class UsersService {
           streetAddress: address.streetAddress,
           address: address.address,
           provinceCode: address.provinceCode,
-          districtCode: address.districtCode,
-          wardCode: address.wardCode,
+          communeCode: address.communeCode,
         },
         select: {
           id: true,
@@ -115,11 +123,10 @@ export class UsersService {
           address: address.address,
           city: address.city,
           provinceCode: address.provinceCode,
-          districtCode: address.districtCode,
-          wardCode: address.wardCode,
+          communeCode: address.communeCode,
           workingTime: dto.workingTime?.trim() || null,
           description: dto.description?.trim() || null,
-          imageUrl: dto.imageUrl?.trim() || null,
+          imageUrl: uploadedImage?.secureUrl ?? (dto.imageUrl?.trim() || null),
           consultationType,
           status: 'ACTIVE',
         },
@@ -137,8 +144,7 @@ export class UsersService {
           address: true,
           city: true,
           provinceCode: true,
-          districtCode: true,
-          wardCode: true,
+          communeCode: true,
           workingTime: true,
           imageUrl: true,
           rating: true,
@@ -159,37 +165,27 @@ export class UsersService {
   }
 
   private async resolveDoctorAddress(dto: CreateDoctorAccountDto) {
-    const [provinces, districts, wards] = await Promise.all([
+    const [provinces, communes] = await Promise.all([
       this.administrativeUnits.listProvinces(),
-      this.administrativeUnits.listDistricts(dto.provinceCode),
-      this.administrativeUnits.listWards(dto.districtCode),
+      this.administrativeUnits.listCommunes(dto.provinceCode),
     ]);
 
     const province = provinces.find((item) => item.code === dto.provinceCode);
-    const district = districts.find((item) => item.code === dto.districtCode);
-    const ward = wards.find((item) => item.code === dto.wardCode);
+    const commune = communes.find((item) => item.code === dto.communeCode);
 
-    if (
-      !province ||
-      !district ||
-      district.provinceCode !== province.code ||
-      !ward ||
-      ward.provinceCode !== province.code ||
-      ward.districtCode !== district.code
-    ) {
+    if (!province || !commune || commune.provinceCode !== province.code) {
       throw new BadRequestException('Địa chỉ hành chính không hợp lệ');
     }
 
     const streetAddress = dto.streetAddress.trim();
-    const address = `${streetAddress}, ${ward.name}, ${district.name}, ${province.name}`;
+    const address = `${streetAddress}, ${commune.name}, ${province.name}`;
 
     return {
       streetAddress,
       address,
       city: province.name,
       provinceCode: province.code,
-      districtCode: district.code,
-      wardCode: ward.code,
+      communeCode: commune.code,
     };
   }
 

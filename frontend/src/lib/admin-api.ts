@@ -113,9 +113,9 @@ export interface CreateDoctorAccountInput {
   phoneNumber?: string;
   streetAddress: string;
   provinceCode: number;
-  districtCode: number;
-  wardCode: number;
+  communeCode: number;
   imageUrl?: string;
+  imageFile?: File | null;
   workingTime?: string;
   description?: string;
   consultationType: DoctorConsultationType[];
@@ -126,9 +126,42 @@ export function getDoctorCreationOptions() {
 }
 
 export function createDoctorAccount(input: CreateDoctorAccountInput) {
+  const formData = new FormData();
+  formData.set('fullName', input.fullName);
+  formData.set('email', input.email);
+  formData.set('password', input.password);
+  formData.set('gender', input.gender ?? 'UNKNOWN');
+  formData.set('specialtyId', String(input.specialtyId));
+  formData.set('experienceYears', String(input.experienceYears ?? 0));
+  formData.set('streetAddress', input.streetAddress);
+  formData.set('provinceCode', String(input.provinceCode));
+  formData.set('communeCode', String(input.communeCode));
+  formData.set('consultationType', JSON.stringify(input.consultationType));
+
+  const optionalFields = [
+    'dateOfBirth',
+    'academicTitle',
+    'workplace',
+    'phoneNumber',
+    'workingTime',
+    'description',
+    'imageUrl',
+  ] as const;
+
+  for (const field of optionalFields) {
+    const value = input[field];
+    if (typeof value === 'string' && value.trim()) {
+      formData.set(field, value);
+    }
+  }
+
+  if (input.imageFile) {
+    formData.set('image', input.imageFile);
+  }
+
   return apiRequest('/users/admin/doctors', {
     method: 'POST',
-    json: input,
+    body: formData,
   });
 }
 

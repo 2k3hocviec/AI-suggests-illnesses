@@ -42,9 +42,5 @@ export class UpdateProfileDto {
 
   @IsOptional()
   @IsInt()
-  districtCode?: number;
-
-  @IsOptional()
-  @IsInt()
-  wardCode?: number;
+  communeCode?: number;
 }

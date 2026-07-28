@@ -19,12 +19,12 @@ export class AdministrativeUnitsService {
     });
   }
 
-  listDistricts(provinceCode: number) {
+  listCommunes(provinceCode: number) {
     if (!Number.isInteger(provinceCode)) {
       throw new BadRequestException('provinceCode không hợp lệ');
     }
 
-    return this.prisma.district.findMany({
+    return this.prisma.commune.findMany({
       where: {
         provinceCode,
       },
@@ -41,26 +41,4 @@ export class AdministrativeUnitsService {
     });
   }
 
-  listWards(districtCode: number) {
-    if (!Number.isInteger(districtCode)) {
-      throw new BadRequestException('districtCode không hợp lệ');
-    }
-
-    return this.prisma.ward.findMany({
-      where: {
-        districtCode,
-      },
-      select: {
-        code: true,
-        name: true,
-        divisionType: true,
-        codename: true,
-        districtCode: true,
-        provinceCode: true,
-      },
-      orderBy: {
-        code: 'asc',
-      },
-    });
-  }
 }

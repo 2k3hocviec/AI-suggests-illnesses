@@ -3,12 +3,10 @@
 import { X } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import {
-  District,
-  listDistricts,
+  Commune,
+  listCommunes,
   listProvinces,
-  listWards,
   Province,
-  Ward,
 } from "@/lib/administrative-units-api";
 import { AuthUser, changePassword, getMe, updateProfile } from "@/lib/auth-api";
 
@@ -25,8 +23,7 @@ interface ProfileFormState {
   gender: "MALE" | "FEMALE" | "OTHER" | "UNKNOWN";
   streetAddress: string;
   provinceCode: number;
-  districtCode: number;
-  wardCode: number;
+  communeCode: number;
 }
 
 interface PasswordFormState {
@@ -43,8 +40,7 @@ const emptyForm: ProfileFormState = {
   gender: "UNKNOWN",
   streetAddress: "",
   provinceCode: 0,
-  districtCode: 0,
-  wardCode: 0,
+  communeCode: 0,
 };
 
 const emptyPasswordForm: PasswordFormState = {
@@ -58,8 +54,7 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
   const [passwordForm, setPasswordForm] =
     useState<PasswordFormState>(emptyPasswordForm);
   const [provinces, setProvinces] = useState<Province[]>([]);
-  const [districts, setDistricts] = useState<District[]>([]);
-  const [wards, setWards] = useState<Ward[]>([]);
+  const [communes, setCommunes] = useState<Commune[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -68,13 +63,9 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
     () => provinces.find((province) => province.code === form.provinceCode),
     [form.provinceCode, provinces],
   );
-  const selectedDistrict = useMemo(
-    () => districts.find((district) => district.code === form.districtCode),
-    [districts, form.districtCode],
-  );
-  const selectedWard = useMemo(
-    () => wards.find((ward) => ward.code === form.wardCode),
-    [form.wardCode, wards],
+  const selectedCommune = useMemo(
+    () => communes.find((commune) => commune.code === form.communeCode),
+    [communes, form.communeCode],
   );
 
   useEffect(() => {
@@ -126,25 +117,16 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
 
   useEffect(() => {
     if (!open || !form.provinceCode) {
-      setDistricts([]);
+      setCommunes([]);
       return;
     }
 
-    listDistricts(form.provinceCode)
-      .then(setDistricts)
-      .catch(() => setError("Không thể tải danh sách quận/huyện."));
+    listCommunes(form.provinceCode)
+      .then(setCommunes)
+      .catch(() => setError("Không thể tải danh sách xã/phường."));
   }, [form.provinceCode, open]);
 
-  useEffect(() => {
-    if (!open || !form.districtCode) {
-      setWards([]);
-      return;
-    }
 
-    listWards(form.districtCode)
-      .then(setWards)
-      .catch(() => setError("Không thể tải danh sách xã/phường."));
-  }, [form.districtCode, open]);
 
   if (!open) {
     return null;
@@ -186,8 +168,7 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
         gender: form.gender,
         streetAddress: form.streetAddress,
         provinceCode: form.provinceCode,
-        districtCode: form.districtCode,
-        wardCode: form.wardCode,
+        communeCode: form.communeCode,
         dateOfBirth: form.dateOfBirth || undefined,
       });
 
@@ -261,13 +242,10 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
                     label="Tỉnh/thành"
                     value={selectedProvince?.name}
                   />
+
                   <AddressPreviewItem
-                    label="Quận/huyện"
-                    value={selectedDistrict?.name}
-                  />
-                  <AddressPreviewItem
-                    label="Xã/phường"
-                    value={selectedWard?.name}
+                    label="Xã / phường"
+                    value={selectedCommune?.name}
                   />
                 </div>
               </div>
@@ -326,7 +304,7 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
                 />
               </div>
 
-              <div className="grid gap-3 sm:grid-cols-3">
+              <div className="grid gap-3 sm:grid-cols-2">
                 <ProfileSelect
                   label="Tỉnh/thành"
                   value={form.provinceCode}
@@ -335,31 +313,18 @@ export function ProfileDialog({ open, onClose }: ProfileDialogProps) {
                     setForm((current) => ({
                       ...current,
                       provinceCode: value,
-                      districtCode: 0,
-                      wardCode: 0,
+                      communeCode: 0,
                     }));
-                    setWards([]);
+                    setCommunes([]);
                   }}
                 />
-                <ProfileSelect
-                  label="Quận/huyện"
-                  value={form.districtCode}
-                  options={districts}
-                  disabled={!form.provinceCode}
-                  onChange={(value) => {
-                    setForm((current) => ({
-                      ...current,
-                      districtCode: value,
-                      wardCode: 0,
-                    }));
-                  }}
-                />
+
                 <ProfileSelect
                   label="Xã/phường"
-                  value={form.wardCode}
-                  options={wards}
-                  disabled={!form.districtCode}
-                  onChange={(value) => updateField("wardCode", value)}
+                  value={form.communeCode}
+                  options={communes}
+                  disabled={!form.provinceCode}
+                  onChange={(value) => updateField("communeCode", value)}
                 />
               </div>
 
@@ -546,7 +511,6 @@ function toFormState(profile: AuthUser): ProfileFormState {
     gender: profile.gender as ProfileFormState["gender"],
     streetAddress: profile.streetAddress ?? "",
     provinceCode: profile.provinceCode ?? 0,
-    districtCode: profile.districtCode ?? 0,
-    wardCode: profile.wardCode ?? 0,
+    communeCode: profile.communeCode ?? 0,
   };
 }

@@ -12,13 +12,8 @@ export class AdministrativeUnitsController {
     return this.administrativeUnitsService.listProvinces();
   }
 
-  @Get('districts')
-  listDistricts(@Query('provinceCode', ParseIntPipe) provinceCode: number) {
-    return this.administrativeUnitsService.listDistricts(provinceCode);
-  }
-
-  @Get('wards')
-  listWards(@Query('districtCode', ParseIntPipe) districtCode: number) {
-    return this.administrativeUnitsService.listWards(districtCode);
+  @Get('communes')
+  listCommunes(@Query('provinceCode', ParseIntPipe) provinceCode: number) {
+    return this.administrativeUnitsService.listCommunes(provinceCode);
   }
 }

@@ -8,12 +8,10 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import {
-  District,
-  listDistricts,
+  Commune,
+  listCommunes,
   listProvinces,
-  listWards,
   Province,
-  Ward,
 } from '@/lib/administrative-units-api';
 import { register as registerAccount } from '@/lib/auth-api';
 import { AuthCard } from './AuthCard';
@@ -31,8 +29,7 @@ const registerSchema = z
     }),
     streetAddress: z.string().min(3, 'Vui lòng nhập số nhà và tên đường'),
     provinceCode: z.coerce.number().int().positive('Vui lòng chọn tỉnh/thành'),
-    districtCode: z.coerce.number().int().positive('Vui lòng chọn quận/huyện'),
-    wardCode: z.coerce.number().int().positive('Vui lòng chọn xã/phường'),
+    communeCode: z.coerce.number().int().positive('Vui lòng chọn xã/phường'),
     password: z.string().min(6, 'Mật khẩu tối thiểu 6 ký tự'),
     confirmPassword: z.string().min(6, 'Vui lòng xác nhận mật khẩu'),
   })
@@ -48,8 +45,7 @@ export function RegisterForm() {
   const [serverError, setServerError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [provinces, setProvinces] = useState<Province[]>([]);
-  const [districts, setDistricts] = useState<District[]>([]);
-  const [wards, setWards] = useState<Ward[]>([]);
+  const [communes, setCommunes] = useState<Commune[]>([]);
   const {
     register,
     handleSubmit,
@@ -66,14 +62,12 @@ export function RegisterForm() {
       gender: 'MALE',
       streetAddress: '',
       provinceCode: 0,
-      districtCode: 0,
-      wardCode: 0,
+      communeCode: 0,
       password: '',
       confirmPassword: '',
     },
   });
   const provinceCode = watch('provinceCode');
-  const districtCode = watch('districtCode');
 
   useEffect(() => {
     listProvinces()
@@ -82,32 +76,17 @@ export function RegisterForm() {
   }, []);
 
   useEffect(() => {
-    setDistricts([]);
-    setWards([]);
-    setValue('districtCode', 0);
-    setValue('wardCode', 0);
+    setCommunes([]);
+    setValue('communeCode', 0);
 
     if (!provinceCode) {
       return;
     }
 
-    listDistricts(provinceCode)
-      .then(setDistricts)
-      .catch(() => setServerError('Không thể tải danh sách quận/huyện.'));
-  }, [provinceCode, setValue]);
-
-  useEffect(() => {
-    setWards([]);
-    setValue('wardCode', 0);
-
-    if (!districtCode) {
-      return;
-    }
-
-    listWards(districtCode)
-      .then(setWards)
+    listCommunes(provinceCode)
+      .then(setCommunes)
       .catch(() => setServerError('Không thể tải danh sách xã/phường.'));
-  }, [districtCode, setValue]);
+  }, [provinceCode, setValue]);
 
   async function onSubmit(values: RegisterFormValues) {
     setServerError(null);
@@ -121,8 +100,7 @@ export function RegisterForm() {
         gender: values.gender,
         streetAddress: values.streetAddress,
         provinceCode: values.provinceCode,
-        districtCode: values.districtCode,
-        wardCode: values.wardCode,
+        communeCode: values.communeCode,
         password: values.password,
       });
       router.push('/login?registered=1');
@@ -230,7 +208,7 @@ export function RegisterForm() {
                 {...register('streetAddress')}
               />
             </div>
-            <div className="grid gap-3 lg:grid-cols-3">
+            <div className="grid gap-3 lg:grid-cols-2">
               <label className="block">
                 <select
                   className="h-9 w-full rounded-md border border-slate-200 bg-white px-3 text-xs text-slate-800 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100 lg:h-11 lg:text-sm"
@@ -254,38 +232,18 @@ export function RegisterForm() {
                 <select
                   className="h-9 w-full rounded-md border border-slate-200 bg-white px-3 text-xs text-slate-800 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100 disabled:bg-slate-100 lg:h-11 lg:text-sm"
                   disabled={!provinceCode}
-                  {...register('districtCode', { valueAsNumber: true })}
-                >
-                  <option value={0}>Quận/huyện</option>
-                  {districts.map((district) => (
-                    <option key={district.code} value={district.code}>
-                      {district.name}
-                    </option>
-                  ))}
-                </select>
-                {errors.districtCode?.message ? (
-                  <span className="mt-1 block text-[11px] text-red-500">
-                    {errors.districtCode.message}
-                  </span>
-                ) : null}
-              </label>
-
-              <label className="block">
-                <select
-                  className="h-9 w-full rounded-md border border-slate-200 bg-white px-3 text-xs text-slate-800 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-100 disabled:bg-slate-100 lg:h-11 lg:text-sm"
-                  disabled={!districtCode}
-                  {...register('wardCode', { valueAsNumber: true })}
+                  {...register('communeCode', { valueAsNumber: true })}
                 >
                   <option value={0}>Xã/phường</option>
-                  {wards.map((ward) => (
-                    <option key={ward.code} value={ward.code}>
-                      {ward.name}
+                  {communes.map((commune) => (
+                    <option key={commune.code} value={commune.code}>
+                      {commune.name}
                     </option>
                   ))}
                 </select>
-                {errors.wardCode?.message ? (
+                {errors.communeCode?.message ? (
                   <span className="mt-1 block text-[11px] text-red-500">
-                    {errors.wardCode.message}
+                    {errors.communeCode.message}
                   </span>
                 ) : null}
               </label>

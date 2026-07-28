@@ -255,6 +255,23 @@ export class DirectChatGateway implements OnGatewayConnection {
     });
   }
 
+  notifyConversationClosed(
+    recipientId: number,
+    conversation: Record<string, unknown>,
+  ) {
+    const conversationId = conversation.id;
+    this.server
+      .to(this.conversationRoom(Number(conversationId)))
+      .emit("conversation:closed", conversation);
+    this.server.to(this.userRoom(recipientId)).emit("notification:new", {
+      type: "CONVERSATION_CLOSED",
+      title: "Cuộc trò chuyện đã kết thúc",
+      message: "Cuộc trò chuyện với bạn đã được đóng.",
+      conversationId,
+      createdAt: new Date().toISOString(),
+    });
+  }
+
   emitReadReceipt(conversationId: number, receipt: Record<string, unknown>) {
     this.server
       .to(this.conversationRoom(conversationId))

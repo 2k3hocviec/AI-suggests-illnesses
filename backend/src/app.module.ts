@@ -11,6 +11,7 @@ import { PlatformStatsModule } from './platform-stats/platform-stats.module';
 import { ChatModule } from './chat/chat.module';
 import { AdministrativeUnitsModule } from './administrative-units/administrative-units.module';
 import { DirectChatModule } from './direct-chat/direct-chat.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { DirectChatModule } from './direct-chat/direct-chat.module';
     PlatformStatsModule,
     ChatModule,
     DirectChatModule,
+    CloudinaryModule,
   ],
   controllers: [AppController],
   providers: [AppService],

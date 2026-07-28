@@ -1,10 +1,12 @@
 import {
   Body,
+  Delete,
   Controller,
   Get,
   Param,
   ParseIntPipe,
   Post,
+  Patch,
   UseGuards,
 } from '@nestjs/common';
 import { CurrentUser } from '../auth/current-user.decorator';
@@ -41,6 +43,22 @@ export class ChatController {
     @Param('sessionId', ParseIntPipe) sessionId: number,
   ) {
     return this.chatService.listMessages(user.id, sessionId);
+  }
+
+  @Patch('sessions/:sessionId/close')
+  closeSession(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('sessionId', ParseIntPipe) sessionId: number,
+  ) {
+    return this.chatService.closeSession(user.id, sessionId);
+  }
+
+  @Delete('sessions/:sessionId')
+  deleteSession(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('sessionId', ParseIntPipe) sessionId: number,
+  ) {
+    return this.chatService.deleteSession(user.id, sessionId);
   }
 
   @Post('admin/model-test')

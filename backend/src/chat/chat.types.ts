@@ -38,6 +38,7 @@ export interface RecommendedDoctor {
   id: number;
   chatAvailable: boolean;
   fullName: string;
+  imageUrl: string | null;
   academicTitle: string | null;
   experienceYears: number;
   workplace: string | null;
@@ -45,8 +46,7 @@ export interface RecommendedDoctor {
   address: string | null;
   city: string | null;
   provinceCode: number | null;
-  districtCode: number | null;
-  wardCode: number | null;
+  communeCode: number | null;
   phoneNumber: string | null;
   email: string | null;
   workingTime: string | null;

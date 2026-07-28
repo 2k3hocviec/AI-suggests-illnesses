@@ -61,8 +61,7 @@ model User {
   streetAddress         String?    @map("street_address")
   address               String?
   provinceCode          Int?       @map("province_code")
-  districtCode          Int?       @map("district_code")
-  wardCode              Int?       @map("ward_code")
+  communeCode           Int?       @map("commune_code")
   password              String?
   passwordResetOtpHash  String?    @map("password_reset_otp_hash")
   passwordResetExpires  DateTime?  @map("password_reset_expires")
@@ -78,12 +77,10 @@ model User {
   directChatRequests    DirectChatConversation[] @relation("DirectChatPatient")
   directChatMessages    DirectChatMessage[]      @relation("DirectChatMessageSender")
   province              Province?                @relation("UserProvince", fields: [provinceCode], references: [code])
-  district              District?                @relation("UserDistrict", fields: [districtCode], references: [code])
-  ward                  Ward?                    @relation("UserWard", fields: [wardCode], references: [code])
+  commune               Commune?                 @relation("UserCommune", fields: [communeCode], references: [code])
 
   @@index([provinceCode])
-  @@index([districtCode])
-  @@index([wardCode])
+  @@index([communeCode])
   @@map("users")
 }
 
@@ -135,15 +132,14 @@ model Province {
   codename     String
   phoneCode    Int?   @map("phone_code")
 
-  districts District[]
-  wards     Ward[]
-  users     User[]     @relation("UserProvince")
-  doctors   Doctor[]   @relation("DoctorProvince")
+  communes Commune[]
+  users    User[]    @relation("UserProvince")
+  doctors  Doctor[]  @relation("DoctorProvince")
 
   @@map("provinces")
 }
 
-model District {
+model Commune {
   code         Int    @id
   name         String
   divisionType String @map("division_type")
@@ -151,30 +147,11 @@ model District {
   provinceCode Int    @map("province_code")
 
   province Province @relation(fields: [provinceCode], references: [code], onDelete: Cascade)
-  wards    Ward[]
-  users    User[]   @relation("UserDistrict")
-  doctors  Doctor[] @relation("DoctorDistrict")
+  users    User[]   @relation("UserCommune")
+  doctors  Doctor[] @relation("DoctorCommune")
 
   @@index([provinceCode])
-  @@map("districts")
-}
-
-model Ward {
-  code         Int    @id
-  name         String
-  divisionType String @map("division_type")
-  codename     String @unique
-  districtCode Int    @map("district_code")
-  provinceCode Int    @map("province_code")
-
-  district District @relation(fields: [districtCode], references: [code], onDelete: Cascade)
-  province Province @relation(fields: [provinceCode], references: [code], onDelete: Cascade)
-  users    User[]   @relation("UserWard")
-  doctors  Doctor[] @relation("DoctorWard")
-
-  @@index([districtCode])
-  @@index([provinceCode])
-  @@map("wards")
+  @@map("communes")
 }
 
 model Doctor {
@@ -192,8 +169,7 @@ model Doctor {
   address          String?
   city             String?
   provinceCode     Int?               @map("province_code")
-  districtCode     Int?               @map("district_code")
-  wardCode         Int?               @map("ward_code")
+  communeCode      Int?               @map("commune_code")
   workingTime      String?            @map("working_time")
   consultationType ConsultationType[] @default([]) @map("consultation_type")
   imageUrl         String?            @map("image_url")
@@ -205,16 +181,14 @@ model Doctor {
   specialty               Specialty                @relation(fields: [specialtyId], references: [id])
   user                    User?                    @relation("DoctorAccount", fields: [userId], references: [id], onDelete: SetNull)
   province                Province?                @relation("DoctorProvince", fields: [provinceCode], references: [code])
-  district                District?                @relation("DoctorDistrict", fields: [districtCode], references: [code])
-  ward                    Ward?                    @relation("DoctorWard", fields: [wardCode], references: [code])
+  commune                 Commune?                 @relation("DoctorCommune", fields: [communeCode], references: [code])
   expertises              DoctorExpertise[]
   directChatConversations DirectChatConversation[]
 
   @@index([specialtyId])
   @@index([city])
   @@index([provinceCode])
-  @@index([districtCode])
-  @@index([wardCode])
+  @@index([communeCode])
   @@map("doctors")
 }
 
@@ -238,6 +212,7 @@ model ChatSession {
   createdAt DateTime  @default(now()) @map("created_at")
   updatedAt DateTime  @updatedAt @map("updated_at")
   closedAt  DateTime? @map("closed_at")
+  deletedAt DateTime? @map("deleted_at")
 
   user                  User?                 @relation(fields: [userId], references: [id], onDelete: SetNull)
   messages              ChatMessage[]
@@ -266,14 +241,17 @@ model ChatMessage {
 }
 
 model DirectChatConversation {
-  id          Int              @id @default(autoincrement())
-  patientId   Int              @map("patient_id")
-  doctorId    Int              @map("doctor_id")
-  status      DirectChatStatus @default(PENDING)
-  requestedAt DateTime         @default(now()) @map("requested_at")
-  respondedAt DateTime?        @map("responded_at")
-  closedAt    DateTime?        @map("closed_at")
-  updatedAt   DateTime         @default(now()) @updatedAt @map("updated_at")
+  id               Int              @id @default(autoincrement())
+  patientId        Int              @map("patient_id")
+  doctorId         Int              @map("doctor_id")
+  status           DirectChatStatus @default(PENDING)
+  requestedAt      DateTime         @default(now()) @map("requested_at")
+  respondedAt      DateTime?        @map("responded_at")
+  closedAt         DateTime?        @map("closed_at")
+  deletedAt        DateTime?        @map("deleted_at")
+  patientDeletedAt DateTime?        @map("patient_deleted_at")
+  doctorDeletedAt  DateTime?        @map("doctor_deleted_at")
+  updatedAt        DateTime         @default(now()) @updatedAt @map("updated_at")
 
   patient  User                @relation("DirectChatPatient", fields: [patientId], references: [id], onDelete: Cascade)
   doctor   Doctor              @relation(fields: [doctorId], references: [id], onDelete: Cascade)

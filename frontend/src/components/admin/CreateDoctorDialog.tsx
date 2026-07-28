@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { X, UserPlus } from "lucide-react";
 import {
   Commune,
@@ -29,7 +29,7 @@ const initialForm: CreateDoctorAccountInput = {
   streetAddress: "",
   provinceCode: 0,
   communeCode: 0,
-  imageUrl: "",
+  imageFile: null,
   workingTime: "",
   description: "",
   consultationType: ["ONLINE"],
@@ -54,6 +54,7 @@ export function CreateDoctorDialog({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!isOpen) {
@@ -62,6 +63,9 @@ export function CreateDoctorDialog({
 
     let cancelled = false;
     setForm(initialForm);
+    if (imageInputRef.current) {
+      imageInputRef.current.value = "";
+    }
     setCommunes([]);
     setError(null);
     setSuccess(null);
@@ -182,7 +186,6 @@ export function CreateDoctorDialog({
         workplace: form.workplace?.trim() || undefined,
         phoneNumber: form.phoneNumber?.trim() || undefined,
         streetAddress: form.streetAddress.trim(),
-        imageUrl: form.imageUrl?.trim() || undefined,
         workingTime: form.workingTime?.trim() || undefined,
         description: form.description?.trim() || undefined,
         experienceYears: Number(form.experienceYears) || 0,
@@ -190,6 +193,9 @@ export function CreateDoctorDialog({
       await onCreated();
       setSuccess("Đã tạo tài khoản và hồ sơ bác sĩ.");
       setForm(initialForm);
+      if (imageInputRef.current) {
+        imageInputRef.current.value = "";
+      }
     } catch (submitError) {
       setError(
         submitError instanceof Error
@@ -361,14 +367,33 @@ export function CreateDoctorDialog({
                 placeholder="Thứ Hai - Thứ Sáu, 08:00 - 17:00"
               />
             </FormField>
-            <FormField label="Ảnh đại diện (URL)">
+            <FormField label="Ảnh đại diện">
               <input
-                type="url"
-                value={form.imageUrl}
-                onChange={(event) => updateField("imageUrl", event.target.value)}
+                ref={imageInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp,image/gif"
+                onChange={(event) => {
+                  const file = event.target.files?.[0] ?? null;
+                  if (file && file.size > 5 * 1024 * 1024) {
+                    setError("Ảnh đại diện không được vượt quá 5 MB.");
+                    event.target.value = "";
+                    updateField("imageFile", null);
+                    return;
+                  }
+
+                  setError(null);
+                  updateField("imageFile", file);
+                }}
                 className={inputClassName}
-                placeholder="https://..."
               />
+              <span className="mt-1 block text-xs font-normal text-slate-500">
+                JPG, PNG, WEBP hoặc GIF, tối đa 5 MB. Ảnh sẽ được lưu trên Cloudinary.
+              </span>
+              {form.imageFile ? (
+                <span className="mt-1 block truncate text-xs font-normal text-emerald-700">
+                  Đã chọn: {form.imageFile.name}
+                </span>
+              ) : null}
             </FormField>
           </div>
 

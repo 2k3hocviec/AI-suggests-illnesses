@@ -9,6 +9,7 @@ import { ConsultationType, UserGender, UserRole } from '@prisma/client';
 import * as bcrypt from 'bcryptjs';
 import { AdministrativeUnitsService } from '../administrative-units/administrative-units.service';
 import { PrismaService } from '../prisma/prisma.service';
+import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { CreateDoctorAccountDto } from './dto/create-doctor-account.dto';
 
 @Injectable()
@@ -16,6 +17,7 @@ export class UsersService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly administrativeUnits: AdministrativeUnitsService,
+    private readonly cloudinary: CloudinaryService,
   ) {}
 
   async getDoctorCreationOptions(adminId: number) {
@@ -38,7 +40,11 @@ export class UsersService {
     };
   }
 
-  async createDoctorAccount(adminId: number, dto: CreateDoctorAccountDto) {
+  async createDoctorAccount(
+    adminId: number,
+    dto: CreateDoctorAccountDto,
+    image?: Express.Multer.File,
+  ) {
     await this.assertAdmin(adminId);
 
     const email = dto.email.trim().toLowerCase();
@@ -70,6 +76,9 @@ export class UsersService {
     }
 
     const address = await this.resolveDoctorAddress(dto);
+    const uploadedImage = image
+      ? await this.cloudinary.uploadDoctorImage(image)
+      : null;
     const password = await bcrypt.hash(dto.password, 12);
     const consultationType = [...new Set(dto.consultationType)];
 
@@ -117,7 +126,7 @@ export class UsersService {
           communeCode: address.communeCode,
           workingTime: dto.workingTime?.trim() || null,
           description: dto.description?.trim() || null,
-          imageUrl: dto.imageUrl?.trim() || null,
+          imageUrl: uploadedImage?.secureUrl ?? (dto.imageUrl?.trim() || null),
           consultationType,
           status: 'ACTIVE',
         },

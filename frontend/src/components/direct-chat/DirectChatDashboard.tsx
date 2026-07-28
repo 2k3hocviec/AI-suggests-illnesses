@@ -38,6 +38,8 @@ import {
   listDirectChatMessages,
   rejectDirectChatRequest,
 } from '@/lib/direct-chat-api';
+import { DoctorProfile } from '@/lib/doctors-api';
+import { DoctorProfileDialog } from '@/components/doctor/DoctorProfileDialog';
 
 export function DirectChatDashboard() {
   const router = useRouter();
@@ -56,6 +58,7 @@ export function DirectChatDashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingMessages, setIsLoadingMessages] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
+  const [isDoctorProfileOpen, setIsDoctorProfileOpen] = useState(false);
   const [processingRequestId, setProcessingRequestId] = useState<number | null>(
     null,
   );
@@ -427,6 +430,26 @@ export function DirectChatDashboard() {
         />
       ) : null}
 
+      <DoctorProfileDialog
+        open={isDoctorProfileOpen}
+        onClose={() => setIsDoctorProfileOpen(false)}
+        onSaved={(profile: DoctorProfile) => {
+          setMe((current) =>
+            current
+              ? {
+                  ...current,
+                  fullName: profile.fullName,
+                  phoneNumber: profile.phoneNumber,
+                  streetAddress: profile.streetAddress,
+                  address: profile.address,
+                  provinceCode: profile.provinceCode,
+                  communeCode: profile.communeCode,
+                }
+              : current,
+          );
+        }}
+      />
+
       <header className="flex h-16 shrink-0 items-center justify-between border-b border-slate-200 bg-white px-4 sm:px-6">
         <div className="flex min-w-0 items-center gap-3">
           <button
@@ -460,6 +483,16 @@ export function DirectChatDashboard() {
           <span className="hidden max-w-44 truncate text-sm font-medium text-slate-600 sm:block">
             {me.fullName}
           </span>
+          {me.role === 'DOCTOR' ? (
+            <button
+              type="button"
+              onClick={() => setIsDoctorProfileOpen(true)}
+              className="inline-flex h-9 items-center gap-2 rounded-lg border border-emerald-200 bg-emerald-50 px-3 text-sm font-semibold text-emerald-700 transition hover:bg-emerald-100"
+            >
+              <UserRound className="h-4 w-4" />
+              <span className="hidden sm:inline">Quản lý hồ sơ</span>
+            </button>
+          ) : null}
           <button
             type="button"
             onClick={handleLogout}

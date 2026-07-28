@@ -12,6 +12,7 @@ import { ChatModule } from './chat/chat.module';
 import { AdministrativeUnitsModule } from './administrative-units/administrative-units.module';
 import { DirectChatModule } from './direct-chat/direct-chat.module';
 import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { DoctorsModule } from './doctors/doctors.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
     ChatModule,
     DirectChatModule,
     CloudinaryModule,
+    DoctorsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

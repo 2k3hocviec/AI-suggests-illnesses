@@ -20,6 +20,7 @@ import {
   UserCircle,
   Video,
 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 export interface ThreadMessage {
@@ -487,6 +488,8 @@ function DoctorCard({
   requestFeedback?: { tone: 'success' | 'error'; message: string };
   onRequestChat: () => void;
 }) {
+  const router = useRouter();
+
   return (
     <article className="min-w-0 max-w-full rounded-2xl border border-slate-200 bg-white px-4 py-5 shadow-sm sm:px-5">
       <div className="flex flex-wrap items-start gap-3">
@@ -547,6 +550,13 @@ function DoctorCard({
       ) : null}
 
       <div className="mt-4 grid gap-2 sm:grid-cols-2">
+        <button
+          type="button"
+          onClick={() => router.push(`/doctors/${doctor.id}`)}
+          className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-[#073f87] bg-white px-3 text-sm font-semibold text-[#073f87] transition hover:bg-blue-50"
+        >
+          Xem hồ sơ bác sĩ
+        </button>
         {doctor.phone && doctor.phone !== 'chưa cập nhật' ? (
           <a
             href={`tel:${doctor.phone.replace(/\s+/g, '')}`}

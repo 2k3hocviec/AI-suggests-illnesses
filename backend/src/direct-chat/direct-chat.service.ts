@@ -27,6 +27,7 @@ const conversationInclude = {
       id: true,
       userId: true,
       fullName: true,
+      imageUrl: true,
       academicTitle: true,
       email: true,
       phoneNumber: true,
@@ -704,6 +705,7 @@ export class DirectChatService {
       doctor: {
         id: conversation.doctor.id,
         fullName: conversation.doctor.fullName,
+        imageUrl: conversation.doctor.imageUrl,
         academicTitle: conversation.doctor.academicTitle,
         email: conversation.doctor.email,
         phoneNumber: conversation.doctor.phoneNumber,

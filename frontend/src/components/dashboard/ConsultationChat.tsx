@@ -45,6 +45,7 @@ export function ConsultationChat({
         id: message.id,
         role: message.role,
         content: message.content,
+        metadata: message.metadata,
         createdAt: message.createdAt,
       })),
     ],

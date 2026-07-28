@@ -12,6 +12,7 @@ export interface DirectChatPerson {
 export interface DirectChatDoctor {
   id: number;
   fullName: string;
+  imageUrl: string | null;
   academicTitle: string | null;
   email: string | null;
   phoneNumber: string | null;

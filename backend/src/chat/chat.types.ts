@@ -38,6 +38,7 @@ export interface RecommendedDoctor {
   id: number;
   chatAvailable: boolean;
   fullName: string;
+  imageUrl: string | null;
   academicTitle: string | null;
   experienceYears: number;
   workplace: string | null;

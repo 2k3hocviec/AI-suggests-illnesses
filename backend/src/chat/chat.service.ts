@@ -165,7 +165,10 @@ export class ChatService {
         sessionId: session.id,
         role: ChatRole.ASSISTANT,
         content: assistantContent,
-        metadata: responseAnalysis as unknown as Prisma.InputJsonValue,
+        metadata: {
+          ...responseAnalysis,
+          recommendedSpecialties: recommendedSpecialtiesWithDoctors,
+        } as unknown as Prisma.InputJsonValue,
       },
     });
 
@@ -262,7 +265,10 @@ export class ChatService {
       userId: null,
       role: ChatRole.ASSISTANT,
       content: assistantContent,
-      metadata: analysis as unknown as Prisma.JsonValue,
+      metadata: {
+        ...analysis,
+        recommendedSpecialties: recommendedSpecialtiesWithDoctors,
+      } as unknown as Prisma.JsonValue,
       createdAt,
     };
 
@@ -905,6 +911,7 @@ ${content}`;
         id: true,
         userId: true,
         fullName: true,
+        imageUrl: true,
         academicTitle: true,
         experienceYears: true,
         workplace: true,
@@ -981,6 +988,7 @@ ${content}`;
             id: doctor.id,
             chatAvailable: Boolean(doctor.userId),
             fullName: doctor.fullName,
+            imageUrl: doctor.imageUrl,
             academicTitle: doctor.academicTitle,
             experienceYears: doctor.experienceYears,
             workplace: doctor.workplace,

@@ -685,9 +685,11 @@ function PendingConversationCard({
   return (
     <article className="rounded-xl border border-amber-200 bg-amber-50/70 p-3">
       <div className="flex items-start gap-3">
-        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-amber-700 ring-1 ring-amber-200">
-          <UserRound className="h-4 w-4" />
-        </span>
+        <PersonAvatar
+          name={isDoctor ? conversation.patient.fullName : conversation.doctor.fullName}
+          imageUrl={isDoctor ? null : conversation.doctor.imageUrl}
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-xs font-bold text-amber-700 ring-1 ring-amber-200"
+        />
         <div className="min-w-0 flex-1">
           <p className="truncate text-sm font-bold text-slate-900">
             {isDoctor
@@ -772,9 +774,11 @@ function ConversationButton({
         className="min-w-0 flex-1 rounded-lg p-1 text-left disabled:cursor-default disabled:opacity-70"
       >
       <div className="flex items-start gap-3">
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-sm font-bold text-blue-700">
-          {getInitials(counterpart)}
-        </span>
+        <PersonAvatar
+          name={counterpart}
+          imageUrl={viewerRole === 'DOCTOR' ? null : conversation.doctor.imageUrl}
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-sm font-bold text-blue-700"
+        />
         <span className="min-w-0 flex-1">
           <span className="flex items-center justify-between gap-2">
             <span className="truncate text-sm font-bold text-slate-900">
@@ -837,9 +841,11 @@ function ChatHeader({
       >
         <ArrowLeft className="h-5 w-5" />
       </button>
-      <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-sm font-bold text-emerald-700">
-        {getInitials(counterpart)}
-      </span>
+      <PersonAvatar
+        name={counterpart}
+        imageUrl={viewerRole === 'DOCTOR' ? null : conversation.doctor.imageUrl}
+        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-sm font-bold text-emerald-700"
+      />
       <div className="min-w-0 flex-1">
         <h2 className="truncate text-sm font-bold text-slate-900 sm:text-base">
           {counterpart}
@@ -1007,6 +1013,39 @@ function getStatusLabel(status: DirectChatConversation['status']) {
     default:
       return 'Đang chờ xác nhận';
   }
+}
+
+function PersonAvatar({
+  name,
+  imageUrl,
+  className,
+}: {
+  name: string;
+  imageUrl: string | null;
+  className: string;
+}) {
+  const [imageFailed, setImageFailed] = useState(false);
+  const showImage = Boolean(imageUrl) && !imageFailed;
+
+  useEffect(() => {
+    setImageFailed(false);
+  }, [imageUrl]);
+
+  return (
+    <span className={`relative overflow-hidden ${className}`} title={name}>
+      {showImage ? (
+        <img
+          src={imageUrl ?? undefined}
+          alt={`Ảnh đại diện của ${name}`}
+          className="h-full w-full object-cover"
+          loading="lazy"
+          onError={() => setImageFailed(true)}
+        />
+      ) : (
+        getInitials(name) || <UserRound className="h-4 w-4" />
+      )}
+    </span>
+  );
 }
 
 function getInitials(value: string) {

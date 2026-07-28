@@ -19,6 +19,7 @@ export interface ChatSpecialty {
 export interface ChatDoctor {
   id: number;
   fullName: string;
+  imageUrl: string | null;
   academicTitle: string | null;
   experienceYears: number;
   workplace: string | null;

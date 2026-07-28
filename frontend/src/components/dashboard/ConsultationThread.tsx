@@ -26,6 +26,7 @@ export interface ThreadMessage {
   id: number | string;
   role: 'USER' | 'ASSISTANT' | 'SYSTEM';
   content: string;
+  metadata?: unknown;
   createdAt: string;
 }
 
@@ -114,6 +115,7 @@ export function ConsultationThread({
                 >
                   <AssistantContent
                     content={message.content}
+                    metadata={message.metadata}
                     onRequestDoctorChat={onRequestDoctorChat}
                   />
                 </div>
@@ -140,14 +142,16 @@ export function ConsultationThread({
 
 function AssistantContent({
   content,
+  metadata,
   onRequestDoctorChat,
 }: {
   content: string;
+  metadata?: unknown;
   onRequestDoctorChat?: (
     doctorId: number,
   ) => Promise<{ created: boolean }>;
 }) {
-  const recommendation = parseRecommendation(content);
+  const recommendation = parseRecommendation(content, metadata);
 
   if (!recommendation) {
     return <p className="whitespace-pre-line text-slate-700">{content}</p>;
@@ -170,6 +174,7 @@ interface DoctorRecommendation {
   id: number;
   chatAvailable: boolean;
   name: string;
+  imageUrl: string | null;
   score: number | null;
   fitLabel: string | null;
   specialty: string | null;
@@ -350,7 +355,11 @@ function RecommendationResponse({
                   aria-expanded={isExpanded}
                   className="flex w-full items-center gap-3 rounded-2xl border border-slate-200 bg-white px-4 py-4 text-left shadow-sm transition hover:border-emerald-300 hover:bg-emerald-50/30"
                 >
-                  <DoctorAvatar name={doctor.name} muted />
+                  <DoctorAvatar
+                    name={doctor.name}
+                    imageUrl={doctor.imageUrl}
+                    muted
+                  />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-bold text-slate-800">
                       {doctor.name}
@@ -481,7 +490,7 @@ function DoctorCard({
   return (
     <article className="min-w-0 max-w-full rounded-2xl border border-slate-200 bg-white px-4 py-5 shadow-sm sm:px-5">
       <div className="flex flex-wrap items-start gap-3">
-        <DoctorAvatar name={doctor.name} />
+        <DoctorAvatar name={doctor.name} imageUrl={doctor.imageUrl} />
         <div className="min-w-0 flex-1">
           <h4 className="break-words text-lg font-bold text-slate-950">{doctor.name}</h4>
           <p className="mt-1 text-sm text-slate-600">
@@ -617,7 +626,15 @@ function DoctorInfo({
   );
 }
 
-function DoctorAvatar({ name, muted = false }: { name: string; muted?: boolean }) {
+function DoctorAvatar({
+  name,
+  imageUrl,
+  muted = false,
+}: {
+  name: string;
+  imageUrl: string | null;
+  muted?: boolean;
+}) {
   const initials = name
     .replace(/^Bác sĩ\s+/i, '')
     .split(/\s+/)
@@ -626,21 +643,41 @@ function DoctorAvatar({ name, muted = false }: { name: string; muted?: boolean }
     .map((part) => part[0])
     .join('')
     .toUpperCase();
+  const [imageFailed, setImageFailed] = useState(false);
+  const showImage = Boolean(imageUrl) && !imageFailed;
+
+  useEffect(() => {
+    setImageFailed(false);
+  }, [imageUrl]);
 
   return (
     <span
+      title={name}
       className={
         muted
           ? 'flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-100 text-sm font-bold text-slate-500'
           : 'flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-blue-100 text-lg font-bold text-blue-800'
       }
     >
-      {initials || 'BS'}
+      {showImage ? (
+        <img
+          src={imageUrl ?? undefined}
+          alt={`Ảnh đại diện của ${name}`}
+          className="h-full w-full rounded-full object-cover"
+          loading="lazy"
+          onError={() => setImageFailed(true)}
+        />
+      ) : (
+        initials || 'BS'
+      )}
     </span>
   );
 }
 
-function parseRecommendation(content: string): RecommendationData | null {
+function parseRecommendation(
+  content: string,
+  metadata?: unknown,
+): RecommendationData | null {
   const lines = content
     .split(/\r?\n/)
     .map((line) => line.trim())
@@ -709,6 +746,7 @@ function parseRecommendation(content: string): RecommendationData | null {
         id: index,
         chatAvailable: false,
         name: doctorHeader[1].trim(),
+        imageUrl: null,
         score: null,
         fitLabel: null,
         specialty: activeSpecialty,
@@ -792,6 +830,11 @@ function parseRecommendation(content: string): RecommendationData | null {
 
   pushCurrentDoctor();
 
+  const imageByDoctorId = getDoctorImageMap(metadata);
+  doctors.forEach((doctor) => {
+    doctor.imageUrl = imageByDoctorId.get(doctor.id) ?? null;
+  });
+
   return {
     symptoms,
     specialties,
@@ -802,6 +845,52 @@ function parseRecommendation(content: string): RecommendationData | null {
       ? 'Các dấu hiệu cấp cứu cần được thăm khám trực tiếp, không thay thế hướng dẫn của nhân viên y tế.'
       : 'Thông tin chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ.',
   };
+}
+
+function getDoctorImageMap(metadata: unknown) {
+  const imageByDoctorId = new Map<number, string>();
+
+  if (!metadata || typeof metadata !== 'object') {
+    return imageByDoctorId;
+  }
+
+  const recommendedSpecialties = (
+    metadata as { recommendedSpecialties?: unknown }
+  ).recommendedSpecialties;
+
+  if (!Array.isArray(recommendedSpecialties)) {
+    return imageByDoctorId;
+  }
+
+  recommendedSpecialties.forEach((specialty) => {
+    if (!specialty || typeof specialty !== 'object') {
+      return;
+    }
+
+    const doctors = (specialty as { doctors?: unknown }).doctors;
+    if (!Array.isArray(doctors)) {
+      return;
+    }
+
+    doctors.forEach((doctor) => {
+      if (!doctor || typeof doctor !== 'object') {
+        return;
+      }
+
+      const id = (doctor as { id?: unknown }).id;
+      const imageUrl = (doctor as { imageUrl?: unknown }).imageUrl;
+      if (
+        typeof id === 'number' &&
+        Number.isInteger(id) &&
+        typeof imageUrl === 'string' &&
+        imageUrl.trim()
+      ) {
+        imageByDoctorId.set(id, imageUrl);
+      }
+    });
+  });
+
+  return imageByDoctorId;
 }
 
 function isStructuredRecommendation(content: string) {

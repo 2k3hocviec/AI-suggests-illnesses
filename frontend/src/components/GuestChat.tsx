@@ -2,7 +2,7 @@
 
 import { Bot, LogIn, Stethoscope, UserPlus } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ChatMessage, sendGuestChatMessage } from "@/lib/chat-api";
 import { ConsultationChat } from "./dashboard/ConsultationChat";
 
@@ -13,6 +13,7 @@ export function GuestChat() {
   const [error, setError] = useState<string | null>(null);
   const [isSending, setIsSending] = useState(false);
   const [requestCount, setRequestCount] = useState(0);
+  const guestSessionId = useRef<string | null>(null);
 
   async function handleSend(content: string) {
     if (requestCount >= MAX_GUEST_REQUESTS) {
@@ -90,7 +91,11 @@ export function GuestChat() {
     setMessages((current) => [...current, optimisticMessage]);
 
     try {
-      const response = await sendGuestChatMessage(content);
+      guestSessionId.current ??= crypto.randomUUID();
+      const response = await sendGuestChatMessage(
+        content,
+        guestSessionId.current,
+      );
       setMessages((current) => [
         ...current.filter((message) => message.id !== optimisticMessageId),
         response.userMessage,
@@ -166,18 +171,18 @@ export function GuestChat() {
             </div>
 
             <div className="flex min-h-0 flex-1 flex-col bg-[#fcfdfd]">
-            <ConsultationChat
-              messages={messages}
-              error={error}
-              notice={
-                requestCount >= MAX_GUEST_REQUESTS
-                  ? "Bạn đã sử dụng 5 lượt chat miễn phí. Hãy đăng nhập để tiếp tục hoặc tải lại trang để bắt đầu lại."
-                  : `Bạn còn ${MAX_GUEST_REQUESTS - requestCount} lượt chat miễn phí trong lần truy cập này.`
-              }
-              isSending={isSending}
-              disabled={requestCount >= MAX_GUEST_REQUESTS}
-              onSend={handleSend}
-            />
+              <ConsultationChat
+                messages={messages}
+                error={error}
+                notice={
+                  requestCount >= MAX_GUEST_REQUESTS
+                    ? "Bạn đã sử dụng 5 lượt chat miễn phí. Hãy đăng nhập để tiếp tục hoặc tải lại trang để bắt đầu lại."
+                    : `Bạn còn ${MAX_GUEST_REQUESTS - requestCount} lượt chat miễn phí trong lần truy cập này.`
+                }
+                isSending={isSending}
+                disabled={requestCount >= MAX_GUEST_REQUESTS}
+                onSend={handleSend}
+              />
             </div>
           </div>
         </div>

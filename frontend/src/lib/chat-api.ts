@@ -1,10 +1,10 @@
-import { apiRequest } from './http';
+import { apiRequest } from "./http";
 
 export interface ChatMessage {
   id: number;
   sessionId: number;
   userId: number | null;
-  role: 'USER' | 'ASSISTANT' | 'SYSTEM';
+  role: "USER" | "ASSISTANT" | "SYSTEM";
   content: string;
   metadata: unknown;
   createdAt: string;
@@ -50,13 +50,30 @@ export interface ChatSpecialtyWithDoctors extends ChatSpecialty {
 }
 
 export type ChatIntent =
-  | 'SYMPTOM'
-  | 'GREETING'
-  | 'THANKS'
-  | 'GOODBYE'
-  | 'UNKNOWN';
+  "SYMPTOM" | "GREETING" | "THANKS" | "GOODBYE" | "UNKNOWN";
 
-export type ChatAction = 'FIND_DOCTORS' | 'REPLY' | 'CLARIFY';
+export type ChatAction = "FIND_DOCTORS" | "REPLY" | "CLARIFY";
+
+export type ClinicalField = "duration" | "severity" | "age";
+
+export interface ClinicalSlot {
+  text: string;
+  value?: number;
+  unit?: "HOUR" | "DAY" | "WEEK" | "MONTH" | "YEAR";
+  confidence?: number;
+}
+
+export interface ClinicalSlots {
+  duration: ClinicalSlot | null;
+  severity: ClinicalSlot | null;
+  age: ClinicalSlot | null;
+}
+
+export interface ChatRedFlag {
+  code: string;
+  text: string;
+  confidence: number;
+}
 
 export interface ChatSession {
   id: number;
@@ -80,6 +97,11 @@ export interface ChatAnalysis {
   specialties: string[];
   intent: ChatIntent;
   action: ChatAction;
+  slots: ClinicalSlots;
+  redFlags: ChatRedFlag[];
+  missingFields: ClinicalField[];
+  followUpQuestion: string | null;
+  readyForRecommendation: boolean;
   repeatDetected?: boolean;
   recommendedSpecialty: ChatSpecialty | null;
   recommendedSpecialties: ChatSpecialtyWithDoctors[];
@@ -103,8 +125,8 @@ export interface GuestChatResponse {
 }
 
 export function sendChatMessage(message: string, sessionId?: number) {
-  return apiRequest<SendChatMessageResponse>('/chat/messages', {
-    method: 'POST',
+  return apiRequest<SendChatMessageResponse>("/chat/messages", {
+    method: "POST",
     json: {
       message,
       sessionId,
@@ -112,15 +134,15 @@ export function sendChatMessage(message: string, sessionId?: number) {
   });
 }
 
-export function sendGuestChatMessage(message: string) {
-  return apiRequest<GuestChatResponse>('/chat/guest-messages', {
-    method: 'POST',
-    json: { message },
+export function sendGuestChatMessage(message: string, guestSessionId?: string) {
+  return apiRequest<GuestChatResponse>("/chat/guest-messages", {
+    method: "POST",
+    json: { message, guestSessionId },
   });
 }
 
 export function listChatSessions() {
-  return apiRequest<ChatSession[]>('/chat/sessions');
+  return apiRequest<ChatSession[]>("/chat/sessions");
 }
 
 export function listChatMessages(sessionId: number) {
@@ -129,7 +151,7 @@ export function listChatMessages(sessionId: number) {
 
 export function closeChatSession(sessionId: number) {
   return apiRequest<ChatSession>(`/chat/sessions/${sessionId}/close`, {
-    method: 'PATCH',
+    method: "PATCH",
   });
 }
 
@@ -137,7 +159,7 @@ export function deleteChatSession(sessionId: number) {
   return apiRequest<{ id: number; deletedAt: string }>(
     `/chat/sessions/${sessionId}`,
     {
-      method: 'DELETE',
+      method: "DELETE",
     },
   );
 }

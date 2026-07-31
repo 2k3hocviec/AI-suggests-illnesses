@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import {
   Activity,
@@ -14,18 +14,19 @@ import {
   MapPin,
   MessageCircle,
   Phone,
+  Send,
   ShieldCheck,
   Star,
   Stethoscope,
   UserCircle,
   Video,
-} from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useEffect, useRef, useState } from 'react';
+} from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 export interface ThreadMessage {
   id: number | string;
-  role: 'USER' | 'ASSISTANT' | 'SYSTEM';
+  role: "USER" | "ASSISTANT" | "SYSTEM";
   content: string;
   metadata?: unknown;
   createdAt: string;
@@ -37,6 +38,7 @@ interface ConsultationThreadProps {
   isLoadingMessages?: boolean;
   onRequestDoctorChat?: (
     doctorId: number,
+    consultationSummary?: string,
   ) => Promise<{ created: boolean }>;
 }
 
@@ -56,7 +58,7 @@ export function ConsultationThread({
 
     thread.scrollTo({
       top: thread.scrollHeight,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
   }, [messages, isThinking]);
 
@@ -75,9 +77,12 @@ export function ConsultationThread({
         {messages.map((message) => {
           const time = formatTime(message.createdAt);
 
-          if (message.role === 'USER') {
+          if (message.role === "USER") {
             return (
-              <div key={message.id} className="flex w-full min-w-0 justify-end gap-3 sm:gap-5">
+              <div
+                key={message.id}
+                className="flex w-full min-w-0 justify-end gap-3 sm:gap-5"
+              >
                 <div className="w-fit min-w-0 max-w-[76%]">
                   <div className="break-words rounded-bl-xl rounded-tl-xl rounded-tr-xl bg-[#073f87] px-4 py-3.5 text-sm leading-6 text-white shadow-sm lg:text-[15px]">
                     {message.content}
@@ -96,22 +101,25 @@ export function ConsultationThread({
           const isRecommendation = isStructuredRecommendation(message.content);
 
           return (
-            <div key={message.id} className="flex w-full min-w-0 items-start gap-3 sm:gap-5">
+            <div
+              key={message.id}
+              className="flex w-full min-w-0 items-start gap-3 sm:gap-5"
+            >
               <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-emerald-700 text-white shadow-sm">
                 <Bot className="h-4 w-4" />
               </div>
               <div
                 className={
                   isRecommendation
-                    ? 'min-w-0 flex-1'
-                    : 'w-fit min-w-0 max-w-[76%]'
+                    ? "min-w-0 flex-1"
+                    : "w-fit min-w-0 max-w-[76%]"
                 }
               >
                 <div
                   className={
                     isRecommendation
-                      ? 'rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:p-4 lg:p-5'
-                      : 'whitespace-pre-line rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-sm leading-6 shadow-sm lg:text-[15px]'
+                      ? "rounded-2xl border border-slate-200 bg-white p-3 shadow-sm sm:p-4 lg:p-5"
+                      : "whitespace-pre-line rounded-xl border border-slate-300 bg-white px-4 py-3.5 text-sm leading-6 shadow-sm lg:text-[15px]"
                   }
                 >
                   <AssistantContent
@@ -150,6 +158,7 @@ function AssistantContent({
   metadata?: unknown;
   onRequestDoctorChat?: (
     doctorId: number,
+    consultationSummary?: string,
   ) => Promise<{ created: boolean }>;
 }) {
   const recommendation = parseRecommendation(content, metadata);
@@ -198,6 +207,13 @@ interface RecommendationData {
   source: string | null;
   hasEmergencySignal: boolean;
   note: string;
+  clinicalSummary: ClinicalSummaryItem[];
+}
+
+interface ClinicalSummaryItem {
+  key: string;
+  label: string;
+  value: string;
 }
 
 function RecommendationResponse({
@@ -207,18 +223,25 @@ function RecommendationResponse({
   recommendation: RecommendationData;
   onRequestDoctorChat?: (
     doctorId: number,
+    consultationSummary?: string,
   ) => Promise<{ created: boolean }>;
 }) {
-  const [expandedDoctorId, setExpandedDoctorId] = useState<number | null>(
-    null,
-  );
+  const [expandedDoctorId, setExpandedDoctorId] = useState<number | null>(null);
   const [requestingDoctorId, setRequestingDoctorId] = useState<number | null>(
     null,
   );
   const [requestFeedback, setRequestFeedback] = useState<
-    Record<number, { tone: 'success' | 'error'; message: string }>
+    Record<number, { tone: "success" | "error"; message: string }>
   >({});
-  const primarySpecialty = recommendation.specialties[0]?.name ?? 'Phù hợp';
+  const [selectedSummaryKeys, setSelectedSummaryKeys] = useState<Set<string>>(
+    () => new Set(recommendation.clinicalSummary.map((item) => item.key)),
+  );
+  const primarySpecialty = recommendation.specialties[0]?.name ?? "Phù hợp";
+
+  const selectedSummary = recommendation.clinicalSummary
+    .filter((item) => selectedSummaryKeys.has(item.key))
+    .map((item) => `${item.label}: ${item.value}`)
+    .join("\n");
 
   async function handleRequestDoctorChat(doctorId: number) {
     if (!onRequestDoctorChat) {
@@ -227,25 +250,25 @@ function RecommendationResponse({
 
     setRequestingDoctorId(doctorId);
     try {
-      const result = await onRequestDoctorChat(doctorId);
+      const result = await onRequestDoctorChat(doctorId, selectedSummary);
       setRequestFeedback((current) => ({
         ...current,
         [doctorId]: {
-          tone: 'success',
+          tone: "success",
           message: result.created
-            ? 'Đã gửi yêu cầu. Hãy chờ bác sĩ chấp nhận.'
-            : 'Bạn đã có yêu cầu hoặc phiên chat với bác sĩ này.',
+            ? "Đã gửi yêu cầu. Hãy chờ bác sĩ chấp nhận."
+            : "Bạn đã có yêu cầu hoặc phiên chat với bác sĩ này.",
         },
       }));
     } catch (error) {
       setRequestFeedback((current) => ({
         ...current,
         [doctorId]: {
-          tone: 'error',
+          tone: "error",
           message:
             error instanceof Error
               ? error.message
-              : 'Không thể gửi yêu cầu chat.',
+              : "Không thể gửi yêu cầu chat.",
         },
       }));
     } finally {
@@ -273,9 +296,7 @@ function RecommendationResponse({
                 ))}
               </div>
             ) : (
-              <span className="text-sm text-slate-500">
-                Chưa nhận diện rõ
-              </span>
+              <span className="text-sm text-slate-500">Chưa nhận diện rõ</span>
             )
           }
         />
@@ -294,8 +315,8 @@ function RecommendationResponse({
                     </p>
                     <p className="text-sm text-slate-500">
                       {specialty.symptoms.length
-                        ? specialty.symptoms.join(', ')
-                        : 'Theo triệu chứng đã cung cấp'}
+                        ? specialty.symptoms.join(", ")
+                        : "Theo triệu chứng đã cung cấp"}
                     </p>
                   </div>
                 ))
@@ -311,23 +332,80 @@ function RecommendationResponse({
         <SummaryCard
           icon={recommendation.hasEmergencySignal ? AlertTriangle : ShieldCheck}
           title="Lưu ý"
-          tone={recommendation.hasEmergencySignal ? 'red' : 'amber'}
+          tone={recommendation.hasEmergencySignal ? "red" : "amber"}
           content={
             <p className="text-sm leading-6 text-slate-600">
               {recommendation.hasEmergencySignal
-                ? 'Có dấu hiệu cần xử trí sớm. Hãy đến cơ sở y tế gần nhất hoặc gọi cấp cứu nếu triệu chứng nặng lên.'
-                : 'Chỉ mang tính tham khảo, không thay thế chẩn đoán bác sĩ.'}
+                ? "Có dấu hiệu cần xử trí sớm. Hãy đến cơ sở y tế gần nhất hoặc gọi cấp cứu nếu triệu chứng nặng lên."
+                : "Chỉ mang tính tham khảo, không thay thế chẩn đoán bác sĩ."}
             </p>
           }
         />
       </div>
+
+      {recommendation.clinicalSummary.length ? (
+        <section className="rounded-2xl border border-blue-100 bg-blue-50/50 px-4 py-4">
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5 rounded-lg bg-blue-100 p-2 text-blue-700">
+              <Send className="h-4 w-4" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h3 className="text-sm font-bold text-slate-900">
+                Chọn thông tin gửi cho bác sĩ
+              </h3>
+              <p className="mt-1 text-xs leading-5 text-slate-600">
+                Các mục được chọn sẽ được gửi kèm khi bạn yêu cầu chat trực
+                tiếp.
+              </p>
+              <div className="mt-3 grid gap-2 sm:grid-cols-2">
+                {recommendation.clinicalSummary.map((item) => (
+                  <label
+                    key={item.key}
+                    className="flex cursor-pointer items-start gap-2 rounded-xl border border-white bg-white px-3 py-2.5 text-sm shadow-sm"
+                  >
+                    <input
+                      type="checkbox"
+                      checked={selectedSummaryKeys.has(item.key)}
+                      onChange={(event) =>
+                        setSelectedSummaryKeys((current) => {
+                          const next = new Set(current);
+                          if (event.target.checked) {
+                            next.add(item.key);
+                          } else {
+                            next.delete(item.key);
+                          }
+                          return next;
+                        })
+                      }
+                      className="mt-0.5 h-4 w-4 accent-[#073f87]"
+                    />
+                    <span className="min-w-0">
+                      <span className="block text-xs font-semibold text-slate-500">
+                        {item.label}
+                      </span>
+                      <span className="mt-0.5 block break-words font-medium text-slate-800">
+                        {item.value}
+                      </span>
+                    </span>
+                  </label>
+                ))}
+              </div>
+              {!selectedSummary ? (
+                <p className="mt-2 text-xs font-medium text-amber-700">
+                  Hãy chọn ít nhất một mục trước khi gửi thông tin.
+                </p>
+              ) : null}
+            </div>
+          </div>
+        </section>
+      ) : null}
 
       <div className="flex items-center gap-2 px-1 pt-1 text-sm font-semibold text-slate-600">
         <Stethoscope className="h-4 w-4 text-emerald-700" />
         {recommendation.doctors.length
           ? `${recommendation.doctors.length} bác sĩ phù hợp nhất`
           : recommendation.hasEmergencySignal
-            ? 'Khuyến nghị xử trí khẩn cấp'
+            ? "Khuyến nghị xử trí khẩn cấp"
             : `Gợi ý chuyên khoa ${primarySpecialty}`}
       </div>
 
@@ -335,7 +413,7 @@ function RecommendationResponse({
         <div className="space-y-3">
           <DoctorCard
             doctor={recommendation.doctors[0]}
-            canRequestChat={Boolean(onRequestDoctorChat)}
+            canRequestChat={Boolean(onRequestDoctorChat && selectedSummary)}
             isRequesting={requestingDoctorId === recommendation.doctors[0].id}
             requestFeedback={requestFeedback[recommendation.doctors[0].id]}
             onRequestChat={() =>
@@ -367,15 +445,15 @@ function RecommendationResponse({
                     </span>
                     <span className="mt-1 block truncate text-xs text-slate-500">
                       {doctor.specialty ?? primarySpecialty}
-                      {doctor.experience ? ` · ${doctor.experience}` : ''}
+                      {doctor.experience ? ` · ${doctor.experience}` : ""}
                     </span>
                   </span>
                   <span className="hidden text-right sm:block">
                     <span className="block text-lg font-bold text-emerald-700">
-                      {doctor.score !== null ? `${doctor.score}%` : '—'}
+                      {doctor.score !== null ? `${doctor.score}%` : "—"}
                     </span>
                     <span className="text-xs text-slate-500">
-                      {doctor.fitLabel ?? 'phù hợp'}
+                      {doctor.fitLabel ?? "phù hợp"}
                     </span>
                   </span>
                   {isExpanded ? (
@@ -388,7 +466,9 @@ function RecommendationResponse({
                   <div className="mt-3">
                     <DoctorCard
                       doctor={doctor}
-                      canRequestChat={Boolean(onRequestDoctorChat)}
+                      canRequestChat={Boolean(
+                        onRequestDoctorChat && selectedSummary,
+                      )}
                       isRequesting={requestingDoctorId === doctor.id}
                       requestFeedback={requestFeedback[doctor.id]}
                       onRequestChat={() =>
@@ -405,13 +485,13 @@ function RecommendationResponse({
         <div
           className={
             recommendation.hasEmergencySignal
-              ? 'rounded-2xl border border-red-200 bg-red-50 px-4 py-4 text-sm leading-6 text-red-800'
-              : 'rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm leading-6 text-slate-600'
+              ? "rounded-2xl border border-red-200 bg-red-50 px-4 py-4 text-sm leading-6 text-red-800"
+              : "rounded-2xl border border-slate-200 bg-slate-50 px-4 py-4 text-sm leading-6 text-slate-600"
           }
         >
           {recommendation.hasEmergencySignal
-            ? 'Không nên chờ gợi ý bác sĩ trên hệ thống. Hãy đến cơ sở y tế gần nhất hoặc gọi cấp cứu để được thăm khám kịp thời.'
-            : 'Chưa có dữ liệu bác sĩ phù hợp trong hệ thống.'}
+            ? "Không nên chờ gợi ý bác sĩ trên hệ thống. Hãy đến cơ sở y tế gần nhất hoặc gọi cấp cứu để được thăm khám kịp thời."
+            : "Chưa có dữ liệu bác sĩ phù hợp trong hệ thống."}
         </div>
       )}
 
@@ -436,29 +516,29 @@ function SummaryCard({
 }: {
   icon: typeof Activity;
   title: string;
-  tone: 'blue' | 'green' | 'amber' | 'red';
+  tone: "blue" | "green" | "amber" | "red";
   content: React.ReactNode;
 }) {
   const styles = {
     blue: {
-      border: 'border-blue-100',
-      icon: 'text-blue-700',
-      background: 'bg-blue-50/40',
+      border: "border-blue-100",
+      icon: "text-blue-700",
+      background: "bg-blue-50/40",
     },
     green: {
-      border: 'border-emerald-100',
-      icon: 'text-emerald-700',
-      background: 'bg-emerald-50/40',
+      border: "border-emerald-100",
+      icon: "text-emerald-700",
+      background: "bg-emerald-50/40",
     },
     amber: {
-      border: 'border-amber-100',
-      icon: 'text-amber-700',
-      background: 'bg-amber-50/40',
+      border: "border-amber-100",
+      icon: "text-amber-700",
+      background: "bg-amber-50/40",
     },
     red: {
-      border: 'border-red-100',
-      icon: 'text-red-700',
-      background: 'bg-red-50/40',
+      border: "border-red-100",
+      icon: "text-red-700",
+      background: "bg-red-50/40",
     },
   }[tone];
 
@@ -466,7 +546,9 @@ function SummaryCard({
     <section
       className={`min-h-[142px] min-w-0 max-w-full rounded-2xl border ${styles.border} ${styles.background} px-4 py-4`}
     >
-      <div className={`mb-3 flex items-center gap-2 text-sm font-bold ${styles.icon}`}>
+      <div
+        className={`mb-3 flex items-center gap-2 text-sm font-bold ${styles.icon}`}
+      >
         <Icon className="h-4 w-4" />
         {title}
       </div>
@@ -485,7 +567,7 @@ function DoctorCard({
   doctor: DoctorRecommendation;
   canRequestChat: boolean;
   isRequesting: boolean;
-  requestFeedback?: { tone: 'success' | 'error'; message: string };
+  requestFeedback?: { tone: "success" | "error"; message: string };
   onRequestChat: () => void;
 }) {
   const router = useRouter();
@@ -495,18 +577,20 @@ function DoctorCard({
       <div className="flex flex-wrap items-start gap-3">
         <DoctorAvatar name={doctor.name} imageUrl={doctor.imageUrl} />
         <div className="min-w-0 flex-1">
-          <h4 className="break-words text-lg font-bold text-slate-950">{doctor.name}</h4>
+          <h4 className="break-words text-lg font-bold text-slate-950">
+            {doctor.name}
+          </h4>
           <p className="mt-1 text-sm text-slate-600">
-            {doctor.specialty ?? 'Bác sĩ chuyên khoa'}
-            {doctor.experience ? ` · ${doctor.experience}` : ''}
+            {doctor.specialty ?? "Bác sĩ chuyên khoa"}
+            {doctor.experience ? ` · ${doctor.experience}` : ""}
           </p>
         </div>
         <div className="ml-auto text-right">
           <p className="text-2xl font-bold text-emerald-700">
-            {doctor.score !== null ? `${doctor.score}%` : '—'}
+            {doctor.score !== null ? `${doctor.score}%` : "—"}
           </p>
           <p className="text-xs font-medium text-slate-500">
-            {doctor.fitLabel ?? 'phù hợp'}
+            {doctor.fitLabel ?? "phù hợp"}
           </p>
         </div>
       </div>
@@ -557,16 +641,16 @@ function DoctorCard({
         >
           Xem hồ sơ bác sĩ
         </button>
-        {doctor.phone && doctor.phone !== 'chưa cập nhật' ? (
+        {doctor.phone && doctor.phone !== "chưa cập nhật" ? (
           <a
-            href={`tel:${doctor.phone.replace(/\s+/g, '')}`}
+            href={`tel:${doctor.phone.replace(/\s+/g, "")}`}
             className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-[#073f87] px-3 text-sm font-semibold text-white transition hover:bg-[#052f66]"
           >
             <Phone className="h-4 w-4" />
             Gọi điện
           </a>
         ) : null}
-        {doctor.email && doctor.email !== 'chưa cập nhật' ? (
+        {doctor.email && doctor.email !== "chưa cập nhật" ? (
           <a
             href={`mailto:${doctor.email}`}
             className="inline-flex h-10 items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
@@ -578,16 +662,16 @@ function DoctorCard({
         {doctor.chatAvailable && canRequestChat ? (
           <button
             type="button"
-            disabled={isRequesting || requestFeedback?.tone === 'success'}
+            disabled={isRequesting || requestFeedback?.tone === "success"}
             onClick={onRequestChat}
             className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-emerald-600 px-3 text-sm font-semibold text-white transition hover:bg-emerald-700 disabled:cursor-not-allowed disabled:bg-emerald-300 sm:col-span-2"
           >
             <MessageCircle className="h-4 w-4" />
             {isRequesting
-              ? 'Đang gửi yêu cầu...'
-              : requestFeedback?.tone === 'success'
-                ? 'Đã gửi yêu cầu chat'
-                : 'Yêu cầu chat trực tiếp'}
+              ? "Đang gửi yêu cầu..."
+              : requestFeedback?.tone === "success"
+                ? "Đã gửi yêu cầu chat"
+                : "Yêu cầu chat trực tiếp"}
           </button>
         ) : null}
       </div>
@@ -595,20 +679,18 @@ function DoctorCard({
       {requestFeedback ? (
         <p
           className={`mt-3 rounded-lg px-3 py-2 text-xs font-medium ${
-            requestFeedback.tone === 'success'
-              ? 'bg-emerald-50 text-emerald-700'
-              : 'bg-red-50 text-red-600'
+            requestFeedback.tone === "success"
+              ? "bg-emerald-50 text-emerald-700"
+              : "bg-red-50 text-red-600"
           }`}
         >
           {requestFeedback.message}
         </p>
       ) : null}
 
-      {(!doctor.phone || doctor.phone === 'chưa cập nhật') &&
-      (!doctor.email || doctor.email === 'chưa cập nhật') ? (
-        <p className="mt-3 text-xs text-slate-500">
-          Liên hệ: chưa cập nhật
-        </p>
+      {(!doctor.phone || doctor.phone === "chưa cập nhật") &&
+      (!doctor.email || doctor.email === "chưa cập nhật") ? (
+        <p className="mt-3 text-xs text-slate-500">Liên hệ: chưa cập nhật</p>
       ) : null}
     </article>
   );
@@ -627,9 +709,11 @@ function DoctorInfo({
     <div className="flex min-w-0 items-start gap-2 text-sm">
       <Icon className="mt-0.5 h-4 w-4 shrink-0 text-slate-400" />
       <span className="min-w-0 flex-1">
-        <span className="block text-xs font-medium text-slate-500">{label}</span>
+        <span className="block text-xs font-medium text-slate-500">
+          {label}
+        </span>
         <span className="mt-0.5 block break-words font-medium text-slate-800">
-          {value || 'chưa cập nhật'}
+          {value || "chưa cập nhật"}
         </span>
       </span>
     </div>
@@ -646,12 +730,12 @@ function DoctorAvatar({
   muted?: boolean;
 }) {
   const initials = name
-    .replace(/^Bác sĩ\s+/i, '')
+    .replace(/^Bác sĩ\s+/i, "")
     .split(/\s+/)
     .filter(Boolean)
     .slice(-2)
     .map((part) => part[0])
-    .join('')
+    .join("")
     .toUpperCase();
   const [imageFailed, setImageFailed] = useState(false);
   const showImage = Boolean(imageUrl) && !imageFailed;
@@ -665,8 +749,8 @@ function DoctorAvatar({
       title={name}
       className={
         muted
-          ? 'flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-100 text-sm font-bold text-slate-500'
-          : 'flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-blue-100 text-lg font-bold text-blue-800'
+          ? "flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-slate-100 text-sm font-bold text-slate-500"
+          : "flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-blue-100 text-lg font-bold text-blue-800"
       }
     >
       {showImage ? (
@@ -678,7 +762,7 @@ function DoctorAvatar({
           onError={() => setImageFailed(true)}
         />
       ) : (
-        initials || 'BS'
+        initials || "BS"
       )}
     </span>
   );
@@ -700,7 +784,7 @@ function parseRecommendation(
       ? lines.slice(0, firstDoctorSectionIndex)
       : lines;
   const groupedLines = summaryLines.filter(
-    (line) => /^(?:•|o)\s+/i.test(line) && line.includes(':'),
+    (line) => /^(?:•|o)\s+/i.test(line) && line.includes(":"),
   );
 
   if (!groupedLines.length) {
@@ -708,12 +792,10 @@ function parseRecommendation(
   }
 
   const specialties = groupedLines.map((line) => {
-    const [name, ...symptomParts] = line
-      .replace(/^(?:•|o)\s+/i, '')
-      .split(':');
+    const [name, ...symptomParts] = line.replace(/^(?:•|o)\s+/i, "").split(":");
     const symptoms = symptomParts
-      .join(':')
-      .split(',')
+      .join(":")
+      .split(",")
       .map((symptom) => symptom.trim())
       .filter(Boolean)
       .filter((symptom) => !/mô tả|mo ta/i.test(symptom));
@@ -721,15 +803,15 @@ function parseRecommendation(
     return { name: name.trim(), symptoms };
   });
 
-  const symptoms = unique(specialties.flatMap((specialty) => specialty.symptoms));
+  const symptoms = unique(
+    specialties.flatMap((specialty) => specialty.symptoms),
+  );
   const source =
     lines
       .find((line) => /^Nguồn phân tích:/i.test(line))
-      ?.replace(/^Nguồn phân tích:/i, '')
+      ?.replace(/^Nguồn phân tích:/i, "")
       .trim() ?? null;
-  const hasEmergencySignal = /EMERGENCY|cấp cứu|cap cuu/i.test(
-    content,
-  );
+  const hasEmergencySignal = /EMERGENCY|cấp cứu|cap cuu/i.test(content);
   const doctors: DoctorRecommendation[] = [];
   let activeSpecialty: string | null = null;
   let currentDoctor: DoctorRecommendation | null = null;
@@ -783,7 +865,7 @@ function parseRecommendation(
       const scoreMatch = scoreLine[1].match(/(\d+(?:\.\d+)?)%/);
       currentDoctor.score = scoreMatch ? Number(scoreMatch[1]) : null;
       currentDoctor.fitLabel = scoreLine[1]
-        .replace(/\d+(?:\.\d+)?%\s*[—-]?\s*/i, '')
+        .replace(/\d+(?:\.\d+)?%\s*[—-]?\s*/i, "")
         .trim();
       return;
     }
@@ -798,39 +880,39 @@ function parseRecommendation(
       return;
     }
 
-    const bulletLine = line.replace(/^(?:•|o)\s+/i, '');
-    const separatorIndex = bulletLine.indexOf(':');
+    const bulletLine = line.replace(/^(?:•|o)\s+/i, "");
+    const separatorIndex = bulletLine.indexOf(":");
     if (separatorIndex < 0) {
       return;
     }
 
     const label = bulletLine.slice(0, separatorIndex).trim();
     const value = bulletLine.slice(separatorIndex + 1).trim();
-    if (label === 'Mã bác sĩ') {
+    if (label === "Mã bác sĩ") {
       const doctorId = Number(value);
       if (Number.isInteger(doctorId) && doctorId > 0) {
         currentDoctor.id = doctorId;
       }
       return;
     }
-    if (label === 'Chat trực tiếp') {
+    if (label === "Chat trực tiếp") {
       currentDoctor.chatAvailable = /^có$/i.test(value);
       return;
     }
     const fields: Record<
       string,
-      Exclude<keyof DoctorRecommendation, 'id' | 'score' | 'chatAvailable'>
+      Exclude<keyof DoctorRecommendation, "id" | "score" | "chatAvailable">
     > = {
-      'Chuyên khoa': 'specialty',
-      'Kinh nghiệm': 'experience',
-      'Đánh giá': 'rating',
-      'Nơi làm việc': 'workplace',
-      'Địa chỉ': 'address',
-      'Khoảng cách khu vực': 'distance',
-      'Thời gian làm việc': 'schedule',
-      'Hình thức tư vấn': 'consultationType',
-      'Điện thoại': 'phone',
-      Email: 'email',
+      "Chuyên khoa": "specialty",
+      "Kinh nghiệm": "experience",
+      "Đánh giá": "rating",
+      "Nơi làm việc": "workplace",
+      "Địa chỉ": "address",
+      "Khoảng cách khu vực": "distance",
+      "Thời gian làm việc": "schedule",
+      "Hình thức tư vấn": "consultationType",
+      "Điện thoại": "phone",
+      Email: "email",
     };
     const field = fields[label];
     if (field) {
@@ -851,16 +933,88 @@ function parseRecommendation(
     doctors,
     source,
     hasEmergencySignal,
+    clinicalSummary: getClinicalSummary(metadata),
     note: hasEmergencySignal
-      ? 'Các dấu hiệu cấp cứu cần được thăm khám trực tiếp, không thay thế hướng dẫn của nhân viên y tế.'
-      : 'Thông tin chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ.',
+      ? "Các dấu hiệu cấp cứu cần được thăm khám trực tiếp, không thay thế hướng dẫn của nhân viên y tế."
+      : "Thông tin chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ.",
   };
+}
+
+function getClinicalSummary(metadata: unknown): ClinicalSummaryItem[] {
+  if (!metadata || typeof metadata !== "object") {
+    return [];
+  }
+
+  const raw = metadata as {
+    symptoms?: unknown;
+    slots?: unknown;
+    redFlags?: unknown;
+  };
+  const items: ClinicalSummaryItem[] = [];
+  const symptoms = Array.isArray(raw.symptoms)
+    ? raw.symptoms
+        .filter(
+          (item): item is { name: string } =>
+            Boolean(item) &&
+            typeof item === "object" &&
+            typeof (item as { name?: unknown }).name === "string",
+        )
+        .map((item) => item.name.trim())
+        .filter(Boolean)
+    : [];
+  if (symptoms.length) {
+    items.push({
+      key: "symptoms",
+      label: "Triệu chứng",
+      value: [...new Set(symptoms)].join(", "),
+    });
+  }
+
+  const slots =
+    raw.slots && typeof raw.slots === "object"
+      ? (raw.slots as Record<string, unknown>)
+      : {};
+  const slotLabels: Array<[string, string]> = [
+    ["duration", "Xuất hiện từ khi"],
+    ["severity", "Mức độ đau/khó chịu"],
+    ["age", "Tuổi người bệnh"],
+  ];
+  slotLabels.forEach(([key, label]) => {
+    const slot = slots[key];
+    if (!slot || typeof slot !== "object") {
+      return;
+    }
+    const text = (slot as { text?: unknown }).text;
+    if (typeof text === "string" && text.trim()) {
+      items.push({ key, label, value: text.trim() });
+    }
+  });
+
+  const redFlags = Array.isArray(raw.redFlags)
+    ? raw.redFlags
+        .filter(
+          (item): item is { text: string } =>
+            Boolean(item) &&
+            typeof item === "object" &&
+            typeof (item as { text?: unknown }).text === "string",
+        )
+        .map((item) => item.text.trim())
+        .filter(Boolean)
+    : [];
+  if (redFlags.length) {
+    items.push({
+      key: "redFlags",
+      label: "Dấu hiệu cần lưu ý",
+      value: [...new Set(redFlags)].join(", "),
+    });
+  }
+  return items;
 }
 
 function getDoctorImageMap(metadata: unknown) {
   const imageByDoctorId = new Map<number, string>();
 
-  if (!metadata || typeof metadata !== 'object') {
+  if (!metadata || typeof metadata !== "object") {
     return imageByDoctorId;
   }
 
@@ -873,7 +1027,7 @@ function getDoctorImageMap(metadata: unknown) {
   }
 
   recommendedSpecialties.forEach((specialty) => {
-    if (!specialty || typeof specialty !== 'object') {
+    if (!specialty || typeof specialty !== "object") {
       return;
     }
 
@@ -883,16 +1037,16 @@ function getDoctorImageMap(metadata: unknown) {
     }
 
     doctors.forEach((doctor) => {
-      if (!doctor || typeof doctor !== 'object') {
+      if (!doctor || typeof doctor !== "object") {
         return;
       }
 
       const id = (doctor as { id?: unknown }).id;
       const imageUrl = (doctor as { imageUrl?: unknown }).imageUrl;
       if (
-        typeof id === 'number' &&
+        typeof id === "number" &&
         Number.isInteger(id) &&
-        typeof imageUrl === 'string' &&
+        typeof imageUrl === "string" &&
         imageUrl.trim()
       ) {
         imageByDoctorId.set(id, imageUrl);
@@ -912,8 +1066,8 @@ function unique(values: string[]) {
 }
 
 function formatTime(value: string) {
-  return new Intl.DateTimeFormat('vi-VN', {
-    hour: '2-digit',
-    minute: '2-digit',
+  return new Intl.DateTimeFormat("vi-VN", {
+    hour: "2-digit",
+    minute: "2-digit",
   }).format(new Date(value));
 }

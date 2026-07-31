@@ -5,7 +5,7 @@ import {
   MaxLength,
   Min,
   MinLength,
-} from 'class-validator';
+} from "class-validator";
 
 export class SendChatMessageDto {
   @IsString()
@@ -17,4 +17,9 @@ export class SendChatMessageDto {
   @IsInt()
   @Min(1)
   sessionId?: number;
+
+  @IsOptional()
+  @IsString()
+  @MaxLength(80)
+  guestSessionId?: string;
 }

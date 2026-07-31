@@ -5,20 +5,42 @@ export interface ModelSymptom {
 }
 
 export type ModelIntent =
-  | "SYMPTOM"
-  | "GREETING"
-  | "THANKS"
-  | "GOODBYE"
-  | "UNKNOWN";
+  "SYMPTOM" | "GREETING" | "THANKS" | "GOODBYE" | "UNKNOWN";
 
 export type ModelAction = "FIND_DOCTORS" | "REPLY" | "CLARIFY";
+
+export type ClinicalField = "duration" | "severity" | "age";
+
+export interface ClinicalSlot {
+  text: string;
+  value?: number;
+  unit?: "HOUR" | "DAY" | "WEEK" | "MONTH" | "YEAR";
+  confidence?: number;
+}
+
+export interface ClinicalSlots {
+  duration: ClinicalSlot | null;
+  severity: ClinicalSlot | null;
+  age: ClinicalSlot | null;
+}
+
+export interface ModelRedFlag {
+  code: string;
+  text: string;
+  confidence: number;
+}
 
 export interface ModelAnalyzeResponse {
   symptoms: ModelSymptom[];
   specialties: string[];
   intent: ModelIntent;
   action: ModelAction;
-  analysisSource?: 'NER' | 'Gemini';
+  slots: ClinicalSlots;
+  redFlags: ModelRedFlag[];
+  missingFields: ClinicalField[];
+  followUpQuestion: string | null;
+  readyForRecommendation: boolean;
+  analysisSource?: "NER" | "Gemini";
   repeatDetected?: boolean;
 }
 
@@ -64,7 +86,6 @@ export interface RecommendedDoctor {
   doctorScore: number;
 }
 
-export interface RecommendedSpecialtyWithDoctors
-  extends RecommendedSpecialty {
+export interface RecommendedSpecialtyWithDoctors extends RecommendedSpecialty {
   doctors: RecommendedDoctor[];
 }

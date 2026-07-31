@@ -86,7 +86,11 @@ export class DirectChatService {
     - B4: Kiểm tra tài khoản bác sĩ đó.
     - B5: Kiểm tra người dùng có phiên chat nào với bác sĩ này trước đó chưa, nếu có thì sẽ tiếp tục phiên chat trước đó, không thì tạo mới.
   */
-  async requestConversation(patientId: number, doctorId: number) {
+  async requestConversation(
+    patientId: number,
+    doctorId: number,
+    consultationSummary?: string,
+  ) {
     const patient = await this.prisma.user.findUnique({
       where: { id: patientId },
       select: {
@@ -150,10 +154,17 @@ export class DirectChatService {
           })
         : existing;
 
+      await this.addConsultationSummary(
+        restored.id,
+        patientId,
+        consultationSummary,
+      );
+      const current = await this.getConversationRecord(restored.id);
+
       return {
         created: false,
         doctorUserId: doctor.user.id,
-        conversation: await this.toConversationView(restored, patientId),
+        conversation: await this.toConversationView(current, patientId),
       };
     }
 
@@ -164,12 +175,38 @@ export class DirectChatService {
       },
       include: conversationInclude,
     });
+    await this.addConsultationSummary(
+      conversation.id,
+      patientId,
+      consultationSummary,
+    );
+    const current = await this.getConversationRecord(conversation.id);
 
     return {
       created: true,
       doctorUserId: doctor.user.id,
-      conversation: await this.toConversationView(conversation, patientId),
+      conversation: await this.toConversationView(current, patientId),
     };
+  }
+
+  private async addConsultationSummary(
+    conversationId: number,
+    patientId: number,
+    consultationSummary?: string,
+  ) {
+    const summary = consultationSummary?.trim();
+    if (!summary) {
+      return;
+    }
+
+    await this.prisma.directChatMessage.create({
+      data: {
+        conversationId,
+        senderId: patientId,
+        clientMessageId: randomUUID(),
+        content: `Thông tin đã chọn từ HealthAI:\n\n${summary}`,
+      },
+    });
   }
 
   /*

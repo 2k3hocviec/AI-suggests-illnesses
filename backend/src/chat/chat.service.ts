@@ -9,7 +9,11 @@ import { ChatRole, Prisma } from "@prisma/client";
 import { PrismaService } from "../prisma/prisma.service";
 import { SendChatMessageDto } from "./dto/send-chat-message.dto";
 import {
+  ClinicalField,
+  ClinicalSlot,
+  ClinicalSlots,
   ModelAnalyzeResponse,
+  ModelRedFlag,
   ModelSymptom,
   RecommendedDoctor,
   RecommendedSpecialty,
@@ -113,6 +117,8 @@ interface RepeatedQuestionContext {
 
 @Injectable()
 export class ChatService {
+  private readonly guestAnalyses = new Map<string, ModelAnalyzeResponse>();
+
   constructor(
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
@@ -132,6 +138,7 @@ export class ChatService {
       session.id,
       content,
     );
+    const previousAnalysis = await this.findLatestSessionAnalysis(session.id);
     const userMessage = await this.prisma.chatMessage.create({
       data: {
         sessionId: session.id,
@@ -147,6 +154,7 @@ export class ChatService {
       repeatedQuestion?.analysis,
       repeatedQuestion?.assistantContent,
       Boolean(repeatedQuestion),
+      previousAnalysis,
     );
     const {
       analysis,
@@ -219,12 +227,20 @@ export class ChatService {
   async sendGuestMessage(dto: SendChatMessageDto) {
     const content = dto.message.trim();
     if (!content) {
-      throw new BadRequestException(
-        "Nội dung tin nhắn không được để trống",
-      );
+      throw new BadRequestException("Nội dung tin nhắn không được để trống");
     }
 
-    const prepared = await this.prepareChatResponse(content);
+    const previousAnalysis = dto.guestSessionId
+      ? this.guestAnalyses.get(dto.guestSessionId)
+      : undefined;
+    const prepared = await this.prepareChatResponse(
+      content,
+      undefined,
+      undefined,
+      undefined,
+      false,
+      previousAnalysis,
+    );
     const {
       analysis,
       hasEmergencySpecialty,
@@ -272,6 +288,14 @@ export class ChatService {
       createdAt,
     };
 
+    if (dto.guestSessionId) {
+      if (analysis.readyForRecommendation) {
+        this.guestAnalyses.delete(dto.guestSessionId);
+      } else {
+        this.guestAnalyses.set(dto.guestSessionId, analysis);
+      }
+    }
+
     return {
       session: null,
       userMessage,
@@ -290,9 +314,13 @@ export class ChatService {
     cachedAnalysis?: ModelAnalyzeResponse,
     cachedAssistantContent?: string,
     isRepeatedQuestion = false,
+    previousAnalysis?: ModelAnalyzeResponse,
   ): Promise<PreparedChatResponse> {
-    const analysis = cachedAnalysis ?? (await this.analyze(content));
-    const isMedicalRequest = analysis.action === "FIND_DOCTORS";
+    const rawAnalysis = cachedAnalysis ?? (await this.analyze(content));
+    const analysis = cachedAnalysis
+      ? cachedAnalysis
+      : this.mergeAnalyses(previousAnalysis, rawAnalysis);
+    const isMedicalRequest = analysis.readyForRecommendation;
     const hasEmergencySpecialty =
       isMedicalRequest && this.hasEmergencySpecialty(analysis);
     const recommendedSpecialties = isMedicalRequest
@@ -547,6 +575,44 @@ export class ChatService {
     }
   }
 
+  private async findLatestSessionAnalysis(
+    sessionId: number,
+  ): Promise<ModelAnalyzeResponse | undefined> {
+    const previousAssistantMessage = await this.prisma.chatMessage.findFirst({
+      where: {
+        sessionId,
+        role: ChatRole.ASSISTANT,
+        metadata: { not: Prisma.JsonNull },
+      },
+      select: { metadata: true },
+      orderBy: { id: "desc" },
+    });
+
+    if (!previousAssistantMessage?.metadata) {
+      return undefined;
+    }
+
+    try {
+      const rawMetadata = previousAssistantMessage.metadata as {
+        analysisSource?: unknown;
+      };
+      const analysis = this.normalizeModelAnalysis(
+        previousAssistantMessage.metadata,
+      );
+      const analysisSource =
+        rawMetadata.analysisSource === "NER" ||
+        rawMetadata.analysisSource === "Gemini"
+          ? rawMetadata.analysisSource
+          : undefined;
+      return {
+        ...analysis,
+        ...(analysisSource ? { analysisSource } : {}),
+      };
+    } catch {
+      return undefined;
+    }
+  }
+
   /*
   Gọi đến model NER
   */
@@ -685,6 +751,8 @@ export class ChatService {
       specialties?: unknown;
       intent?: unknown;
       action?: unknown;
+      slots?: unknown;
+      redFlags?: unknown;
     };
     const rawIntent =
       typeof raw.intent === "string" ? raw.intent.toUpperCase() : "UNKNOWN";
@@ -735,32 +803,193 @@ export class ChatService {
           .filter((symptom): symptom is ModelSymptom => Boolean(symptom))
       : [];
 
-    if (symptoms.length > 0) {
-      return {
-        symptoms,
-        specialties: [
-          ...new Set(symptoms.map((symptom) => symptom.specialty_code)),
-        ],
-        intent: "SYMPTOM",
-        action: "FIND_DOCTORS",
-      };
-    }
-
-    if (rawAction === "REPLY" && CONVERSATION_INTENTS.has(intent)) {
-      return {
-        symptoms: [],
-        specialties: [intent],
-        intent,
-        action: "REPLY",
-      };
-    }
-
-    return {
-      symptoms: [],
-      specialties: [],
-      intent: "UNKNOWN",
-      action: "CLARIFY",
+    const slots = this.normalizeClinicalSlots(raw.slots);
+    const redFlags = this.normalizeRedFlags(raw.redFlags);
+    const specialties = [
+      ...new Set([
+        ...symptoms.map((symptom) => symptom.specialty_code),
+        ...(redFlags.length ? ["EMERGENCY"] : []),
+      ]),
+    ];
+    const baseAnalysis: ModelAnalyzeResponse = {
+      symptoms,
+      specialties,
+      intent:
+        symptoms.length || redFlags.length
+          ? "SYMPTOM"
+          : rawAction === "REPLY" && CONVERSATION_INTENTS.has(intent)
+            ? intent
+            : "UNKNOWN",
+      action:
+        symptoms.length || redFlags.length
+          ? "FIND_DOCTORS"
+          : rawAction === "REPLY" && CONVERSATION_INTENTS.has(intent)
+            ? "REPLY"
+            : "CLARIFY",
+      slots,
+      redFlags,
+      missingFields: [],
+      followUpQuestion: null,
+      readyForRecommendation: false,
     };
+
+    return this.withClinicalFollowUp(baseAnalysis);
+  }
+
+  private normalizeClinicalSlots(value: unknown): ClinicalSlots {
+    const raw =
+      value && typeof value === "object"
+        ? (value as Record<string, unknown>)
+        : {};
+    return {
+      duration: this.normalizeClinicalSlot(raw.duration),
+      severity: this.normalizeClinicalSlot(raw.severity),
+      age: this.normalizeClinicalSlot(raw.age),
+    };
+  }
+
+  private normalizeClinicalSlot(value: unknown): ClinicalSlot | null {
+    if (!value || typeof value !== "object") {
+      return null;
+    }
+
+    const raw = value as Record<string, unknown>;
+    if (typeof raw.text !== "string" || !raw.text.trim()) {
+      return null;
+    }
+
+    const normalized: ClinicalSlot = { text: raw.text.trim() };
+    if (typeof raw.value === "number" && Number.isFinite(raw.value)) {
+      normalized.value = raw.value;
+    }
+    if (
+      typeof raw.unit === "string" &&
+      ["HOUR", "DAY", "WEEK", "MONTH", "YEAR"].includes(raw.unit)
+    ) {
+      normalized.unit = raw.unit as ClinicalSlot["unit"];
+    }
+    if (typeof raw.confidence === "number" && Number.isFinite(raw.confidence)) {
+      normalized.confidence = this.clampScore(raw.confidence);
+    }
+    return normalized;
+  }
+
+  private normalizeRedFlags(value: unknown): ModelRedFlag[] {
+    if (!Array.isArray(value)) {
+      return [];
+    }
+
+    return value
+      .map((item) => {
+        if (!item || typeof item !== "object") {
+          return null;
+        }
+        const raw = item as Record<string, unknown>;
+        const code = typeof raw.code === "string" ? raw.code : "";
+        const text = typeof raw.text === "string" ? raw.text : code;
+        const confidence = Number(raw.confidence ?? 0);
+        if (!code || !text || !Number.isFinite(confidence)) {
+          return null;
+        }
+        return {
+          code,
+          text,
+          confidence: this.clampScore(confidence),
+        };
+      })
+      .filter((item): item is ModelRedFlag => Boolean(item));
+  }
+
+  private mergeAnalyses(
+    previous: ModelAnalyzeResponse | undefined,
+    current: ModelAnalyzeResponse,
+  ): ModelAnalyzeResponse {
+    if (!previous) {
+      return current;
+    }
+
+    const symptoms = [...previous.symptoms, ...current.symptoms].filter(
+      (symptom, index, all) =>
+        all.findIndex(
+          (candidate) =>
+            candidate.name === symptom.name &&
+            candidate.specialty_code === symptom.specialty_code,
+        ) === index,
+    );
+    const redFlags = [...previous.redFlags, ...current.redFlags].filter(
+      (flag, index, all) =>
+        all.findIndex((candidate) => candidate.code === flag.code) === index,
+    );
+    const slots = {
+      duration: current.slots.duration ?? previous.slots.duration,
+      severity: current.slots.severity ?? previous.slots.severity,
+      age: current.slots.age ?? previous.slots.age,
+    };
+    const specialties = [
+      ...new Set([
+        ...previous.specialties,
+        ...current.specialties,
+        ...(redFlags.length ? ["EMERGENCY"] : []),
+      ]),
+    ].filter((specialty) => MEDICAL_SPECIALTY_CODES.has(specialty));
+
+    return this.withClinicalFollowUp({
+      ...current,
+      symptoms,
+      specialties,
+      intent: symptoms.length || redFlags.length ? "SYMPTOM" : current.intent,
+      action:
+        symptoms.length || redFlags.length ? "FIND_DOCTORS" : current.action,
+      slots,
+      redFlags,
+      missingFields: [],
+      followUpQuestion: null,
+      readyForRecommendation: false,
+    });
+  }
+
+  private withClinicalFollowUp(
+    analysis: ModelAnalyzeResponse,
+  ): ModelAnalyzeResponse {
+    const hasClinicalEvidence =
+      analysis.symptoms.length > 0 || analysis.redFlags.length > 0;
+    if (!hasClinicalEvidence) {
+      return {
+        ...analysis,
+        missingFields: [],
+        followUpQuestion: null,
+        readyForRecommendation: false,
+        action: analysis.action === "REPLY" ? "REPLY" : "CLARIFY",
+      };
+    }
+
+    const missingFields: ClinicalField[] = analysis.redFlags.length
+      ? []
+      : (["duration", "severity", "age"] as ClinicalField[]).filter(
+          (field) => analysis.slots[field] === null,
+        );
+    const readyForRecommendation = missingFields.length === 0;
+    return {
+      ...analysis,
+      intent: "SYMPTOM",
+      action: readyForRecommendation ? "FIND_DOCTORS" : "CLARIFY",
+      missingFields,
+      followUpQuestion: missingFields.length
+        ? this.buildClinicalFollowUpQuestion(missingFields[0])
+        : null,
+      readyForRecommendation,
+    };
+  }
+
+  private buildClinicalFollowUpQuestion(field: ClinicalField) {
+    switch (field) {
+      case "duration":
+        return "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.";
+      case "severity":
+        return "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.";
+      case "age":
+        return "Người bệnh bao nhiêu tuổi?";
+    }
   }
 
   private hasConfidentSymptoms(analysis: ModelAnalyzeResponse) {
@@ -781,6 +1010,7 @@ Yêu cầu bắt buộc:
 - Nếu là lời chào, cảm ơn hoặc tạm biệt thuần túy, nhận diện intent tương ứng
   (GREETING, THANKS, GOODBYE) và action là REPLY.
 - Nếu câu có triệu chứng y tế, luôn ưu tiên intent SYMPTOM và action FIND_DOCTORS.
+- Nếu có, trích xuất thêm các trường lâm sàng: duration (thời gian xuất hiện), severity (mức độ đau/khó chịu), age (tuổi người bệnh). Không tự suy đoán giá trị còn thiếu; trường thiếu phải là null.
 - Chỉ trả về JSON hợp lệ, không markdown, không giải thích.
 - specialty_code chỉ được dùng một trong các mã sau:
 GENERAL_MEDICINE, CARDIOLOGY, RESPIRATORY, PEDIATRICS, DERMATOLOGY, NEUROLOGY, ENT, OB_GYN, ORTHOPEDICS, OPHTHALMOLOGY, GASTROENTEROLOGY, DENTISTRY, UROLOGY, ENDOCRINOLOGY, PSYCHIATRY, ONCOLOGY, EMERGENCY.
@@ -796,7 +1026,13 @@ Format JSON bắt buộc:
   ],
   "specialties": ["SPECIALTY_CODE"],
   "intent": "SYMPTOM",
-  "action": "FIND_DOCTORS"
+  "action": "FIND_DOCTORS",
+  "slots": {
+    "duration": {"text": "string", "value": 0, "unit": "DAY"},
+    "severity": {"text": "string"},
+    "age": {"text": "string", "value": 0, "unit": "YEAR"}
+  },
+  "redFlags": []
 }
 
 Với lời chào/cảm ơn/tạm biệt thuần túy, dùng format:
@@ -1336,6 +1572,13 @@ ${content}`;
     analysis: ModelAnalyzeResponse,
     recommendedSpecialties: RecommendedSpecialtyWithDoctors[],
   ) {
+    if (analysis.followUpQuestion && analysis.symptoms.length) {
+      const symptomText = [
+        ...new Set(analysis.symptoms.map((symptom) => symptom.name)),
+      ].join(", ");
+      return `Mình đã ghi nhận triệu chứng: ${symptomText}.\n\n${analysis.followUpQuestion}\n\nKhi đủ thông tin, mình sẽ tổng hợp và gợi ý bác sĩ phù hợp.`;
+    }
+
     if (recommendedSpecialties.length) {
       const groupedSymptoms = recommendedSpecialties.map((specialty) => {
         const symptoms = analysis.symptoms

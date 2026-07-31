@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { getMe } from '@/lib/auth-api';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { getMe } from "@/lib/auth-api";
 import {
   ChatMessage,
   ChatSession,
@@ -11,14 +11,14 @@ import {
   listChatMessages,
   listChatSessions,
   sendChatMessage,
-} from '@/lib/chat-api';
-import { requestDoctorChat } from '@/lib/direct-chat-api';
-import { ChatHistoryDialog } from './ChatHistoryDialog';
-import { ConsultationChat } from './ConsultationChat';
-import { ConsultationHeader } from './ConsultationHeader';
-import { UserAppShell } from './UserAppShell';
-import { UserSidebar } from './UserSidebar';
-import { DirectChatNotificationListener } from '../direct-chat/DirectChatNotificationListener';
+} from "@/lib/chat-api";
+import { requestDoctorChat } from "@/lib/direct-chat-api";
+import { ChatHistoryDialog } from "./ChatHistoryDialog";
+import { ConsultationChat } from "./ConsultationChat";
+import { ConsultationHeader } from "./ConsultationHeader";
+import { UserAppShell } from "./UserAppShell";
+import { UserSidebar } from "./UserSidebar";
+import { DirectChatNotificationListener } from "../direct-chat/DirectChatNotificationListener";
 
 export function ConsultationDashboard() {
   const router = useRouter();
@@ -38,19 +38,19 @@ export function ConsultationDashboard() {
       try {
         const me = await getMe();
 
-        if (me.role === 'ADMIN') {
-          router.replace('/admin');
+        if (me.role === "ADMIN") {
+          router.replace("/admin");
           return;
         }
-        if (me.role === 'DOCTOR') {
-          router.replace('/doctor');
+        if (me.role === "DOCTOR") {
+          router.replace("/doctor");
           return;
         }
 
         await refreshSessions();
       } catch {
-        localStorage.removeItem('accessToken');
-        router.replace('/');
+        localStorage.removeItem("accessToken");
+        router.replace("/");
       }
     }
 
@@ -63,7 +63,7 @@ export function ConsultationDashboard() {
       const nextSessions = await listChatSessions();
       setSessions(nextSessions);
     } catch (requestError) {
-      setError(getRequestErrorMessage(requestError, 'Không thể tải lịch sử.'));
+      setError(getRequestErrorMessage(requestError, "Không thể tải lịch sử."));
     } finally {
       setIsLoadingSessions(false);
     }
@@ -92,10 +92,12 @@ export function ConsultationDashboard() {
             : session,
         ),
       );
-      setNotice('Phiên chat đã được đóng. Bạn có thể mở lại nội dung trong lịch sử.');
+      setNotice(
+        "Phiên chat đã được đóng. Bạn có thể mở lại nội dung trong lịch sử.",
+      );
     } catch (requestError) {
       setError(
-        getRequestErrorMessage(requestError, 'Không thể đóng phiên chat.'),
+        getRequestErrorMessage(requestError, "Không thể đóng phiên chat."),
       );
     } finally {
       setIsClosingSession(false);
@@ -113,16 +115,16 @@ export function ConsultationDashboard() {
         setActiveSessionId(undefined);
         setMessages([]);
       }
-      setNotice('Phiên chat đã được ẩn khỏi lịch sử của bạn.');
+      setNotice("Phiên chat đã được ẩn khỏi lịch sử của bạn.");
     } catch (requestError) {
       setError(
-        getRequestErrorMessage(requestError, 'Không thể ẩn phiên chat.'),
+        getRequestErrorMessage(requestError, "Không thể ẩn phiên chat."),
       );
     }
   }
 
   function handleOpenDirectChat() {
-    router.push('/direct-chat');
+    router.push("/direct-chat");
   }
 
   async function handleOpenHistory() {
@@ -143,7 +145,7 @@ export function ConsultationDashboard() {
       setMessages(sessionMessages);
     } catch (requestError) {
       setError(
-        getRequestErrorMessage(requestError, 'Không thể tải phiên chat.'),
+        getRequestErrorMessage(requestError, "Không thể tải phiên chat."),
       );
     } finally {
       setIsLoadingMessages(false);
@@ -155,7 +157,7 @@ export function ConsultationDashboard() {
       (session) => session.id === activeSessionId,
     );
     if (activeSession?.closedAt) {
-      setError('Phiên chat đã đóng. Hãy bắt đầu một đoạn chat mới.');
+      setError("Phiên chat đã đóng. Hãy bắt đầu một đoạn chat mới.");
       return;
     }
 
@@ -167,7 +169,7 @@ export function ConsultationDashboard() {
       id: optimisticMessageId,
       sessionId: activeSessionId ?? 0,
       userId: null,
-      role: 'USER',
+      role: "USER",
       content,
       metadata: null,
       createdAt: new Date().toISOString(),
@@ -187,21 +189,22 @@ export function ConsultationDashboard() {
       setMessages((current) =>
         current.filter((message) => message.id !== optimisticMessageId),
       );
-      setError(
-        getRequestErrorMessage(requestError, 'Không thể gửi tin nhắn.'),
-      );
+      setError(getRequestErrorMessage(requestError, "Không thể gửi tin nhắn."));
     } finally {
       setIsSending(false);
     }
   }
 
-  async function handleRequestDoctorChat(doctorId: number) {
+  async function handleRequestDoctorChat(
+    doctorId: number,
+    consultationSummary?: string,
+  ) {
     setError(null);
-    const result = await requestDoctorChat(doctorId);
+    const result = await requestDoctorChat(doctorId, consultationSummary);
     setNotice(
       result.created
-        ? 'Đã gửi yêu cầu chat trực tiếp. Bạn có thể theo dõi trong mục “Chat với bác sĩ”.'
-        : 'Yêu cầu này đã tồn tại. Bạn có thể mở mục “Chat với bác sĩ” để theo dõi.',
+        ? "Đã gửi yêu cầu chat trực tiếp. Bạn có thể theo dõi trong mục “Chat với bác sĩ”."
+        : "Yêu cầu này đã tồn tại. Bạn có thể mở mục “Chat với bác sĩ” để theo dõi.",
     );
     return {
       created: result.created,

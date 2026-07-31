@@ -108,8 +108,6 @@ model Symptom {
   normalizedName String  @unique @map("normalized_name")
   description    String?
 
-  doctorExpertises DoctorExpertise[]
-
   @@map("symptoms")
 }
 
@@ -182,7 +180,6 @@ model Doctor {
   user                    User?                    @relation("DoctorAccount", fields: [userId], references: [id], onDelete: SetNull)
   province                Province?                @relation("DoctorProvince", fields: [provinceCode], references: [code])
   commune                 Commune?                 @relation("DoctorCommune", fields: [communeCode], references: [code])
-  expertises              DoctorExpertise[]
   directChatConversations DirectChatConversation[]
 
   @@index([specialtyId])
@@ -190,18 +187,6 @@ model Doctor {
   @@index([provinceCode])
   @@index([communeCode])
   @@map("doctors")
-}
-
-model DoctorExpertise {
-  doctorId       Int     @map("doctor_id")
-  symptomId      Int     @map("symptom_id")
-  expertiseScore Decimal @default(1.0) @map("expertise_score") @db.Decimal(4, 3)
-
-  doctor  Doctor  @relation(fields: [doctorId], references: [id], onDelete: Cascade)
-  symptom Symptom @relation(fields: [symptomId], references: [id], onDelete: Cascade)
-
-  @@id([doctorId, symptomId])
-  @@map("doctor_expertise")
 }
 
 model ChatSession {

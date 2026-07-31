@@ -79,7 +79,6 @@ export interface RecommendedDoctor {
   durationText: string | null;
   durationSeconds: number | null;
   specialtyScore: number;
-  expertiseScore: number;
   experienceScore: number;
   locationScore: number | null;
   ratingScore: number;

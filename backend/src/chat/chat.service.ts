@@ -335,7 +335,6 @@ export class ChatService {
           : await this.attachDoctorsToSpecialties(
               userId,
               recommendedSpecialties,
-              analysis,
             );
     const assistantContent =
       isRepeatedQuestion && cachedAssistantContent
@@ -614,7 +613,9 @@ export class ChatService {
   }
 
   /*
-  Gọi đến model NER
+  Gọi đến model NER:
+    - Có thể gọi đến GEMINI khi model chưa sẵn sàng.
+    - Phát sinh bất cứ lỗi gì cũng sẽ gọi sang GEMINI.
   */
   private async analyze(content: string): Promise<ModelAnalyzeResponse> {
     const modelUrl =
@@ -900,6 +901,11 @@ export class ChatService {
       .filter((item): item is ModelRedFlag => Boolean(item));
   }
 
+  /*
+  Tổng hợp kết quả phân tích được:
+    - Nếu thiếu -> Hỏi tiếp bằng hàm withClinicalFollowup.
+    - Nếu đủ -> tổng hợp -> tìm chuyên khoa -> gợi ý bác sĩ.
+  */
   private mergeAnalyses(
     previous: ModelAnalyzeResponse | undefined,
     current: ModelAnalyzeResponse,
@@ -948,6 +954,12 @@ export class ChatService {
     });
   }
 
+  /*
+  Xác định các trường còn thiếu ví dụ thiết ngày, mức độ đau, tuổi tác:
+    - Dùng hasClinicalEvidence để kiểm tra người dùng có đưa ra triệu chứng rõ ràng không
+      + nếu false: hệ thống không hỏi duration, severity, age. => có thể là câu chào hỏi, cảm ơn, tạm biệt.
+      + nếu true: tiếp tục thêm thông tin để gợi ý bác sĩ.
+  */
   private withClinicalFollowUp(
     analysis: ModelAnalyzeResponse,
   ): ModelAnalyzeResponse {
@@ -981,6 +993,9 @@ export class ChatService {
     };
   }
 
+  /*
+  Tạo câu hỏi tiếp theo để hoàn thiện bộ data.
+  */
   private buildClinicalFollowUpQuestion(field: ClinicalField) {
     switch (field) {
       case "duration":
@@ -992,6 +1007,9 @@ export class ChatService {
     }
   }
 
+  /*
+  Kiểm tra triệu chứng xem có ít nhất 1 triệu chứng trên 0.5 => true.
+  */
   private hasConfidentSymptoms(analysis: ModelAnalyzeResponse) {
     return (
       analysis.symptoms.some((symptom) => symptom.confidence >= 0.5) &&
@@ -1128,7 +1146,6 @@ ${content}`;
   private async attachDoctorsToSpecialties(
     userId: number | undefined,
     specialties: RecommendedSpecialty[],
-    analysis: ModelAnalyzeResponse,
   ): Promise<RecommendedSpecialtyWithDoctors[]> {
     if (!specialties.length) {
       return [];
@@ -1166,17 +1183,6 @@ ${content}`;
             code: true,
           },
         },
-        expertises: {
-          select: {
-            expertiseScore: true,
-            symptom: {
-              select: {
-                name: true,
-                normalizedName: true,
-              },
-            },
-          },
-        },
       },
       orderBy: [
         {
@@ -1200,11 +1206,6 @@ ${content}`;
         .map((doctor): RecommendedDoctor => {
           const distance = doctorDistances.get(doctor.id);
           const specialtyScore = 1;
-          const expertiseScore = this.calculateExpertiseScore(
-            doctor.expertises,
-            analysis,
-            specialty.code,
-          );
           const experienceScore = this.calculateExperienceScore(
             doctor.experienceYears,
           );
@@ -1214,7 +1215,6 @@ ${content}`;
           );
           const doctorScore = this.calculateDoctorScore({
             specialtyScore,
-            expertiseScore,
             experienceScore,
             locationScore,
             ratingScore,
@@ -1243,7 +1243,6 @@ ${content}`;
             durationText: distance?.durationText ?? null,
             durationSeconds: distance?.durationSeconds ?? null,
             specialtyScore,
-            expertiseScore,
             experienceScore,
             locationScore: distance?.locationScore ?? null,
             ratingScore,
@@ -1319,46 +1318,6 @@ ${content}`;
     };
   }
 
-  private calculateExpertiseScore(
-    expertises: Array<{
-      expertiseScore: { toString(): string };
-      symptom: {
-        name: string;
-        normalizedName: string;
-      };
-    }>,
-    analysis: ModelAnalyzeResponse,
-    specialtyCode: string,
-  ) {
-    const symptomNames = analysis.symptoms
-      .filter((symptom) => symptom.specialty_code === specialtyCode)
-      .map((symptom) => this.normalize(symptom.name));
-
-    if (!symptomNames.length) {
-      return 0;
-    }
-
-    const matchedExpertiseScores = expertises
-      .filter((expertise) => {
-        const normalizedName = this.normalize(expertise.symptom.name);
-        const normalizedCode = this.normalize(expertise.symptom.normalizedName);
-
-        return symptomNames.some(
-          (symptomName) =>
-            symptomName === normalizedName || symptomName === normalizedCode,
-        );
-      })
-      .map((expertise) => Number(expertise.expertiseScore.toString()))
-      .filter((score) => Number.isFinite(score));
-
-    if (!matchedExpertiseScores.length) {
-      return 0;
-    }
-
-    const total = matchedExpertiseScores.reduce((sum, score) => sum + score, 0);
-    return this.clampScore(total / matchedExpertiseScores.length);
-  }
-
   private calculateExperienceScore(experienceYears: number) {
     return this.clampScore(Math.min(Math.max(experienceYears, 0), 10) / 10);
   }
@@ -1372,17 +1331,15 @@ ${content}`;
   */
   private calculateDoctorScore(scores: {
     specialtyScore: number;
-    expertiseScore: number;
     experienceScore: number;
     locationScore: number;
     ratingScore: number;
   }) {
     return this.clampScore(
-      scores.specialtyScore * 0.25 +
-        scores.expertiseScore * 0.25 +
+      scores.specialtyScore * 0.5 +
         scores.experienceScore * 0.15 +
-        scores.locationScore * 0.3 +
-        scores.ratingScore * 0.05,
+        scores.ratingScore * 0.1 +
+        scores.locationScore * 0.25,
     );
   }
 
@@ -1541,10 +1498,6 @@ ${content}`;
 
   private buildRecommendationReason(doctor: RecommendedDoctor) {
     const reasons = ["đúng chuyên khoa"];
-
-    if (doctor.expertiseScore >= 0.8) {
-      reasons.push("khớp tốt với triệu chứng");
-    }
 
     if (doctor.experienceScore >= 1) {
       reasons.push("nhiều kinh nghiệm");

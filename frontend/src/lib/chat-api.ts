@@ -38,7 +38,6 @@ export interface ChatDoctor {
   durationText: string | null;
   durationSeconds: number | null;
   specialtyScore: number;
-  expertiseScore: number;
   experienceScore: number;
   locationScore: number | null;
   ratingScore: number;

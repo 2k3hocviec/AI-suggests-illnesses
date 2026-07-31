@@ -17,7 +17,8 @@ from pydantic import BaseModel  # type: ignore
 from inference import InferenceBundle, load_multitask_model, predict
 
 
-DEFAULT_MODEL_PATH = str(Path(__file__).parent / "output" / "medical-multitask-model")
+CLINICAL_MODEL_PATH = Path(__file__).parent / "output" / "medical-clinical-slots-model"
+DEFAULT_MODEL_PATH = str(CLINICAL_MODEL_PATH)
 MODEL_PATH = os.getenv("MODEL_PATH", DEFAULT_MODEL_PATH)
 PORT = int(os.getenv("PORT", "5678"))
 
@@ -53,11 +54,38 @@ class DetectedSymptom(BaseModel):
     specialty_code: str
 
 
+class ClinicalSlot(BaseModel):
+    text: str
+    value: float | int | None = None
+    unit: Literal["HOUR", "DAY", "WEEK", "MONTH", "YEAR"] | None = None
+    confidence: float | None = None
+
+
+class ClinicalSlots(BaseModel):
+    duration: ClinicalSlot | None = None
+    severity: ClinicalSlot | None = None
+    age: ClinicalSlot | None = None
+
+
+class RedFlagSignal(BaseModel):
+    code: Literal[
+        "BREATHING_DIFFICULTY",
+        "CHEST_PAIN",
+        "SYNCOPE",
+        "FOCAL_WEAKNESS",
+        "ABNORMAL_BLEEDING",
+    ]
+    text: str
+    confidence: float
+
+
 class SymptomResponse(BaseModel):
     symptoms: list[DetectedSymptom]
     specialties: list[str]
     intent: Literal["SYMPTOM", "GREETING", "THANKS", "GOODBYE", "UNKNOWN"]
     action: Literal["FIND_DOCTORS", "REPLY", "CLARIFY"]
+    slots: ClinicalSlots
+    redFlags: list[RedFlagSignal]
 
 
 @app.on_event("startup")

@@ -1,145 +1,55 @@
-# Medical multi-task NER chatbot
+# AIver2 medical slots
 
-Service Python dùng một backbone PhoBERT với hai head:
+PhoBERT multi-task model for Vietnamese symptom extraction, clinical slots and emergency red flags.
 
-1. NER: trích xuất triệu chứng và mã chuyên khoa.
-2. Intent classification: nhận diện `SYMPTOM`, `GREETING`, `THANKS`, `GOODBYE`, `UNKNOWN`.
+## Dataset and training
 
-Python chỉ trả dữ liệu máy đọc được. NestJS tạo `message`, quyết định có truy vấn bác sĩ hay không.
+The canonical dataset is `data/dataset_training_all.json`. It contains specialty entities, intents, clinical slots and `red_flags`. Severity examples include `đau nhẹ`, `nhẹ nhẹ`, `vừa phải`, `nặng`, `đau dữ dội`, `âm ỉ` and `không chịu nổi`; relative durations include `sáng hôm nay`, `chiều hôm qua`, `2 ngày trước`, `1 tuần trước`, `1 tháng trước` and `1 năm trước`.
 
-## Cấu trúc chính
-
-```text
-data/dataset_specialty.json   toàn bộ dữ liệu y tế và intent hội thoại
-prepare_data.py               tokenize và chia train/validation
-multitask_model.py            backbone + NER head + intent head
-train.py                      huấn luyện model multi-task
-inference.py                  load model và tạo JSON inference
-model_api.py                  FastAPI service
-```
-
-## Cài đặt
-
-```bash
-pip install -r requirements.txt
-```
-
-## Chuẩn bị dữ liệu và train
+Prepare the training files, train the model, then start the API:
 
 ```bash
 python prepare_data.py
 python train.py
-```
-
-Mọi mẫu dữ liệu, bao gồm `GREETING`, `THANKS`, `GOODBYE`, `UNKNOWN` và các
-câu kết hợp có triệu chứng, đều nằm trong `data/dataset_specialty.json`.
-
-Checkpoint được lưu tại:
-
-```text
-output/medical-multitask-model/
-```
-
-Model multi-task khởi tạo NER từ `output/medical-ner-model/` nếu checkpoint cũ tồn tại.
-
-## Response contract
-
-`POST /api/extract-symptoms` chỉ trả bốn trường:
-
-```json
-{
-  "symptoms": [],
-  "specialties": ["GREETING"],
-  "intent": "GREETING",
-  "action": "REPLY"
-}
-```
-
-Ví dụ câu cảm ơn:
-
-```json
-{
-  "symptoms": [],
-  "specialties": ["THANKS"],
-  "intent": "THANKS",
-  "action": "REPLY"
-}
-```
-
-Ví dụ câu có triệu chứng:
-
-```json
-{
-  "symptoms": [
-    {
-      "name": "đau ngực",
-      "confidence": 0.91,
-      "specialty_code": "CARDIOLOGY"
-    }
-  ],
-  "specialties": ["CARDIOLOGY"],
-  "intent": "SYMPTOM",
-  "action": "FIND_DOCTORS"
-}
-```
-
-Câu `Xin chào, tôi bị đau ngực` ưu tiên `SYMPTOM` nếu NER phát hiện entity đủ confidence.
-
-Các action:
-
-| Intent/action | NestJS xử lý |
-|---|---|
-| `GREETING/REPLY` | Tạo câu chào |
-| `THANKS/REPLY` | Tạo câu cảm ơn |
-| `GOODBYE/REPLY` | Tạo câu tạm biệt |
-| `SYMPTOM/FIND_DOCTORS` | Truy vấn bác sĩ theo `specialties` |
-| `UNKNOWN/CLARIFY` | Yêu cầu người dùng mô tả rõ hơn |
-
-Python không trả về `message`.
-
-## Chạy API
-
-```bash
 python model_api.py
 ```
 
-Mặc định service chạy tại `http://localhost:5678`.
-
-```powershell
-Invoke-RestMethod -Method Post `
-  -Uri http://localhost:5678/api/extract-symptoms `
-  -ContentType "application/json" `
-  -Body '{"text":"Xin chào"}'
-```
-
-Biến môi trường:
+Generated data files:
 
 ```text
-MODEL_PATH              đường dẫn checkpoint, mặc định output/medical-multitask-model
-NER_MIN_CONFIDENCE     mặc định 0.7
-INTENT_MIN_CONFIDENCE  mặc định 0.6
-PORT                    mặc định 5678
+data/train_multitask.json
+data/val_multitask.json
+data/test_multitask.json
 ```
 
-## Tích hợp NestJS
+The trained checkpoint is saved to:
 
-NestJS nên chỉ truy vấn bác sĩ khi `action === "FIND_DOCTORS"`:
-
-```ts
-if (result.action === 'REPLY') {
-  return conversationService.createReply(result.intent);
-}
-
-if (result.action === 'FIND_DOCTORS') {
-  const doctors = await doctorService.findBySpecialties(result.specialties);
-  return medicalResponseService.createResponse(result, doctors);
-}
-
-return clarificationService.createResponse(result);
+```text
+output/medical-clinical-slots-model/
 ```
 
-## Lưu ý
+## Main modules
 
-- Hệ thống chỉ mang tính tham khảo, không thay thế chẩn đoán của bác sĩ.
-- Cần đánh giá riêng intent macro-F1 và NER F1 trước khi deploy.
-- Không lưu thông tin y tế nếu chưa có sự đồng ý của người dùng.
+- `prepare_data.py`: validates, tokenizes and splits the dataset.
+- `train.py`: trains the specialty NER, intent, clinical-slot and red-flag heads.
+- `model_api.py`: FastAPI service.
+- `inference.py`: model loading and response decoding.
+- `clinical_normalization.py`: qualitative severity and duration/age normalization.
+- `specialty_labels.py`, `intent_labels.py`, `slot_labels.py`: label definitions.
+- `multitask_model.py`: shared PhoBERT model architecture.
+
+## API
+
+```text
+POST http://localhost:5678/api/extract-symptoms
+```
+
+Example request:
+
+```json
+{"text":"Tôi bị đau đầu rất nhẹ từ sáng nay"}
+```
+
+The response includes `symptoms`, `specialties`, `intent`, `action`, `slots` and `redFlags`.
+
+The service loads `output/medical-clinical-slots-model` by default. Set `MODEL_PATH` to use another local checkpoint.

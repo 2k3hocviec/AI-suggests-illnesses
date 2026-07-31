@@ -1,4 +1,4 @@
-"""Train the shared PhoBERT NER + sentence-intent model."""
+"""Train specialty NER, clinical slots, emergency risk and intent heads."""
 
 from __future__ import annotations
 
@@ -22,13 +22,17 @@ from transformers import (  # type: ignore
 from intent_labels import ID2INTENT, INTENT2ID
 from multitask_model import MultiTaskRobertaForTokenAndIntentClassification
 from specialty_labels import ID2LABEL, LABEL2ID
+from slot_labels import ID2RED_FLAG, ID2SLOT, RED_FLAG2ID, SLOT2ID
 
 
-MODEL_NAME = "vinai/phobert-base"
-OLD_MODEL_PATH = os.getenv("OLD_MODEL_PATH", "./output/medical-ner-model")
-OUTPUT_DIR = os.getenv("OUTPUT_DIR", "./output/medical-multitask-model")
+MODEL_NAME = os.getenv("MODEL_NAME", "vinai/phobert-base")
+CURRENT_MODEL_PATH = os.getenv(
+    "CURRENT_MODEL_PATH", "./output/medical-clinical-slots-model"
+)
+OUTPUT_DIR = os.getenv("OUTPUT_DIR", "./output/medical-clinical-slots-model")
 TRAIN_DATA_PATH = os.getenv("TRAIN_DATA_PATH", "data/train_multitask.json")
 VAL_DATA_PATH = os.getenv("VAL_DATA_PATH", "data/val_multitask.json")
+TEST_DATA_PATH = os.getenv("TEST_DATA_PATH", "data/test_multitask.json")
 NUM_EPOCHS = float(os.getenv("NUM_EPOCHS", "10"))
 MAX_STEPS = int(os.getenv("MAX_STEPS", "-1"))
 
@@ -53,16 +57,27 @@ class MultiTaskDataCollator:
         self.ner_collator = DataCollatorForTokenClassification(tokenizer)
 
     def __call__(self, features):
-        intent_labels = torch.tensor(
-            [int(feature["intent_labels"]) for feature in features],
-            dtype=torch.long,
+        intent_labels = torch.stack(
+            [feature["intent_labels"].long() for feature in features]
+        )
+        slot_labels = torch.stack(
+            [feature["slot_labels"].long() for feature in features]
+        )
+        risk_labels = torch.stack(
+            [feature["risk_labels"].float() for feature in features]
         )
         ner_features = [
-            {key: value for key, value in feature.items() if key != "intent_labels"}
+            {
+                key: value
+                for key, value in feature.items()
+                if key in {"input_ids", "attention_mask", "labels"}
+            }
             for feature in features
         ]
         batch = self.ner_collator(ner_features)
         batch["intent_labels"] = intent_labels
+        batch["slot_labels"] = slot_labels
+        batch["risk_labels"] = risk_labels
         return batch
 
 
@@ -73,7 +88,16 @@ def _prediction_arrays(eval_preds):
         predictions = tuple(predictions)
     if not isinstance(labels, tuple):
         labels = tuple(labels)
-    return predictions[0], predictions[1], labels[0], labels[1]
+    return (
+        predictions[0],
+        predictions[1],
+        predictions[2],
+        predictions[3],
+        labels[0],
+        labels[1],
+        labels[2],
+        labels[3],
+    )
 
 
 def _macro_f1(predictions: np.ndarray, labels: np.ndarray, class_count: int) -> float:
@@ -88,11 +112,23 @@ def _macro_f1(predictions: np.ndarray, labels: np.ndarray, class_count: int) -> 
 
 
 def compute_metrics(eval_preds):
-    ner_logits, intent_logits, ner_labels, intent_labels = _prediction_arrays(eval_preds)
+    (
+        ner_logits,
+        intent_logits,
+        slot_logits,
+        risk_logits,
+        ner_labels,
+        intent_labels,
+        slot_labels,
+        risk_labels,
+    ) = _prediction_arrays(eval_preds)
     ner_predictions = np.argmax(ner_logits, axis=-1)
     intent_predictions = np.argmax(intent_logits, axis=-1)
+    slot_predictions = np.argmax(slot_logits, axis=-1)
+    risk_predictions = (1 / (1 + np.exp(-risk_logits))) >= 0.5
 
     true_labels, predicted_labels = [], []
+    true_slot_labels, predicted_slot_labels = [], []
     for pred_row, label_row in zip(ner_predictions, ner_labels):
         true_labels.append([ID2LABEL[int(label)] for label in label_row if label != -100])
         predicted_labels.append(
@@ -102,9 +138,34 @@ def compute_metrics(eval_preds):
                 if label != -100
             ]
         )
+    for pred_row, label_row in zip(slot_predictions, slot_labels):
+        true_slot_labels.append(
+            [ID2SLOT[int(label)] for label in label_row if label != -100]
+        )
+        predicted_slot_labels.append(
+            [
+                ID2SLOT[int(pred)]
+                for pred, label in zip(pred_row, label_row)
+                if label != -100
+            ]
+        )
+
+    risk_f1_scores = []
+    for class_id in range(len(RED_FLAG2ID)):
+        true_values = risk_labels[:, class_id] >= 0.5
+        predicted_values = risk_predictions[:, class_id]
+        true_positive = np.sum(true_values & predicted_values)
+        false_positive = np.sum(~true_values & predicted_values)
+        false_negative = np.sum(true_values & ~predicted_values)
+        denominator = 2 * true_positive + false_positive + false_negative
+        risk_f1_scores.append(
+            float(2 * true_positive / denominator) if denominator else 0.0
+        )
 
     return {
         "ner_f1": f1_score(true_labels, predicted_labels),
+        "slot_f1": f1_score(true_slot_labels, predicted_slot_labels),
+        "risk_macro_f1": float(np.mean(risk_f1_scores)),
         "intent_accuracy": float(np.mean(intent_predictions == intent_labels)),
         "intent_macro_f1": _macro_f1(
             intent_predictions,
@@ -125,14 +186,18 @@ def intent_class_weights(dataset: MultiTaskDataset) -> list[float]:
 
 
 def create_model(tokenizer, weights: list[float]):
-    if os.path.exists(OLD_MODEL_PATH):
-        return MultiTaskRobertaForTokenAndIntentClassification.from_ner_checkpoint(
-            OLD_MODEL_PATH,
-            intent_num_labels=len(INTENT2ID),
-            intent_label2id=INTENT2ID,
-            intent_id2label=ID2INTENT,
-            intent_class_weights=weights,
+    if os.path.exists(CURRENT_MODEL_PATH):
+        model = MultiTaskRobertaForTokenAndIntentClassification.from_pretrained(
+            CURRENT_MODEL_PATH
         )
+        model.config.slot_num_labels = len(SLOT2ID)
+        model.config.slot_label2id = SLOT2ID
+        model.config.slot_id2label = ID2SLOT
+        model.config.risk_num_labels = len(RED_FLAG2ID)
+        model.config.risk_label2id = RED_FLAG2ID
+        model.config.risk_id2label = ID2RED_FLAG
+        model.config.clinical_heads_trained = False
+        return model
 
     config = AutoConfig.from_pretrained(MODEL_NAME)
     config.num_labels = len(LABEL2ID)
@@ -142,8 +207,21 @@ def create_model(tokenizer, weights: list[float]):
     config.intent_label2id = INTENT2ID
     config.intent_id2label = ID2INTENT
     config.intent_class_weights = weights
+    config.slot_num_labels = len(SLOT2ID)
+    config.slot_label2id = SLOT2ID
+    config.slot_id2label = ID2SLOT
+    config.risk_num_labels = len(RED_FLAG2ID)
+    config.risk_label2id = RED_FLAG2ID
+    config.risk_id2label = ID2RED_FLAG
+    config.slot_loss_weight = 1.0
+    config.risk_loss_weight = 1.5
+    config.clinical_heads_trained = False
     model = MultiTaskRobertaForTokenAndIntentClassification(config)
-    base = RobertaModel.from_pretrained(MODEL_NAME, config=config)
+    base = RobertaModel.from_pretrained(
+        MODEL_NAME,
+        config=config,
+        add_pooling_layer=False,
+    )
     model.roberta.load_state_dict(base.state_dict())
     return model
 
@@ -173,7 +251,7 @@ def train():
         logging_steps=25,
         report_to="none",
         remove_unused_columns=False,
-        label_names=["labels", "intent_labels"],
+        label_names=["labels", "intent_labels", "slot_labels", "risk_labels"],
         max_steps=MAX_STEPS,
     )
 
@@ -200,10 +278,14 @@ def train():
 
     print("[5/5] Saving model and tokenizer")
     os.makedirs(OUTPUT_DIR, exist_ok=True)
+    model.config.clinical_heads_trained = True
     trainer.save_model(OUTPUT_DIR)
     tokenizer.save_pretrained(OUTPUT_DIR)
     print(f"Saved multi-task model to {OUTPUT_DIR}")
     print(json.dumps(trainer.evaluate(), indent=2))
+    if os.path.exists(TEST_DATA_PATH):
+        test_dataset = MultiTaskDataset(TEST_DATA_PATH)
+        print(json.dumps(trainer.evaluate(test_dataset, metric_key_prefix="test"), indent=2))
 
 
 if __name__ == "__main__":

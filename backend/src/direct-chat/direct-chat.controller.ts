@@ -32,6 +32,7 @@ export class DirectChatController {
     const result = await this.directChatService.requestConversation(
       user.id,
       dto.doctorId,
+      dto.consultationSummary,
     );
 
     if (result.created) {

@@ -1094,26 +1094,6 @@ async function seedDoctors() {
           },
         });
 
-    for (const [normalizedName, expertiseScore] of doctor.symptoms) {
-      const symptom = await prisma.symptom.findUniqueOrThrow({
-        where: { normalizedName },
-      });
-
-      await prisma.doctorExpertise.upsert({
-        where: {
-          doctorId_symptomId: {
-            doctorId: savedDoctor.id,
-            symptomId: symptom.id,
-          },
-        },
-        update: { expertiseScore },
-        create: {
-          doctorId: savedDoctor.id,
-          symptomId: symptom.id,
-          expertiseScore,
-        },
-      });
-    }
   }
 }
 
@@ -1243,7 +1223,6 @@ async function main() {
     specialtyCount,
     symptomCount,
     doctorCount,
-    expertiseCount,
   ] = await Promise.all([
     prisma.user.count(),
     prisma.province.count(),
@@ -1251,7 +1230,6 @@ async function main() {
     prisma.specialty.count(),
     prisma.symptom.count(),
     prisma.doctor.count(),
-    prisma.doctorExpertise.count(),
   ]);
 
   console.log({
@@ -1261,7 +1239,6 @@ async function main() {
     specialties: specialtyCount,
     symptoms: symptomCount,
     doctors: doctorCount,
-    doctorExpertise: expertiseCount,
   });
 }
 

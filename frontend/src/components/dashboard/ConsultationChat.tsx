@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import { useMemo } from 'react';
-import { ChatMessage } from '@/lib/chat-api';
-import { ChatComposer } from './ChatComposer';
-import { ConsultationThread, ThreadMessage } from './ConsultationThread';
+import { useMemo } from "react";
+import { ChatMessage } from "@/lib/chat-api";
+import { ChatComposer } from "./ChatComposer";
+import { ConsultationThread, ThreadMessage } from "./ConsultationThread";
 
 const welcomeMessage: ThreadMessage = {
-  id: 'welcome',
-  role: 'ASSISTANT',
+  id: "welcome",
+  role: "ASSISTANT",
   content:
-    'Xin chào! Tôi có thể hỗ trợ bạn tìm bác sĩ phù hợp dựa trên các triệu chứng bạn nhập vào. Hãy mô tả vấn đề sức khỏe của bạn để bắt đầu.',
+    "Xin chào! Tôi có thể hỗ trợ bạn tìm bác sĩ phù hợp dựa trên các triệu chứng bạn nhập vào. Hãy mô tả vấn đề sức khỏe của bạn để bắt đầu.",
   createdAt: new Date().toISOString(),
 };
 
@@ -24,6 +24,7 @@ interface ConsultationChatProps {
   onSend: (message: string) => Promise<void> | void;
   onRequestDoctorChat?: (
     doctorId: number,
+    consultationSummary?: string,
   ) => Promise<{ created: boolean }>;
 }
 
@@ -72,7 +73,8 @@ export function ConsultationChat({
       ) : null}
       {isClosed ? (
         <p className="mx-auto w-full max-w-5xl px-4 pb-2 text-center text-sm font-medium text-amber-700 lg:px-10">
-          Phiên chat đã đóng. Bạn vẫn có thể xem lại nội dung hoặc bắt đầu đoạn chat mới.
+          Phiên chat đã đóng. Bạn vẫn có thể xem lại nội dung hoặc bắt đầu đoạn
+          chat mới.
         </p>
       ) : null}
       <ChatComposer

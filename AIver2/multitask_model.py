@@ -1,4 +1,4 @@
-"""PhoBERT model with shared NER and sentence-intent classification heads."""
+"""PhoBERT model with specialty NER, intent and clinical signal heads."""
 
 from __future__ import annotations
 
@@ -8,7 +8,6 @@ from typing import Optional, Tuple
 import torch
 from torch import nn
 from transformers import (
-    AutoModelForTokenClassification,
     PreTrainedModel,
     RobertaConfig,
     RobertaModel,
@@ -18,18 +17,20 @@ from transformers.modeling_outputs import ModelOutput
 
 @dataclass
 class MultiTaskOutput(ModelOutput):
-    """Output compatible with Trainer plus an additional intent head."""
+    """Output compatible with Trainer plus the clinical extraction heads."""
 
     loss: Optional[torch.FloatTensor] = None
     # ``logits`` is the NER output expected by the Hugging Face Trainer.
     logits: Optional[torch.FloatTensor] = None
     intent_logits: Optional[torch.FloatTensor] = None
+    slot_logits: Optional[torch.FloatTensor] = None
+    risk_logits: Optional[torch.FloatTensor] = None
     hidden_states: Optional[Tuple[torch.FloatTensor, ...]] = None
     attentions: Optional[Tuple[torch.FloatTensor, ...]] = None
 
 
 class MultiTaskRobertaForTokenAndIntentClassification(PreTrainedModel):
-    """A shared PhoBERT encoder with token and sequence classification heads."""
+    """Shared PhoBERT encoder with specialty, slot, intent and risk heads."""
 
     config_class = RobertaConfig
     base_model_prefix = "roberta"
@@ -43,11 +44,15 @@ class MultiTaskRobertaForTokenAndIntentClassification(PreTrainedModel):
         super().__init__(config)
         self.num_labels = int(config.num_labels)
         self.intent_num_labels = int(config.intent_num_labels)
+        self.slot_num_labels = int(getattr(config, "slot_num_labels", 7))
+        self.risk_num_labels = int(getattr(config, "risk_num_labels", 5))
 
         self.roberta = RobertaModel(config, add_pooling_layer=False)
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.ner_classifier = nn.Linear(config.hidden_size, self.num_labels)
         self.intent_classifier = nn.Linear(config.hidden_size, self.intent_num_labels)
+        self.slot_classifier = nn.Linear(config.hidden_size, self.slot_num_labels)
+        self.risk_classifier = nn.Linear(config.hidden_size, self.risk_num_labels)
 
         class_weights = getattr(config, "intent_class_weights", None)
         if class_weights is None:
@@ -58,6 +63,8 @@ class MultiTaskRobertaForTokenAndIntentClassification(PreTrainedModel):
             persistent=True,
         )
         self.intent_loss_weight = float(getattr(config, "intent_loss_weight", 1.0))
+        self.slot_loss_weight = float(getattr(config, "slot_loss_weight", 1.0))
+        self.risk_loss_weight = float(getattr(config, "risk_loss_weight", 1.5))
         self.post_init()
 
     def get_input_embeddings(self):
@@ -65,31 +72,6 @@ class MultiTaskRobertaForTokenAndIntentClassification(PreTrainedModel):
 
     def set_input_embeddings(self, value):
         self.roberta.embeddings.word_embeddings = value
-
-    @classmethod
-    def from_ner_checkpoint(
-        cls,
-        model_path: str,
-        intent_num_labels: int,
-        intent_label2id: dict[str, int],
-        intent_id2label: dict[int, str],
-        intent_class_weights: list[float],
-    ) -> "MultiTaskRobertaForTokenAndIntentClassification":
-        """Create the multi-task model while retaining the old NER weights."""
-
-        old_model = AutoModelForTokenClassification.from_pretrained(model_path)
-        config = old_model.config
-        config.intent_num_labels = intent_num_labels
-        config.intent_label2id = intent_label2id
-        config.intent_id2label = intent_id2label
-        config.intent_class_weights = intent_class_weights
-        config.intent_loss_weight = 1.0
-
-        model = cls(config)
-        old_base = getattr(old_model, old_model.base_model_prefix)
-        model.roberta.load_state_dict(old_base.state_dict())
-        model.ner_classifier.load_state_dict(old_model.classifier.state_dict())
-        return model
 
     def forward(
         self,
@@ -101,6 +83,8 @@ class MultiTaskRobertaForTokenAndIntentClassification(PreTrainedModel):
         inputs_embeds: Optional[torch.FloatTensor] = None,
         labels: Optional[torch.LongTensor] = None,
         intent_labels: Optional[torch.LongTensor] = None,
+        slot_labels: Optional[torch.LongTensor] = None,
+        risk_labels: Optional[torch.FloatTensor] = None,
         output_attentions: Optional[bool] = None,
         output_hidden_states: Optional[bool] = None,
         return_dict: Optional[bool] = None,
@@ -122,6 +106,8 @@ class MultiTaskRobertaForTokenAndIntentClassification(PreTrainedModel):
         sequence_output = self.dropout(outputs.last_hidden_state)
         ner_logits = self.ner_classifier(sequence_output)
         intent_logits = self.intent_classifier(sequence_output[:, 0, :])
+        slot_logits = self.slot_classifier(sequence_output)
+        risk_logits = self.risk_classifier(sequence_output[:, 0, :])
 
         loss = None
         if labels is not None:
@@ -137,14 +123,26 @@ class MultiTaskRobertaForTokenAndIntentClassification(PreTrainedModel):
             )
             loss = intent_loss * self.intent_loss_weight if loss is None else loss + intent_loss * self.intent_loss_weight
 
+        if slot_labels is not None:
+            slot_loss = nn.CrossEntropyLoss(ignore_index=-100)(
+                slot_logits.reshape(-1, self.slot_num_labels), slot_labels.reshape(-1)
+            )
+            loss = slot_loss * self.slot_loss_weight if loss is None else loss + slot_loss * self.slot_loss_weight
+
+        if risk_labels is not None:
+            risk_loss = nn.BCEWithLogitsLoss()(risk_logits, risk_labels.float())
+            loss = risk_loss * self.risk_loss_weight if loss is None else loss + risk_loss * self.risk_loss_weight
+
         if not return_dict:
-            output = (ner_logits, intent_logits) + outputs[2:]
+            output = (ner_logits, intent_logits, slot_logits, risk_logits) + outputs[2:]
             return ((loss,) + output) if loss is not None else output
 
         return MultiTaskOutput(
             loss=loss,
             logits=ner_logits,
             intent_logits=intent_logits,
+            slot_logits=slot_logits,
+            risk_logits=risk_logits,
             hidden_states=outputs.hidden_states,
             attentions=outputs.attentions,
         )

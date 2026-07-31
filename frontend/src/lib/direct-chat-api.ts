@@ -1,7 +1,7 @@
-import { io, Socket } from 'socket.io-client';
-import { apiRequest, API_BASE_URL } from './http';
+import { io, Socket } from "socket.io-client";
+import { apiRequest, API_BASE_URL } from "./http";
 
-export type DirectChatStatus = 'PENDING' | 'ACTIVE' | 'REJECTED' | 'CLOSED';
+export type DirectChatStatus = "PENDING" | "ACTIVE" | "REJECTED" | "CLOSED";
 
 export interface DirectChatPerson {
   id: number;
@@ -57,17 +57,17 @@ export interface DirectChatMessage {
   sender: {
     id: number;
     fullName: string;
-    role: 'USER' | 'DOCTOR' | 'ADMIN';
+    role: "USER" | "DOCTOR" | "ADMIN";
   };
 }
 
 export interface DirectChatNotification {
   type:
-    | 'REQUEST'
-    | 'REQUEST_ACCEPTED'
-    | 'REQUEST_REJECTED'
-    | 'MESSAGE'
-    | 'CONVERSATION_CLOSED';
+    | "REQUEST"
+    | "REQUEST_ACCEPTED"
+    | "REQUEST_REJECTED"
+    | "MESSAGE"
+    | "CONVERSATION_CLOSED";
   title: string;
   message: string;
   conversationId?: number;
@@ -81,20 +81,24 @@ export interface DirectChatSocketAck<T = undefined> {
   conversationId?: number;
 }
 
-export function requestDoctorChat(doctorId: number) {
+export function requestDoctorChat(
+  doctorId: number,
+  consultationSummary?: string,
+) {
   return apiRequest<{
     created: boolean;
     conversation: DirectChatConversation;
-  }>('/direct-chat/requests', {
-    method: 'POST',
+  }>("/direct-chat/requests", {
+    method: "POST",
     json: {
       doctorId,
+      consultationSummary,
     },
   });
 }
 
 export function listDirectChatConversations() {
-  return apiRequest<DirectChatConversation[]>('/direct-chat/conversations');
+  return apiRequest<DirectChatConversation[]>("/direct-chat/conversations");
 }
 
 export function listDirectChatMessages(conversationId: number) {
@@ -107,7 +111,7 @@ export function acceptDirectChatRequest(conversationId: number) {
   return apiRequest<DirectChatConversation>(
     `/direct-chat/conversations/${conversationId}/accept`,
     {
-      method: 'PATCH',
+      method: "PATCH",
     },
   );
 }
@@ -116,7 +120,7 @@ export function rejectDirectChatRequest(conversationId: number) {
   return apiRequest<DirectChatConversation>(
     `/direct-chat/conversations/${conversationId}/reject`,
     {
-      method: 'PATCH',
+      method: "PATCH",
     },
   );
 }
@@ -125,7 +129,7 @@ export function closeDirectChatConversation(conversationId: number) {
   return apiRequest<DirectChatConversation>(
     `/direct-chat/conversations/${conversationId}/close`,
     {
-      method: 'PATCH',
+      method: "PATCH",
     },
   );
 }
@@ -134,7 +138,7 @@ export function deleteDirectChatConversation(conversationId: number) {
   return apiRequest<{ id: number; deletedAt: string }>(
     `/direct-chat/conversations/${conversationId}`,
     {
-      method: 'DELETE',
+      method: "DELETE",
     },
   );
 }
@@ -146,21 +150,21 @@ export function markDirectChatRead(conversationId: number) {
     readAt: string;
     count: number;
   }>(`/direct-chat/conversations/${conversationId}/read`, {
-    method: 'PATCH',
+    method: "PATCH",
   });
 }
 
 export function createDirectChatSocket(): Socket {
   const accessToken =
-    typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
-  const configuredUrl = process.env.NEXT_PUBLIC_WS_URL?.replace(/\/+$/, '');
-  const fallbackUrl = API_BASE_URL.replace(/\/api\/v1\/?$/, '');
+    typeof window !== "undefined" ? localStorage.getItem("accessToken") : null;
+  const configuredUrl = process.env.NEXT_PUBLIC_WS_URL?.replace(/\/+$/, "");
+  const fallbackUrl = API_BASE_URL.replace(/\/api\/v1\/?$/, "");
 
   return io(`${configuredUrl ?? fallbackUrl}/direct-chat`, {
     auth: {
       token: accessToken,
     },
-    transports: ['websocket', 'polling'],
+    transports: ["websocket", "polling"],
     reconnection: true,
     reconnectionAttempts: Infinity,
   });

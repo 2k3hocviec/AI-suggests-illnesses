@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { formatChatMessageTime } from "@/lib/chat-time";
 
 export interface ThreadMessage {
   id: number | string;
@@ -75,7 +76,7 @@ export function ConsultationThread({
         ) : null}
 
         {messages.map((message) => {
-          const time = formatTime(message.createdAt);
+          const time = formatChatMessageTime(message.createdAt);
 
           if (message.role === "USER") {
             return (
@@ -1063,11 +1064,4 @@ function isStructuredRecommendation(content: string) {
 
 function unique(values: string[]) {
   return [...new Set(values)];
-}
-
-function formatTime(value: string) {
-  return new Intl.DateTimeFormat("vi-VN", {
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(value));
 }

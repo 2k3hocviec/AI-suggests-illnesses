@@ -26,6 +26,7 @@ import {
 } from "react";
 import { Socket } from "socket.io-client";
 import { getMe, logout, AuthUser } from "@/lib/auth-api";
+import { formatChatMessageTime } from "@/lib/chat-time";
 import {
   acceptDirectChatRequest,
   closeDirectChatConversation,
@@ -972,7 +973,7 @@ function MessageBubble({
             own ? "text-right" : "text-left"
           }`}
         >
-          {formatTime(message.createdAt)}
+          {formatChatMessageTime(message.createdAt)}
           {own ? ` · ${message.readAt ? "Đã xem" : "Đã gửi"}` : ""}
         </p>
       </div>
@@ -1212,13 +1213,6 @@ function formatDateTime(value: string) {
   return new Intl.DateTimeFormat("vi-VN", {
     day: "2-digit",
     month: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(value));
-}
-
-function formatTime(value: string) {
-  return new Intl.DateTimeFormat("vi-VN", {
     hour: "2-digit",
     minute: "2-digit",
   }).format(new Date(value));

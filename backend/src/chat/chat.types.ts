@@ -9,6 +9,28 @@ export type ModelIntent =
 
 export type ModelAction = "FIND_DOCTORS" | "REPLY" | "CLARIFY";
 
+export type LocalReasoningAction =
+  | "ASK_FOLLOW_UP"
+  | "FIND_DOCTORS"
+  | "EMERGENCY"
+  | "REPLY"
+  | "CLARIFY";
+
+export type LocalReasoningField = "NONE" | ClinicalField;
+
+export interface LocalReasoningResponse {
+  nextAction: LocalReasoningAction;
+  field: LocalReasoningField;
+  confidence: number;
+  source?: "RULE" | "MODEL";
+  question?: string;
+}
+
+export interface ChatHistoryMessage {
+  role: "USER" | "ASSISTANT" | "SYSTEM";
+  content: string;
+}
+
 export type ClinicalField = "duration" | "severity" | "age";
 
 export interface ClinicalSlot {

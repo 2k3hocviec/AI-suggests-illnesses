@@ -15,6 +15,8 @@ import {
   ModelAnalyzeResponse,
   ModelRedFlag,
   ModelSymptom,
+  ChatHistoryMessage,
+  LocalReasoningResponse,
   RecommendedDoctor,
   RecommendedSpecialty,
   RecommendedSpecialtyWithDoctors,
@@ -118,6 +120,7 @@ interface RepeatedQuestionContext {
 @Injectable()
 export class ChatService {
   private readonly guestAnalyses = new Map<string, ModelAnalyzeResponse>();
+  private readonly guestHistories = new Map<string, ChatHistoryMessage[]>();
 
   constructor(
     private readonly prisma: PrismaService,
@@ -147,6 +150,7 @@ export class ChatService {
         content,
       },
     });
+    const history = await this.getChatHistory(session.id);
 
     const prepared = await this.prepareChatResponse(
       content,
@@ -155,6 +159,7 @@ export class ChatService {
       repeatedQuestion?.assistantContent,
       Boolean(repeatedQuestion),
       previousAnalysis,
+      history,
     );
     const {
       analysis,
@@ -233,6 +238,9 @@ export class ChatService {
     const previousAnalysis = dto.guestSessionId
       ? this.guestAnalyses.get(dto.guestSessionId)
       : undefined;
+    const previousHistory = dto.guestSessionId
+      ? (this.guestHistories.get(dto.guestSessionId) ?? [])
+      : [];
     const prepared = await this.prepareChatResponse(
       content,
       undefined,
@@ -240,6 +248,7 @@ export class ChatService {
       undefined,
       false,
       previousAnalysis,
+      previousHistory,
     );
     const {
       analysis,
@@ -289,9 +298,16 @@ export class ChatService {
     };
 
     if (dto.guestSessionId) {
+      const nextHistory = [
+        ...previousHistory,
+        { role: "USER" as const, content },
+        { role: "ASSISTANT" as const, content: assistantContent },
+      ];
       if (analysis.readyForRecommendation) {
         this.guestAnalyses.delete(dto.guestSessionId);
+        this.guestHistories.delete(dto.guestSessionId);
       } else {
+        this.guestHistories.set(dto.guestSessionId, nextHistory);
         this.guestAnalyses.set(dto.guestSessionId, analysis);
       }
     }
@@ -315,11 +331,16 @@ export class ChatService {
     cachedAssistantContent?: string,
     isRepeatedQuestion = false,
     previousAnalysis?: ModelAnalyzeResponse,
+    history: ChatHistoryMessage[] = [],
   ): Promise<PreparedChatResponse> {
     const rawAnalysis = cachedAnalysis ?? (await this.analyze(content));
-    const analysis = cachedAnalysis
+    let analysis = cachedAnalysis
       ? cachedAnalysis
       : this.mergeAnalyses(previousAnalysis, rawAnalysis);
+    const localReasoning = isRepeatedQuestion
+      ? null
+      : await this.decideNextLocally(content, history, analysis);
+    analysis = this.applyLocalReasoning(analysis, localReasoning);
     const isMedicalRequest = analysis.readyForRecommendation;
     const hasEmergencySpecialty =
       isMedicalRequest && this.hasEmergencySpecialty(analysis);
@@ -358,6 +379,170 @@ export class ChatService {
     }
 
     return this.analyze(message);
+  }
+
+  /*
+  Lấy lích sử chat, lích sử phân tích để gửi cho model dialogue_policy
+  */
+  private async getChatHistory(
+    sessionId: number,
+  ): Promise<ChatHistoryMessage[]> {
+    const messages = await this.prisma.chatMessage.findMany({
+      where: { sessionId },
+      select: { role: true, content: true },
+      orderBy: { id: "asc" },
+    });
+
+    return messages.map((message) => ({
+      role: message.role as ChatHistoryMessage["role"],
+      content: message.content,
+    }));
+  }
+
+  private async decideNextLocally(
+    content: string,
+    history: ChatHistoryMessage[],
+    analysis: ModelAnalyzeResponse,
+  ): Promise<LocalReasoningResponse | null> {
+    const modelUrl = this.config.get<string>("aiReasonerUrl");
+    const endpoint = this.config.get<string>(
+      "aiReasonerEndpoint",
+      "/api/decide-next",
+    );
+    const timeoutMs = this.config.get<number>("aiReasonerTimeoutMs") ?? 10000;
+
+    if (!modelUrl || !endpoint) {
+      return null;
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const requestPayload = {
+        message: content,
+        history,
+        analysis,
+      };
+      console.log(
+        "[Backend -> AI] /api/decide-next:",
+        JSON.stringify(requestPayload, null, 2),
+      );
+
+      const response = await fetch(`${modelUrl}${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestPayload),
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        return null;
+      }
+
+      const payload = (await response.json()) as Record<string, unknown>;
+      console.log(
+        "[AI -> Backend] /api/decide-next:",
+        JSON.stringify(payload, null, 2),
+      );
+      const nextAction = payload.nextAction;
+      const field = payload.field;
+      const confidence = Number(payload.confidence);
+      const source =
+        payload.source === "RULE" || payload.source === "MODEL"
+          ? payload.source
+          : undefined;
+      const rawQuestion =
+        typeof payload.question === "string" ? payload.question.trim() : "";
+      const question =
+        rawQuestion.length <= 240 &&
+        rawQuestion.includes("?") &&
+        ![
+          "chẩn đoán",
+          "chan doan",
+          "điều trị",
+          "dieu tri",
+          "uống thuốc",
+          "uong thuoc",
+          "kê đơn",
+          "ke don",
+          "diagnos",
+          "treatment",
+          "prescribe",
+        ].some((phrase) => rawQuestion.toLowerCase().includes(phrase))
+          ? rawQuestion
+          : undefined;
+      const validActions = new Set([
+        "ASK_FOLLOW_UP",
+        "FIND_DOCTORS",
+        "EMERGENCY",
+        "REPLY",
+        "CLARIFY",
+      ]);
+      const validFields = new Set(["NONE", "duration", "severity", "age"]);
+
+      if (
+        typeof nextAction !== "string" ||
+        !validActions.has(nextAction) ||
+        typeof field !== "string" ||
+        !validFields.has(field) ||
+        !Number.isFinite(confidence)
+      ) {
+        return null;
+      }
+
+      return {
+        nextAction: nextAction as LocalReasoningResponse["nextAction"],
+        field: field as LocalReasoningResponse["field"],
+        confidence: this.clampScore(confidence),
+        ...(source ? { source } : {}),
+        ...(question ? { question } : {}),
+      };
+    } catch {
+      return null;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  private applyLocalReasoning(
+    analysis: ModelAnalyzeResponse,
+    decision: LocalReasoningResponse | null,
+  ): ModelAnalyzeResponse {
+    const minimumConfidence =
+      this.config.get<number>("aiReasonerMinConfidence") ?? 0.75;
+    if (!decision || decision.confidence < minimumConfidence) {
+      return analysis;
+    }
+
+    // Red flags are always decided by the existing deterministic pipeline.
+    if (analysis.redFlags.length > 0) {
+      return analysis;
+    }
+
+    if (
+      decision.nextAction === "ASK_FOLLOW_UP" &&
+      decision.field !== "NONE" &&
+      analysis.missingFields.includes(decision.field)
+    ) {
+      return {
+        ...analysis,
+        action: "CLARIFY",
+        readyForRecommendation: false,
+        followUpQuestion:
+          decision.question ?? this.buildClinicalFollowUpQuestion(decision.field),
+      };
+    }
+
+    if (decision.nextAction === "REPLY" && analysis.symptoms.length === 0) {
+      return {
+        ...analysis,
+        action: "REPLY",
+      };
+    }
+
+    // FIND_DOCTORS, EMERGENCY and CLARIFY cannot override the clinical
+    // readiness and emergency decisions computed by the backend.
+    return analysis;
   }
 
   async listSessions(userId: number) {
@@ -517,7 +702,6 @@ export class ChatService {
       orderBy: {
         id: "desc",
       },
-      take: 6,
     });
     const previousMessage = recentUserMessages.find(
       (message) =>
@@ -635,20 +819,31 @@ export class ChatService {
       const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
       try {
+        const requestPayload = { text: content };
+        console.log(
+          "[Backend -> AI] /api/extract-symptoms:",
+          JSON.stringify(requestPayload),
+        );
+
         const response = await fetch(`${modelUrl}${endpoint}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ text: content }),
+          body: JSON.stringify(requestPayload),
           signal: controller.signal,
         });
 
         if (!response.ok) {
           throw new ServiceUnavailableException("Model chưa sẵn sàng");
         }
+        const payload = await response.json();
+        console.log(
+          "[AI -> Backend] /api/extract-symptoms:",
+          JSON.stringify(payload, null, 2),
+        );
         const nerAnalysis: ModelAnalyzeResponse = {
-          ...this.normalizeModelAnalysis(await response.json()),
+          ...this.normalizeModelAnalysis(payload),
           analysisSource: "NER",
         };
 
@@ -657,7 +852,9 @@ export class ChatService {
         }
 
         if (!this.hasConfidentSymptoms(nerAnalysis)) {
-          return this.analyzeWithGemini(content);
+          return this.isGeminiFallbackEnabled()
+            ? this.analyzeWithGemini(content)
+            : nerAnalysis;
         }
 
         return nerAnalysis;
@@ -666,8 +863,34 @@ export class ChatService {
       }
     } catch (error) {
       console.error("Không gọi được model NER, chuyển sang Gemini:", error);
+      if (!this.isGeminiFallbackEnabled()) {
+        return this.buildUnknownAnalysis();
+      }
       return this.analyzeWithGemini(content);
     }
+  }
+
+  private isGeminiFallbackEnabled() {
+    return this.config.get<boolean>("enableGeminiFallback") ?? true;
+  }
+
+  private buildUnknownAnalysis(): ModelAnalyzeResponse {
+    return this.withClinicalFollowUp({
+      symptoms: [],
+      specialties: [],
+      intent: "UNKNOWN",
+      action: "CLARIFY",
+      slots: {
+        duration: null,
+        severity: null,
+        age: null,
+      },
+      redFlags: [],
+      missingFields: [],
+      followUpQuestion: null,
+      readyForRecommendation: false,
+      analysisSource: "NER",
+    });
   }
 
   private async analyzeWithGemini(
@@ -914,18 +1137,29 @@ export class ChatService {
       return current;
     }
 
-    const symptoms = [...previous.symptoms, ...current.symptoms].filter(
-      (symptom, index, all) =>
-        all.findIndex(
-          (candidate) =>
-            candidate.name === symptom.name &&
-            candidate.specialty_code === symptom.specialty_code,
-        ) === index,
-    );
+    // A new medical description starts a new symptom snapshot. If the user is
+    // only answering a follow-up question (for example "từ hôm qua"), keep
+    // the previous snapshot so the conversation remains linked.
+    const symptoms = current.symptoms.length
+      ? current.symptoms.filter(
+          (symptom, index, all) =>
+            all.findIndex(
+              (candidate) =>
+                candidate.name === symptom.name &&
+                candidate.specialty_code === symptom.specialty_code,
+            ) === index,
+        )
+      : previous.symptoms;
+
+    // Preserve emergency evidence across follow-up answers. A later answer
+    // that does not repeat a red flag must not silently clear the warning.
     const redFlags = [...previous.redFlags, ...current.redFlags].filter(
       (flag, index, all) =>
         all.findIndex((candidate) => candidate.code === flag.code) === index,
     );
+    // Each clinical field is scalar by design: the current message replaces
+    // the previous value when it contains a newer answer. Never keep a list
+    // of historical duration/severity/age values.
     const slots = {
       duration: current.slots.duration ?? previous.slots.duration,
       severity: current.slots.severity ?? previous.slots.severity,
@@ -933,8 +1167,7 @@ export class ChatService {
     };
     const specialties = [
       ...new Set([
-        ...previous.specialties,
-        ...current.specialties,
+        ...symptoms.map((symptom) => symptom.specialty_code),
         ...(redFlags.length ? ["EMERGENCY"] : []),
       ]),
     ].filter((specialty) => MEDICAL_SPECIALTY_CODES.has(specialty));

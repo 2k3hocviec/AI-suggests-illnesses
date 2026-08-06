@@ -53,3 +53,43 @@ Example request:
 The response includes `symptoms`, `specialties`, `intent`, `action`, `slots` and `redFlags`.
 
 The service loads `output/medical-clinical-slots-model` by default. Set `MODEL_PATH` to use another local checkpoint.
+
+## Dialogue policy POC
+
+The dialogue-policy model chooses the next safe action and missing clinical
+field. It does not diagnose or generate treatment advice.
+
+```bash
+python generate_dialogue_policy_dataset.py
+python train_dialogue_policy.py
+python model_api.py
+```
+
+The generated files are stored separately from the PhoBERT dataset:
+
+```text
+data/dialogue_policy.json
+data/train_dialogue_policy.json
+data/val_dialogue_policy.json
+data/test_dialogue_policy.json
+output/dialogue-policy/policy_model.pt
+```
+
+The API exposes `POST /api/decide-next`. If the policy checkpoint is missing,
+the endpoint returns `503` and the NestJS backend keeps its existing fallback
+behavior.
+
+## Docker
+
+The local Docker service runs the PhoBERT clinical model and dialogue policy
+from the local `output/` directory mounted read-only into the container. To
+start it:
+
+```bash
+docker compose up --build
+```
+
+The API is available at `http://localhost:5678`. The dialogue policy uses the
+conversation history and structured clinical analysis to return the next safe
+action and missing field. It does not generate diagnosis, treatment advice or
+follow-up wording.

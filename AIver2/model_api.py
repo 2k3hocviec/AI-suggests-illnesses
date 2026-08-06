@@ -12,8 +12,9 @@ os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 
 from fastapi import FastAPI, HTTPException  # type: ignore
 from fastapi.middleware.cors import CORSMiddleware  # type: ignore
-from pydantic import BaseModel  # type: ignore
+from pydantic import BaseModel, Field  # type: ignore
 
+from dialogue_policy import DialoguePolicyBundle, load_policy_bundle, predict_policy
 from inference import InferenceBundle, load_multitask_model, predict
 
 
@@ -21,6 +22,10 @@ CLINICAL_MODEL_PATH = Path(__file__).parent / "output" / "medical-clinical-slots
 DEFAULT_MODEL_PATH = str(CLINICAL_MODEL_PATH)
 MODEL_PATH = os.getenv("MODEL_PATH", DEFAULT_MODEL_PATH)
 PORT = int(os.getenv("PORT", "5678"))
+POLICY_MODEL_PATH = os.getenv(
+    "POLICY_MODEL_PATH",
+    str(Path(__file__).parent / "output" / "dialogue-policy"),
+)
 
 app = FastAPI(title="Medical Multi-task NER and Intent API")
 app.add_middleware(
@@ -32,6 +37,7 @@ app.add_middleware(
 )
 
 inference_bundle: InferenceBundle | None = None
+policy_bundle: DialoguePolicyBundle | None = None
 
 
 def is_local_model_path(model_path: str) -> bool:
@@ -88,11 +94,22 @@ class SymptomResponse(BaseModel):
     redFlags: list[RedFlagSignal]
 
 
+class PolicyHistoryItem(BaseModel):
+    role: Literal["USER", "ASSISTANT", "SYSTEM"]
+    content: str = Field(min_length=1, max_length=1000)
+
+
+class PolicyRequest(BaseModel):
+    message: str = Field(min_length=1, max_length=2000)
+    history: list[PolicyHistoryItem] = Field(default_factory=list)
+    analysis: dict = Field(default_factory=dict)
+
+
 @app.on_event("startup")
 async def load_model():
     """Load the multi-task checkpoint once when the service starts."""
 
-    global inference_bundle
+    global inference_bundle, policy_bundle
     print(f"[AI Service] Loading multi-task model from: {MODEL_PATH}")
 
     if is_local_model_path(MODEL_PATH) and not os.path.exists(MODEL_PATH):
@@ -112,6 +129,17 @@ async def load_model():
 
         traceback.print_exc()
 
+    try:
+        policy_bundle = load_policy_bundle(POLICY_MODEL_PATH, MODEL_PATH)
+        if policy_bundle:
+            print(f"[AI Service] Dialogue policy loaded from: {POLICY_MODEL_PATH}")
+        else:
+            print(f"[AI Service] Dialogue policy not found at: {POLICY_MODEL_PATH}")
+    except Exception as error:
+        policy_bundle = None
+        print(f"[AI Service] Dialogue policy load error: {type(error).__name__}: {error}")
+
+
 
 @app.get("/health")
 async def health_check():
@@ -123,6 +151,8 @@ async def health_check():
         "model_path": MODEL_PATH,
         "model_source": "local" if is_local_model_path(MODEL_PATH) else "huggingface",
         "model_exists": os.path.exists(MODEL_PATH) if is_local_model_path(MODEL_PATH) else None,
+        "policy_model_loaded": policy_bundle is not None,
+        "policy_model_path": POLICY_MODEL_PATH,
     }
 
 
@@ -134,6 +164,19 @@ async def extract_symptoms(request: SymptomRequest):
         raise HTTPException(status_code=503, detail="Multi-task model chua load")
 
     return SymptomResponse(**predict(request.text, inference_bundle))
+
+
+@app.post("/api/decide-next")
+async def decide_next(request: PolicyRequest):
+    if policy_bundle is None:
+        raise HTTPException(status_code=503, detail="Dialogue policy chua load")
+
+    return predict_policy(
+        request.message,
+        [item.model_dump() for item in request.history],
+        request.analysis,
+        policy_bundle,
+    )
 
 
 if __name__ == "__main__":

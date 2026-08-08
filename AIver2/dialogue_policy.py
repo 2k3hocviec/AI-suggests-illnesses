@@ -203,49 +203,7 @@ def predict_policy(
     analysis: dict[str, Any],
     bundle: DialoguePolicyBundle,
 ) -> dict[str, Any]:
-    # Emergency handling remains deterministic and authoritative at the API
-    # boundary as an additional safeguard.
-    compact = _compact_analysis(analysis)
-    # Always evaluate the policy model first. Deterministic rules below can
-    # still override its result for clinical safety and readiness.
-    model_decision = _predict_with_model(message, history, analysis, bundle)
-    if compact["redFlags"]:
-        return {
-            "nextAction": "EMERGENCY",
-            "field": "NONE",
-            "confidence": 1.0,
-            "source": "RULE",
-            "modelDecision": model_decision,
-        }
-
-    # The clinical readiness gate is authoritative.  The classifier may help
-    # with ordinary conversation, but it must not suppress a required clinical
-    # follow-up question when a symptom is present and a field is missing.
-    missing_fields = [
-        field
-        for field in compact["missingFields"]
-        if field in {"duration", "severity", "age"}
-    ]
-    if compact["symptoms"] and missing_fields:
-        field = missing_fields[0]
-        return {
-            "nextAction": "ASK_FOLLOW_UP",
-            "field": field,
-            "confidence": 1.0,
-            "source": "RULE",
-            "modelDecision": model_decision,
-        }
-
-    # Once the backend has validated that the latest clinical snapshot is
-    # complete, do not let a long history or an uncertain classifier suppress
-    # the doctor-recommendation step.
-    if compact["symptoms"] and compact["readyForRecommendation"]:
-        return {
-            "nextAction": "FIND_DOCTORS",
-            "field": "NONE",
-            "confidence": 1.0,
-            "source": "RULE",
-            "modelDecision": model_decision,
-        }
-
-    return model_decision
+    # Policy decisions are made only by the trained classifier. Clinical
+    # extraction and response rendering remain handled by their existing
+    # backend/model pipelines.
+    return _predict_with_model(message, history, analysis, bundle)

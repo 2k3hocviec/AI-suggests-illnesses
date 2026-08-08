@@ -23,6 +23,7 @@ import {
   SpecialtyHint,
 } from "./chat.types";
 
+var count = 0;
 const SPECIALTY_HINTS: SpecialtyHint[] = [
   {
     code: "CARDIOLOGY",
@@ -333,14 +334,10 @@ export class ChatService {
     previousAnalysis?: ModelAnalyzeResponse,
     history: ChatHistoryMessage[] = [],
   ): Promise<PreparedChatResponse> {
-    const rawAnalysis = cachedAnalysis ?? (await this.analyze(content));
-    let analysis = cachedAnalysis
+    const rawAnalysis = cachedAnalysis
       ? cachedAnalysis
-      : this.mergeAnalyses(previousAnalysis, rawAnalysis);
-    const localReasoning = isRepeatedQuestion
-      ? null
-      : await this.decideNextLocally(content, history, analysis);
-    analysis = this.applyLocalReasoning(analysis, localReasoning);
+      : await this.analyzeConversation(content, history);
+    let analysis = cachedAnalysis ? cachedAnalysis : rawAnalysis;
     const isMedicalRequest = analysis.readyForRecommendation;
     const hasEmergencySpecialty =
       isMedicalRequest && this.hasEmergencySpecialty(analysis);
@@ -423,6 +420,8 @@ export class ChatService {
         history,
         analysis,
       };
+      count++;
+      console.log(count);
       console.log(
         "[Backend -> AI] /api/decide-next:",
         JSON.stringify(requestPayload, null, 2),
@@ -440,6 +439,8 @@ export class ChatService {
       }
 
       const payload = (await response.json()) as Record<string, unknown>;
+      count++;
+      console.log(count);
       console.log(
         "[AI -> Backend] /api/decide-next:",
         JSON.stringify(payload, null, 2),
@@ -509,12 +510,12 @@ export class ChatService {
     decision: LocalReasoningResponse | null,
   ): ModelAnalyzeResponse {
     const minimumConfidence =
-      this.config.get<number>("aiReasonerMinConfidence") ?? 0.75;
+      this.config.get<number>("aiReasonerMinConfidence") ?? 0.25;
     if (!decision || decision.confidence < minimumConfidence) {
       return analysis;
     }
 
-    // Red flags are always decided by the existing deterministic pipeline.
+    // Trường hợp mà gặp triệu chứng EMERGENCY sẽ được xử lý luồng an toàn riêng trả về đi đến cơ sở y tế không gợi ý bác sĩ nữa
     if (analysis.redFlags.length > 0) {
       return analysis;
     }
@@ -529,7 +530,8 @@ export class ChatService {
         action: "CLARIFY",
         readyForRecommendation: false,
         followUpQuestion:
-          decision.question ?? this.buildClinicalFollowUpQuestion(decision.field),
+          decision.question ??
+          this.buildClinicalFollowUpQuestion(decision.field),
       };
     }
 
@@ -801,6 +803,59 @@ export class ChatService {
     - Có thể gọi đến GEMINI khi model chưa sẵn sàng.
     - Phát sinh bất cứ lỗi gì cũng sẽ gọi sang GEMINI.
   */
+  private async analyzeConversation(
+    content: string,
+    history: ChatHistoryMessage[],
+  ): Promise<ModelAnalyzeResponse> {
+    const modelUrl =
+      this.config.get<string>("aiServiceUrl") ??
+      this.config.get<string>("AI_SERVICE_URL") ??
+      "http://localhost:5678";
+    const endpoint = this.config.get<string>(
+      "PYTHON_POLICY_ENDPOINT",
+      "/api/decide-next",
+    );
+    const timeoutMs =
+      this.config.get<number>("aiServiceTimeoutMs") ??
+      Number(this.config.get<string>("AI_SERVICE_TIMEOUT_MS") ?? 60000);
+    const last = history[history.length - 1];
+    const conversationHistory =
+      last?.role === "USER" && last.content === content
+        ? history
+        : [...history, { role: "USER" as const, content }];
+    const requestPayload = { history: conversationHistory };
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      console.log(
+        "[Backend -> AI] /api/decide-next:",
+        JSON.stringify(requestPayload, null, 2),
+      );
+      const response = await fetch(`${modelUrl}${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestPayload),
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        throw new ServiceUnavailableException(
+          "Model conversation chÆ°a sáºµn sÃ ng",
+        );
+      }
+
+      const payload = await response.json();
+      console.log(
+        "[AI -> Backend] /api/decide-next:",
+        JSON.stringify(payload, null, 2),
+      );
+      return this.normalizeConversationAnalysis(payload);
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
   private async analyze(content: string): Promise<ModelAnalyzeResponse> {
     const modelUrl =
       this.config.get<string>("aiServiceUrl") ??
@@ -820,6 +875,8 @@ export class ChatService {
 
       try {
         const requestPayload = { text: content };
+        count++;
+        console.log(count);
         console.log(
           "[Backend -> AI] /api/extract-symptoms:",
           JSON.stringify(requestPayload),
@@ -838,6 +895,8 @@ export class ChatService {
           throw new ServiceUnavailableException("Model chưa sẵn sàng");
         }
         const payload = await response.json();
+        count++;
+        console.log(count);
         console.log(
           "[AI -> Backend] /api/extract-symptoms:",
           JSON.stringify(payload, null, 2),
@@ -963,6 +1022,70 @@ export class ChatService {
     } finally {
       clearTimeout(timeout);
     }
+  }
+
+  private normalizeConversationAnalysis(value: unknown): ModelAnalyzeResponse {
+    const base = this.normalizeModelAnalysis(value);
+    if (!value || typeof value !== "object") {
+      return base;
+    }
+
+    const raw = value as Record<string, unknown>;
+    const validActions = new Set(["FIND_DOCTORS", "REPLY", "CLARIFY"]);
+    const action =
+      typeof raw.action === "string" &&
+      validActions.has(raw.action.toUpperCase())
+        ? (raw.action.toUpperCase() as ModelAnalyzeResponse["action"])
+        : base.action;
+    const missingFields = Array.isArray(raw.missingFields)
+      ? raw.missingFields.filter(
+          (field): field is ClinicalField =>
+            field === "duration" || field === "severity" || field === "age",
+        )
+      : base.missingFields;
+    const followUpQuestion =
+      typeof raw.followUpQuestion === "string"
+        ? raw.followUpQuestion
+        : base.followUpQuestion;
+    const readyForRecommendation =
+      typeof raw.readyForRecommendation === "boolean"
+        ? raw.readyForRecommendation
+        : base.readyForRecommendation;
+    const nextAction =
+      typeof raw.nextAction === "string" &&
+      [
+        "ASK_FOLLOW_UP",
+        "FIND_DOCTORS",
+        "EMERGENCY",
+        "REPLY",
+        "CLARIFY",
+      ].includes(raw.nextAction)
+        ? (raw.nextAction as ModelAnalyzeResponse["nextAction"])
+        : undefined;
+    const field =
+      typeof raw.field === "string" &&
+      ["NONE", "duration", "severity", "age"].includes(raw.field)
+        ? (raw.field as ModelAnalyzeResponse["field"])
+        : undefined;
+    const confidence = Number(raw.confidence);
+    const policySource =
+      raw.source === "MODEL" || raw.source === "RULE" ? raw.source : undefined;
+    const analysisSource = raw.analysisSource === "Gemini" ? "Gemini" : "NER";
+
+    return {
+      ...base,
+      analysisSource,
+      action,
+      missingFields,
+      followUpQuestion,
+      readyForRecommendation,
+      ...(nextAction ? { nextAction } : {}),
+      ...(field ? { field } : {}),
+      ...(Number.isFinite(confidence)
+        ? { confidence: this.clampScore(confidence) }
+        : {}),
+      ...(policySource ? { policySource } : {}),
+    };
   }
 
   private normalizeModelAnalysis(value: unknown): ModelAnalyzeResponse {

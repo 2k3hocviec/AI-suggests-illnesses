@@ -63,6 +63,10 @@ export interface ModelAnalyzeResponse {
   followUpQuestion: string | null;
   readyForRecommendation: boolean;
   analysisSource?: "NER" | "Gemini";
+  nextAction?: LocalReasoningAction;
+  field?: LocalReasoningField;
+  confidence?: number;
+  policySource?: "MODEL" | "RULE";
   repeatDetected?: boolean;
 }
 

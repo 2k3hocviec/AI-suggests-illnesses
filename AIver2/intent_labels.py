@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 INTENT_CODES = (
-    "SYMPTOM",
-    "GREETING",
-    "THANKS",
-    "GOODBYE",
-    "UNKNOWN",
+    "SYMPTOM", # Có triệu chứng.
+    "GREETING", # Lời chào.
+    "THANKS", # Lời cảm ơn.
+    "GOODBYE", # Lời tạm biệt.
+    "UNKNOWN", # Không xác định được.
 )
 
 INTENT2ID = {label: index for index, label in enumerate(INTENT_CODES)}

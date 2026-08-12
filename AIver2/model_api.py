@@ -310,6 +310,7 @@ async def health_check():
     }
 
 
+# Dùng cho admin test kết quả model NER phân tích được
 @app.post("/api/extract-symptoms", response_model=SymptomResponse)
 async def extract_symptoms(request: SymptomRequest):
     if not request.text.strip():
@@ -319,6 +320,65 @@ async def extract_symptoms(request: SymptomRequest):
 
     return SymptomResponse(**predict(request.text, inference_bundle))
 
+
+# API chính dùng toàn bộ đồ án.
+# Model nhận tin nhắn và kết hợp toàn bộ lịch sử đoạn:
+#   - Phân tích tin nhắn hiện tại và lịch sử đoạn chat thành các trường thông tin:
+#   - Vi dụ:
+#        + Đầu vào: 
+#           {
+#               "history": [
+#                   {
+#                       "role": "USER",
+#                       "content": "Tôi bị đau bụng"
+#                   },
+#                   {
+#                       "role": "ASSISTANT",
+#                       "content": "Các triệu chứng xuất hiện từ khi nào?"
+#                   },
+#                   {
+#                       "role": "USER",
+#                       "content": "Sáng hôm nay"
+#                   }
+#               ]
+#           }
+#       + Đầu ra: 
+#           {
+#               "symptoms": [
+#                   {
+#                       "name": "đau bụng",
+#                       "confidence": 0.999,
+#                       "specialty_code": "GASTROENTEROLOGY"
+#                   }
+#               ],
+#               "specialties": [
+#                   "GASTROENTEROLOGY"
+#               ],
+#               "intent": "SYMPTOM",
+#               "action": "CLARIFY",
+#               "slots": {
+#                   "duration": {
+#                       "text": "Sáng hôm nay",
+#                       "value": 0,
+#                       "unit": "DAY",
+#                       "confidence": 0.95
+#                   },
+#                   "severity": null,
+#                   "age": null
+#               },
+#               "redFlags": [],
+#               "missingFields": [
+#                   "severity",
+#                   "age"
+#               ],
+#               "followUpQuestion": "Mức độ đau hoặc khó chịu hiện tại ra sao?",
+#               "readyForRecommendation": false,
+#               "nextAction": "ASK_FOLLOW_UP",
+#               "field": "severity",
+#               "confidence": 0.82,
+#               "source": "MODEL",
+#               "analysisSource": "NER"
+#           }
 
 @app.post("/api/decide-next")
 async def decide_next(request: PolicyRequest):

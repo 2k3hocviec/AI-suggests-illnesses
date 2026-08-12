@@ -1,4 +1,5 @@
 """Train the local dialogue-policy heads on the generated dataset."""
+# Huấn luyện các đầu ra của model quyết định lồng đi của đoạn hội thoại bằng bộ dữ liệu đã được tạo.
 
 from __future__ import annotations
 
@@ -6,8 +7,8 @@ import json
 import os
 from pathlib import Path
 
-import torch
-from torch.utils.data import DataLoader, Dataset
+import torch # type: ignore
+from torch.utils.data import DataLoader, Dataset # type: ignore
 from transformers import AutoTokenizer  # type: ignore
 
 from dialogue_policy import DialoguePolicyModel, MAX_LENGTH, serialize_policy_input

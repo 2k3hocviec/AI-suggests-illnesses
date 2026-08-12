@@ -7,9 +7,9 @@ import os
 from collections import Counter
 
 import numpy as np  # type: ignore
-import torch
+import torch # type: ignore
 from seqeval.metrics import f1_score  # type: ignore
-from torch.utils.data import Dataset
+from torch.utils.data import Dataset # type: ignore
 from transformers import (  # type: ignore
     AutoConfig,
     AutoTokenizer,

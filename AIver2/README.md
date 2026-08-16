@@ -28,6 +28,22 @@ The trained checkpoint is saved to:
 output/medical-clinical-slots-model/
 ```
 
+## T5 follow-up-question generator
+
+The dialogue-policy model selects the next `field` to ask. A separate local
+T5 model can render that field as a natural Vietnamese question using the
+clinical facts and recent conversation. Generate its supervised data and train
+it after the policy data is available:
+
+```bash
+python generate_question_generator_dataset.py
+python train_question_generator.py
+```
+
+The checkpoint is saved to `output/question-generator/`. `model_api.py` loads
+it automatically. When no T5 checkpoint is present, or a generated question
+fails validation, the API uses the existing fixed safe question instead.
+
 ## Main modules
 
 - `prepare_data.py`: validates, tokenizes and splits the dataset.

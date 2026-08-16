@@ -11,8 +11,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-import torch
-from torch import nn
+import torch # type: ignore
+from torch import nn # type: ignore
 from transformers import AutoTokenizer  # type: ignore
 
 from multitask_model import MultiTaskRobertaForTokenAndIntentClassification

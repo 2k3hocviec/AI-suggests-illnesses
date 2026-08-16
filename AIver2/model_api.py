@@ -6,6 +6,14 @@ import os
 from pathlib import Path
 from typing import Literal
 
+import logging
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
+logger = logging.getLogger("ai-service")
+
 os.environ.setdefault("OMP_NUM_THREADS", "1")
 os.environ.setdefault("MKL_NUM_THREADS", "1")
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
@@ -16,6 +24,11 @@ from pydantic import BaseModel, Field  # type: ignore
 
 from dialogue_policy import DialoguePolicyBundle, load_policy_bundle, predict_policy
 from inference import InferenceBundle, load_multitask_model, predict
+from question_generator import (
+    QuestionGeneratorBundle,
+    generate_follow_up_question,
+    load_question_generator,
+)
 
 
 CLINICAL_MODEL_PATH = Path(__file__).parent / "output" / "medical-clinical-slots-model"
@@ -25,6 +38,10 @@ PORT = int(os.getenv("PORT", "5678"))
 POLICY_MODEL_PATH = os.getenv(
     "POLICY_MODEL_PATH",
     str(Path(__file__).parent / "output" / "dialogue-policy"),
+)
+QUESTION_GENERATOR_PATH = os.getenv(
+    "QUESTION_GENERATOR_PATH",
+    str(Path(__file__).parent / "output" / "question-generator"),
 )
 
 app = FastAPI(title="Medical Multi-task NER and Intent API")
@@ -38,6 +55,7 @@ app.add_middleware(
 
 inference_bundle: InferenceBundle | None = None
 policy_bundle: DialoguePolicyBundle | None = None
+question_generator_bundle: QuestionGeneratorBundle | None = None
 
 
 # Kiểm tra đường dẫn đến model.
@@ -126,6 +144,39 @@ def _follow_up_question(field: str) -> str | None:
         "age": "Người bệnh bao nhiêu tuổi?",
     }
     return questions.get(field)
+
+
+# Sinh câu hỏi bằng mT5
+def _generated_follow_up_question(
+    field: str,
+    analysis: dict,
+    history: list[dict[str, str]],
+) -> str | None:
+    """Use T5 when available; never let a failed generation block the API."""
+
+    fallback = _follow_up_question(field)
+
+    if question_generator_bundle is None:
+        logger.info("followup source=TEMPLATE field=%s reason=no_model_loaded", field)
+        return fallback
+
+    try:
+        generated = generate_follow_up_question(
+            field, analysis, history, question_generator_bundle,
+        )
+    except Exception as error:
+        logger.error(
+            "followup source=TEMPLATE field=%s reason=exception error=%s: %s",
+            field, type(error).__name__, error,
+        )
+        return fallback
+
+    if generated:
+        logger.info("followup source=MODEL field=%s question=%r", field, generated)
+        return generated
+
+    logger.info("followup source=TEMPLATE field=%s reason=model_rejected", field)
+    return fallback
 
 
 # Xây dựng lại câu trả lời duy nhất trả về dạng json cho model. 
@@ -221,6 +272,10 @@ def _analyze_history(
     decision = predict_policy(user_messages[-1], history, analysis, policy)
     next_action = str(decision.get("nextAction", "CLARIFY"))
     field = str(decision.get("field", "NONE"))
+    logger.info(
+        "policy decision nextAction=%s field=%s confidence=%.3f",
+        next_action, field, decision.get("confidence", 0.0),
+    )
 
     if next_action == "ASK_FOLLOW_UP":
         analysis["action"] = "CLARIFY"
@@ -228,7 +283,11 @@ def _analyze_history(
         selected_field = field if field in analysis["missingFields"] else (
             analysis["missingFields"][0] if analysis["missingFields"] else field
         )
-        analysis["followUpQuestion"] = _follow_up_question(selected_field)
+        analysis["followUpQuestion"] = _generated_follow_up_question(
+            selected_field,
+            analysis,
+            history,
+        )
         field = selected_field
     elif next_action == "FIND_DOCTORS":
         analysis["action"] = "FIND_DOCTORS"
@@ -262,7 +321,7 @@ def _analyze_history(
 async def load_model():
     """Load the multi-task checkpoint once when the service starts."""
 
-    global inference_bundle, policy_bundle
+    global inference_bundle, policy_bundle, question_generator_bundle
     print(f"[AI Service] Loading multi-task model from: {MODEL_PATH}")
 
     if is_local_model_path(MODEL_PATH) and not os.path.exists(MODEL_PATH):
@@ -292,6 +351,22 @@ async def load_model():
         policy_bundle = None
         print(f"[AI Service] Dialogue policy load error: {type(error).__name__}: {error}")
 
+    try:
+        question_generator_bundle = load_question_generator(QUESTION_GENERATOR_PATH)
+        if question_generator_bundle:
+            print(
+                "[AI Service] T5 question generator loaded from: "
+                f"{QUESTION_GENERATOR_PATH}"
+            )
+        else:
+            print(
+                "[AI Service] T5 question generator not found; "
+                "using fixed-question fallback"
+            )
+    except Exception as error:
+        question_generator_bundle = None
+        print(f"[AI Service] Question generator load error: {type(error).__name__}: {error}")
+
 
 
 # Check model.
@@ -307,6 +382,8 @@ async def health_check():
         "model_exists": os.path.exists(MODEL_PATH) if is_local_model_path(MODEL_PATH) else None,
         "policy_model_loaded": policy_bundle is not None,
         "policy_model_path": POLICY_MODEL_PATH,
+        "question_generator_loaded": question_generator_bundle is not None,
+        "question_generator_path": QUESTION_GENERATOR_PATH,
     }
 
 

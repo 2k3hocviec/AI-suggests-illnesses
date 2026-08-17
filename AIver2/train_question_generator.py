@@ -21,12 +21,12 @@ from question_generator import MAX_INPUT_LENGTH, MAX_NEW_TOKENS
 
 
 ROOT = Path(__file__).parent
-MODEL_NAME = os.getenv("QUESTION_GENERATOR_BASE_MODEL", "google/mt5-small")
+MODEL_NAME = os.getenv("QUESTION_GENERATOR_BASE_MODEL", "VietAI/vit5-base")
 TRAIN_PATH = Path(os.getenv("QUESTION_TRAIN_PATH", str(ROOT / "data" / "train_question_generation.json")))
 VAL_PATH = Path(os.getenv("QUESTION_VAL_PATH", str(ROOT / "data" / "val_question_generation.json")))
 TEST_PATH = Path(os.getenv("QUESTION_TEST_PATH", str(ROOT / "data" / "test_question_generation.json")))
 OUTPUT_DIR = Path(os.getenv("QUESTION_GENERATOR_OUTPUT", str(ROOT / "output" / "question-generator")))
-EPOCHS = float(os.getenv("QUESTION_EPOCHS", "8"))
+EPOCHS = float(os.getenv("QUESTION_EPOCHS", "15"))
 MAX_STEPS = int(os.getenv("QUESTION_MAX_STEPS", "-1"))
 
 
@@ -62,7 +62,7 @@ def main() -> None:
                 f"Missing {path}. Run generate_question_generator_dataset.py first."
             )
 
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, use_fast=False)
     # Tải model.
     model = AutoModelForSeq2SeqLM.from_pretrained(MODEL_NAME)
     train_dataset = QuestionDataset(TRAIN_PATH, tokenizer)
@@ -82,9 +82,15 @@ def main() -> None:
         weight_decay=0.01,
         max_grad_norm=1.0,
         optim="adamw_torch",
+        warmup_ratio=0.1,
+        lr_scheduler_type="cosine",
 
         eval_strategy="epoch",
         save_strategy="epoch",
+        load_best_model_at_end=True,
+        metric_for_best_model="eval_loss",
+        greater_is_better=False,
+        save_total_limit=3,
         logging_first_step=True,
         logging_steps=10,
         report_to="none",

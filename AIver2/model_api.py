@@ -272,23 +272,38 @@ def _analyze_history(
     decision = predict_policy(user_messages[-1], history, analysis, policy)
     next_action = str(decision.get("nextAction", "CLARIFY"))
     field = str(decision.get("field", "NONE"))
+    confidence = decision.get("confidence", 0.0)
+
+    # Rào chắn logic (Guardrail) để sửa lỗi dự đoán sai của model
+    missing_fields = analysis.get("missingFields", [])
+    if next_action == "ASK_FOLLOW_UP" and not missing_fields:
+        # Nếu tất cả các trường đã được điền đầy đủ, bắt buộc chuyển sang FIND_DOCTORS
+        next_action = "FIND_DOCTORS"
+        field = "NONE"
+        logger.info("Guardrail override: all fields filled, forcing FIND_DOCTORS")
+    elif next_action == "ASK_FOLLOW_UP" and field not in missing_fields:
+        # Nếu model muốn hỏi một trường đã có dữ liệu, chuyển sang hỏi trường thực sự còn thiếu
+        if missing_fields:
+            field = missing_fields[0]
+            logger.info("Guardrail override: field %s already filled, redirecting to %s", decision.get("field"), field)
+        else:
+            next_action = "FIND_DOCTORS"
+            field = "NONE"
+            logger.info("Guardrail override: forcing FIND_DOCTORS since no fields are missing")
+
     logger.info(
-        "policy decision nextAction=%s field=%s confidence=%.3f",
-        next_action, field, decision.get("confidence", 0.0),
+        "policy decision nextAction=%s field=%s confidence=%.3f (final action=%s field=%s)",
+        decision.get("nextAction"), decision.get("field"), confidence, next_action, field
     )
 
     if next_action == "ASK_FOLLOW_UP":
         analysis["action"] = "CLARIFY"
         analysis["readyForRecommendation"] = False
-        selected_field = field if field in analysis["missingFields"] else (
-            analysis["missingFields"][0] if analysis["missingFields"] else field
-        )
         analysis["followUpQuestion"] = _generated_follow_up_question(
-            selected_field,
+            field,
             analysis,
             history,
         )
-        field = selected_field
     elif next_action == "FIND_DOCTORS":
         analysis["action"] = "FIND_DOCTORS"
         analysis["readyForRecommendation"] = bool(

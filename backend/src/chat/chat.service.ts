@@ -342,9 +342,7 @@ export class ChatService {
     // Nếu người dùng chào hỏi, cảm ơn, tạm biệt thì không bao giờ gợi ý bác sĩ
     // dù phân tích trước đó đã đủ trường.
     const isConversationalIntent =
-      analysis.intent === "GREETING" ||
-      analysis.intent === "THANKS" ||
-      analysis.intent === "GOODBYE" ||
+      CONVERSATION_INTENTS.has(analysis.intent) ||
       (analysis.intent === "UNKNOWN" && analysis.symptoms.length === 0);
 
     const isMedicalRequest =
@@ -1043,6 +1041,15 @@ export class ChatService {
 
     const raw = value as Record<string, unknown>;
     const validActions = new Set(["FIND_DOCTORS", "REPLY", "CLARIFY"]);
+    const rawIntent =
+      typeof raw.intent === "string" ? raw.intent.toUpperCase() : "UNKNOWN";
+    const rawAction =
+      typeof raw.action === "string" ? raw.action.toUpperCase() : "CLARIFY";
+    const conversationalIntent = CONVERSATION_INTENTS.has(rawIntent)
+      ? (rawIntent as ModelAnalyzeResponse["intent"])
+      : undefined;
+    const isConversationalReply =
+      rawAction === "REPLY" && Boolean(conversationalIntent);
     const action =
       typeof raw.action === "string" &&
         validActions.has(raw.action.toUpperCase())
@@ -1059,7 +1066,9 @@ export class ChatService {
         ? raw.followUpQuestion
         : base.followUpQuestion;
     const readyForRecommendation =
-      typeof raw.readyForRecommendation === "boolean"
+      isConversationalReply
+        ? false
+        : typeof raw.readyForRecommendation === "boolean"
         ? raw.readyForRecommendation
         : base.readyForRecommendation;
     const nextAction =
@@ -1086,9 +1095,10 @@ export class ChatService {
     return {
       ...base,
       analysisSource,
-      action,
+      intent: conversationalIntent ?? base.intent,
+      action: isConversationalReply ? "REPLY" : action,
       missingFields,
-      followUpQuestion,
+      followUpQuestion: isConversationalReply ? null : followUpQuestion,
       readyForRecommendation,
       ...(nextAction ? { nextAction } : {}),
       ...(field ? { field } : {}),
@@ -1973,7 +1983,7 @@ ${content}`;
   private buildConversationReply(intent: ModelAnalyzeResponse["intent"]) {
     switch (intent) {
       case "GREETING":
-        return "Xin chào! Tôi có thể hỗ trợ bạn tìm bác sĩ phù hợp dựa trên các triệu chứng bạn nhập vào. Hãy mô tả vấn đề sức khỏe của bạn để bắt đầu.";
+        return "Xin chào! Tôi có thể giúp gì cho bạn?";
       case "THANKS":
         return "Không có gì. Tôi rất vui được hỗ trợ bạn!";
       case "GOODBYE":

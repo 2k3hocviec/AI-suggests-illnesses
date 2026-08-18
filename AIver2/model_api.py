@@ -24,6 +24,7 @@ from pydantic import BaseModel, Field  # type: ignore
 
 from dialogue_policy import DialoguePolicyBundle, load_policy_bundle, predict_policy
 from inference import InferenceBundle, load_multitask_model, predict
+from intent_labels import CONVERSATION_INTENTS
 from question_generator import (
     QuestionGeneratorBundle,
     generate_follow_up_question,
@@ -268,6 +269,30 @@ def _analyze_history(
     per_message_analyses = [predict(message, inference) for message in user_messages]
     # Lấy lịch sử đoạn chat phân tích.
     analysis = _merge_history_analyses(per_message_analyses)
+
+    # Duy trì intent trong cuộc hội thoại cũ nhất (GREETING, THANKS, or GOODBYE)
+    # thông tin nãy sẽ được duy trì cho các cuộc hội thoại  tiếp theo, nhưng sẽ
+    # không gợi ý cho cuộc hội thoại khi người dùng cảm ơn, tạm biệt.
+    latest = per_message_analyses[-1]
+    latest_intent = latest.get("intent", "UNKNOWN")
+    latest_is_conversational = (
+        latest_intent in CONVERSATION_INTENTS
+        and not latest.get("symptoms")
+        and not latest.get("redFlags")
+    )
+    if latest_is_conversational:
+        analysis["intent"] = latest_intent
+        analysis["action"] = "REPLY"
+        analysis["readyForRecommendation"] = False
+        analysis["followUpQuestion"] = None
+        return {
+            **analysis,
+            "nextAction": "REPLY",
+            "field": "NONE",
+            "confidence": 1.0,
+            "source": "RULE",
+        }
+
     # Dùng model dự đoán hành động tiếp theo.
     decision = predict_policy(user_messages[-1], history, analysis, policy)
     next_action = str(decision.get("nextAction", "CLARIFY"))

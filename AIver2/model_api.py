@@ -313,7 +313,17 @@ def _analyze_history(
     elif next_action == "REPLY":
         analysis["action"] = "REPLY"
         analysis["readyForRecommendation"] = False
-        analysis["followUpQuestion"] = None
+        intent_to_field = {
+            "GREETING": "greeting",
+            "THANKS": "thanks",
+            "GOODBYE": "goodbye"
+        }
+        reply_field = intent_to_field.get(analysis.get("intent", "UNKNOWN"), "greeting")
+        analysis["followUpQuestion"] = _generated_follow_up_question(
+            reply_field,
+            analysis,
+            history,
+        )
     elif next_action == "EMERGENCY":
         analysis["action"] = "FIND_DOCTORS"
         analysis["readyForRecommendation"] = bool(analysis["redFlags"])

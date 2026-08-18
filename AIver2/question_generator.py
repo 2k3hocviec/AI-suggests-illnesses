@@ -21,7 +21,7 @@ import torch #type: ignore
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer  # type: ignore
 
 
-QUESTION_FIELDS = ("duration", "severity", "age")
+QUESTION_FIELDS = ("duration", "severity", "age", "greeting", "thanks", "goodbye")
 MAX_INPUT_LENGTH = 256
 MAX_NEW_TOKENS = 64
 
@@ -165,6 +165,9 @@ def _is_safe_question(question: str, field: str) -> bool:
             "nghiêm trọng", "đánh giá", "mô tả", "cảm nhận",
         ),
         "age": ("bao nhiêu tuổi", "mấy tuổi", "tuổi"),
+        "greeting": ("chào", "hỗ trợ", "giúp", "triệu chứng", "sức khỏe"),
+        "thanks": ("không có gì", "vui", "hỗ trợ", "giúp", "khỏe", "ơn"),
+        "goodbye": ("tạm biệt", "hẹn", "chúc", "khỏe", "chào"),
     }
     return any(term in question.lower() for term in expected_terms[field])
 
@@ -201,7 +204,7 @@ def generate_follow_up_question(
     # Loại bỏ sentinel tokens mT5 (<extra_id_0>, <extra_id_1>, ...)
     question = re.sub(r"<extra_id_\d+>", "", question)
     question = re.sub(r"\s+", " ", question).strip()
-    if question and not question.endswith("?"):
+    if question and field not in ("greeting", "thanks", "goodbye") and not question.endswith("?"):
         question += "?"
     is_safe = _is_safe_question(question, field)
     if not is_safe:

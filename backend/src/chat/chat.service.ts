@@ -126,7 +126,7 @@ export class ChatService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
-  ) {}
+  ) { }
 
   /*
   Gửi một cho server một đoạn tin nhắn
@@ -338,7 +338,17 @@ export class ChatService {
       ? cachedAnalysis
       : await this.analyzeConversation(content, history);
     let analysis = cachedAnalysis ? cachedAnalysis : rawAnalysis;
-    const isMedicalRequest = analysis.readyForRecommendation;
+
+    // Nếu người dùng chào hỏi, cảm ơn, tạm biệt thì không bao giờ gợi ý bác sĩ
+    // dù phân tích trước đó đã đủ trường.
+    const isConversationalIntent =
+      analysis.intent === "GREETING" ||
+      analysis.intent === "THANKS" ||
+      analysis.intent === "GOODBYE" ||
+      (analysis.intent === "UNKNOWN" && analysis.symptoms.length === 0);
+
+    const isMedicalRequest =
+      !isConversationalIntent && analysis.readyForRecommendation;
     const hasEmergencySpecialty =
       isMedicalRequest && this.hasEmergencySpecialty(analysis);
     const recommendedSpecialties = isMedicalRequest
@@ -351,9 +361,9 @@ export class ChatService {
         : isRepeatedQuestion
           ? this.withoutDoctorSuggestions(recommendedSpecialties)
           : await this.attachDoctorsToSpecialties(
-              userId,
-              recommendedSpecialties,
-            );
+            userId,
+            recommendedSpecialties,
+          );
     const assistantContent =
       isRepeatedQuestion && cachedAssistantContent
         ? cachedAssistantContent
@@ -456,20 +466,20 @@ export class ChatService {
         typeof payload.question === "string" ? payload.question.trim() : "";
       const question =
         rawQuestion.length <= 240 &&
-        rawQuestion.includes("?") &&
-        ![
-          "chẩn đoán",
-          "chan doan",
-          "điều trị",
-          "dieu tri",
-          "uống thuốc",
-          "uong thuoc",
-          "kê đơn",
-          "ke don",
-          "diagnos",
-          "treatment",
-          "prescribe",
-        ].some((phrase) => rawQuestion.toLowerCase().includes(phrase))
+          rawQuestion.includes("?") &&
+          ![
+            "chẩn đoán",
+            "chan doan",
+            "điều trị",
+            "dieu tri",
+            "uống thuốc",
+            "uong thuoc",
+            "kê đơn",
+            "ke don",
+            "diagnos",
+            "treatment",
+            "prescribe",
+          ].some((phrase) => rawQuestion.toLowerCase().includes(phrase))
           ? rawQuestion
           : undefined;
       const validActions = new Set([
@@ -539,6 +549,7 @@ export class ChatService {
       return {
         ...analysis,
         action: "REPLY",
+        followUpQuestion: decision.question || null,
       };
     }
 
@@ -744,7 +755,7 @@ export class ChatService {
       );
       const analysisSource =
         rawMetadata.analysisSource === "NER" ||
-        rawMetadata.analysisSource === "Gemini"
+          rawMetadata.analysisSource === "Gemini"
           ? rawMetadata.analysisSource
           : undefined;
 
@@ -786,7 +797,7 @@ export class ChatService {
       );
       const analysisSource =
         rawMetadata.analysisSource === "NER" ||
-        rawMetadata.analysisSource === "Gemini"
+          rawMetadata.analysisSource === "Gemini"
           ? rawMetadata.analysisSource
           : undefined;
       return {
@@ -1034,14 +1045,14 @@ export class ChatService {
     const validActions = new Set(["FIND_DOCTORS", "REPLY", "CLARIFY"]);
     const action =
       typeof raw.action === "string" &&
-      validActions.has(raw.action.toUpperCase())
+        validActions.has(raw.action.toUpperCase())
         ? (raw.action.toUpperCase() as ModelAnalyzeResponse["action"])
         : base.action;
     const missingFields = Array.isArray(raw.missingFields)
       ? raw.missingFields.filter(
-          (field): field is ClinicalField =>
-            field === "duration" || field === "severity" || field === "age",
-        )
+        (field): field is ClinicalField =>
+          field === "duration" || field === "severity" || field === "age",
+      )
       : base.missingFields;
     const followUpQuestion =
       typeof raw.followUpQuestion === "string"
@@ -1053,18 +1064,18 @@ export class ChatService {
         : base.readyForRecommendation;
     const nextAction =
       typeof raw.nextAction === "string" &&
-      [
-        "ASK_FOLLOW_UP",
-        "FIND_DOCTORS",
-        "EMERGENCY",
-        "REPLY",
-        "CLARIFY",
-      ].includes(raw.nextAction)
+        [
+          "ASK_FOLLOW_UP",
+          "FIND_DOCTORS",
+          "EMERGENCY",
+          "REPLY",
+          "CLARIFY",
+        ].includes(raw.nextAction)
         ? (raw.nextAction as ModelAnalyzeResponse["nextAction"])
         : undefined;
     const field =
       typeof raw.field === "string" &&
-      ["NONE", "duration", "severity", "age"].includes(raw.field)
+        ["NONE", "duration", "severity", "age"].includes(raw.field)
         ? (raw.field as ModelAnalyzeResponse["field"])
         : undefined;
     const confidence = Number(raw.confidence);
@@ -1117,37 +1128,37 @@ export class ChatService {
 
     const symptoms = Array.isArray(raw.symptoms)
       ? raw.symptoms
-          .map((symptom) => {
-            if (!symptom || typeof symptom !== "object") {
-              return null;
-            }
+        .map((symptom) => {
+          if (!symptom || typeof symptom !== "object") {
+            return null;
+          }
 
-            const item = symptom as {
-              name?: unknown;
-              confidence?: unknown;
-              specialty_code?: unknown;
-            };
-            const specialtyCode =
-              typeof item.specialty_code === "string"
-                ? item.specialty_code.toUpperCase()
-                : "";
-            const confidence = Number(item.confidence);
+          const item = symptom as {
+            name?: unknown;
+            confidence?: unknown;
+            specialty_code?: unknown;
+          };
+          const specialtyCode =
+            typeof item.specialty_code === "string"
+              ? item.specialty_code.toUpperCase()
+              : "";
+          const confidence = Number(item.confidence);
 
-            if (
-              typeof item.name !== "string" ||
-              !MEDICAL_SPECIALTY_CODES.has(specialtyCode) ||
-              !Number.isFinite(confidence)
-            ) {
-              return null;
-            }
+          if (
+            typeof item.name !== "string" ||
+            !MEDICAL_SPECIALTY_CODES.has(specialtyCode) ||
+            !Number.isFinite(confidence)
+          ) {
+            return null;
+          }
 
-            return {
-              name: item.name.trim(),
-              confidence: this.clampScore(confidence),
-              specialty_code: specialtyCode,
-            };
-          })
-          .filter((symptom): symptom is ModelSymptom => Boolean(symptom))
+          return {
+            name: item.name.trim(),
+            confidence: this.clampScore(confidence),
+            specialty_code: specialtyCode,
+          };
+        })
+        .filter((symptom): symptom is ModelSymptom => Boolean(symptom))
       : [];
 
     const slots = this.normalizeClinicalSlots(raw.slots);
@@ -1265,13 +1276,13 @@ export class ChatService {
     // the previous snapshot so the conversation remains linked.
     const symptoms = current.symptoms.length
       ? current.symptoms.filter(
-          (symptom, index, all) =>
-            all.findIndex(
-              (candidate) =>
-                candidate.name === symptom.name &&
-                candidate.specialty_code === symptom.specialty_code,
-            ) === index,
-        )
+        (symptom, index, all) =>
+          all.findIndex(
+            (candidate) =>
+              candidate.name === symptom.name &&
+              candidate.specialty_code === symptom.specialty_code,
+          ) === index,
+      )
       : previous.symptoms;
 
     // Preserve emergency evidence across follow-up answers. A later answer
@@ -1334,8 +1345,8 @@ export class ChatService {
     const missingFields: ClinicalField[] = analysis.redFlags.length
       ? []
       : (["duration", "severity", "age"] as ClinicalField[]).filter(
-          (field) => analysis.slots[field] === null,
-        );
+        (field) => analysis.slots[field] === null,
+      );
     const readyForRecommendation = missingFields.length === 0;
     return {
       ...analysis,
@@ -1469,10 +1480,10 @@ ${content}`;
         const fallback = SPECIALTY_HINTS.find((hint) => hint.code === code);
         return fallback
           ? {
-              id: null,
-              code: fallback.code,
-              name: fallback.name,
-            }
+            id: null,
+            code: fallback.code,
+            name: fallback.name,
+          }
           : null;
       })
       .filter((item): item is RecommendedSpecialty => item !== null);
@@ -1693,9 +1704,9 @@ ${content}`;
   }) {
     return this.clampScore(
       scores.specialtyScore * 0.5 +
-        scores.experienceScore * 0.15 +
-        scores.ratingScore * 0.1 +
-        scores.locationScore * 0.25,
+      scores.experienceScore * 0.15 +
+      scores.ratingScore * 0.1 +
+      scores.locationScore * 0.25,
     );
   }
 
@@ -1923,10 +1934,10 @@ ${content}`;
               : doctor.fullName;
             const consultationType = doctor.consultationType.length
               ? doctor.consultationType
-                  .map((type) =>
-                    type === "ONLINE" ? "Tư vấn online" : "Khám trực tiếp",
-                  )
-                  .join(", ")
+                .map((type) =>
+                  type === "ONLINE" ? "Tư vấn online" : "Khám trực tiếp",
+                )
+                .join(", ")
               : "chưa cập nhật";
             const distance = doctor.distanceText
               ? `\n• Khoảng cách khu vực: ${doctor.distanceText}`
@@ -1953,7 +1964,7 @@ ${content}`;
     }
 
     if (analysis.action === "REPLY") {
-      return this.buildConversationReply(analysis.intent);
+      return analysis.followUpQuestion || this.buildConversationReply(analysis.intent);
     }
 
     return this.buildClarificationReply();

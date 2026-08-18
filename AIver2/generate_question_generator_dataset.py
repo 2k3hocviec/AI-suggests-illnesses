@@ -98,6 +98,42 @@ TEMPLATES: dict[str, tuple[str, ...]] = {
         "Người bệnh được bao nhiêu tuổi rồi?",
         "Cho hỏi tuổi của bệnh nhân?",
     ),
+    "greeting": (
+        "Xin chào! Mình có thể hỗ trợ gì cho bạn về sức khỏe hôm nay?",
+        "Chào bạn, mình là trợ lý ảo hỗ trợ tìm bác sĩ. Bạn đang gặp triệu chứng gì thế?",
+        "Xin chào! Hãy mô tả triệu chứng của bạn để mình giúp tìm bác sĩ nhé.",
+        "Chào bạn nhé! Bạn cần tư vấn về vấn đề sức khỏe nào hôm nay?",
+        "Dạ xin chào! Mình có thể giúp gì cho sức khỏe của bạn?",
+        "Chào bạn! Bạn đang có các triệu chứng hay khó chịu gì trong người không?",
+        "Dạ chào bạn! Hãy chia sẻ các triệu chứng bạn gặp phải để mình hỗ trợ nhé.",
+        "Xin chào! Mình có thể giúp gì cho bạn hôm nay?",
+        "Chào bạn! Cho mình hỏi bạn cần tư vấn sức khỏe về vấn đề gì ạ?",
+        "Chào bạn! Rất vui được hỗ trợ bạn tìm chuyên khoa và bác sĩ phù hợp.",
+    ),
+    "thanks": (
+        "Không có gì đâu! Chúc bạn luôn khỏe mạnh nhé.",
+        "Rất vui được hỗ trợ bạn. Chúc bạn một ngày tốt lành!",
+        "Dạ không có gì ạ! Bạn cần hỗ trợ gì thêm không?",
+        "Dạ không có gì! Chúc bạn mau khỏe nhé.",
+        "Rất sẵn lòng giúp đỡ bạn. Chúc bạn nhiều sức khỏe!",
+        "Không có gì ạ! Chúc bạn và gia đình luôn khỏe mạnh.",
+        "Dạ có gì đâu ạ! Cần tư vấn gì thêm bạn cứ nhắn mình nha.",
+        "Rất vui vì thông tin này hữu ích với bạn. Chúc bạn luôn mạnh khỏe!",
+        "Dạ không có gì! Chúc bạn một ngày ngập tràn niềm vui và sức khỏe.",
+        "Không có gì đâu ạ! Cảm ơn bạn đã tin tưởng trợ lý ảo sức khỏe.",
+    ),
+    "goodbye": (
+        "Tạm biệt bạn! Chúc bạn và gia đình luôn khỏe mạnh.",
+        "Chào tạm biệt bạn nhé! Hẹn gặp lại bạn.",
+        "Tạm biệt! Chúc bạn nhiều sức khỏe và bình an.",
+        "Chào tạm biệt! Chúc bạn mau chóng hồi phục sức khỏe nhé.",
+        "Tạm biệt bạn nhé! Giữ gìn sức khỏe nha.",
+        "Dạ tạm biệt bạn! Hẹn gặp lại bạn khi cần hỗ trợ sức khỏe.",
+        "Chào tạm biệt! Hãy nhắn cho mình bất cứ khi nào bạn cần giúp đỡ.",
+        "Tạm biệt bạn! Hy vọng bạn sớm khỏe lại.",
+        "Tạm biệt bạn nhé! Chúc bạn một ngày tốt lành.",
+        "Dạ tạm biệt! Chúc bạn luôn bình an và khỏe mạnh.",
+    ),
 }
 
 # Mỗi record tạo nhiều variant bằng cách cắt history khác nhau.
@@ -111,10 +147,12 @@ HISTORY_SLICES: list[int | None] = [
 
 
 def _target_question(field: str, analysis: dict[str, Any], record_id: str) -> str:
-    symptom = _first_symptom(analysis)
     field_templates = TEMPLATES[field]
     index = int(hashlib.sha256(record_id.encode("utf-8")).hexdigest(), 16)
     template = field_templates[index % len(field_templates)]
+    if field in ("greeting", "thanks", "goodbye"):
+        return template
+    symptom = _first_symptom(analysis)
     return template.format(symptom=symptom)
 
 
@@ -160,6 +198,39 @@ def _build_examples(
                     "target": _target_question(field, analysis, variant_id),
                 }
             )
+
+    # Thêm dữ liệu synthetic chào hỏi/cảm ơn/tạm biệt để model T5 tự học
+    if augment:
+        synthetic_dialogues = [
+            ("greeting", ["Xin chào", "Chào bạn", "chào", "hello", "hi", "chào trợ lý ảo", "alo"]),
+            ("thanks", ["Cảm ơn bạn", "cảm ơn", "thank you", "mình cảm ơn nhé", "cám ơn", "ok cảm ơn"]),
+            ("goodbye", ["Tạm biệt", "chào tạm biệt", "tạm biệt nhé", "hẹn gặp lại", "bye bye", "bye"]),
+        ]
+        synthetic_count = 0
+        for field, user_inputs in synthetic_dialogues:
+            for variant_idx, user_input in enumerate(user_inputs):
+                for template_idx in range(10):  # Tạo 10 template target khác nhau cho mỗi đầu vào
+                    record_id = f"synth_{field}_{synthetic_count}"
+                    synthetic_count += 1
+                    
+                    analysis = {
+                        "symptoms": [],
+                        "slots": {f: None for f in QUESTION_FIELDS}
+                    }
+                    variant_history = [{"role": "USER", "content": user_input}]
+                    input_text = serialize_question_input(field, analysis, variant_history)
+                    
+                    target_templates = TEMPLATES[field]
+                    target = target_templates[template_idx]
+                    
+                    examples.append(
+                        {
+                            "id": record_id,
+                            "field": field,
+                            "input": input_text,
+                            "target": target,
+                        }
+                    )
     return examples
 
 

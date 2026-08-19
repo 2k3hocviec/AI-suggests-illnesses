@@ -1069,8 +1069,8 @@ export class ChatService {
       isConversationalReply
         ? false
         : typeof raw.readyForRecommendation === "boolean"
-        ? raw.readyForRecommendation
-        : base.readyForRecommendation;
+          ? raw.readyForRecommendation
+          : base.readyForRecommendation;
     const nextAction =
       typeof raw.nextAction === "string" &&
         [
@@ -1098,7 +1098,7 @@ export class ChatService {
       intent: conversationalIntent ?? base.intent,
       action: isConversationalReply ? "REPLY" : action,
       missingFields,
-      followUpQuestion: isConversationalReply ? null : followUpQuestion,
+      followUpQuestion,
       readyForRecommendation,
       ...(nextAction ? { nextAction } : {}),
       ...(field ? { field } : {}),
@@ -1902,7 +1902,11 @@ ${content}`;
     analysis: ModelAnalyzeResponse,
     recommendedSpecialties: RecommendedSpecialtyWithDoctors[],
   ) {
-    if (analysis.followUpQuestion && analysis.symptoms.length) {
+    if (
+      analysis.followUpQuestion &&
+      analysis.symptoms.length &&
+      !CONVERSATION_INTENTS.has(analysis.intent)
+    ) {
       const symptomText = [
         ...new Set(analysis.symptoms.map((symptom) => symptom.name)),
       ].join(", ");

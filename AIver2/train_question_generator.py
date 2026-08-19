@@ -62,7 +62,14 @@ def main() -> None:
                 f"Missing {path}. Run generate_question_generator_dataset.py first."
             )
 
-    tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME, use_fast=False)
+    import urllib.request
+    spiece_path = ROOT / "spiece.model"
+    if not spiece_path.exists():
+        print("Downloading spiece.model to bypass transformers config bug...")
+        urllib.request.urlretrieve("https://huggingface.co/VietAI/vit5-base/resolve/main/spiece.model", str(spiece_path))
+
+    from transformers import T5Tokenizer
+    tokenizer = T5Tokenizer(vocab_file=str(spiece_path))
     # Tải model.
     model = AutoModelForSeq2SeqLM.from_pretrained(MODEL_NAME)
     train_dataset = QuestionDataset(TRAIN_PATH, tokenizer)

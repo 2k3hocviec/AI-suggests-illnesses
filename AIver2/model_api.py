@@ -147,6 +147,15 @@ def _follow_up_question(field: str) -> str | None:
     return questions.get(field)
 
 
+def _conversation_reply_fallback(field: str) -> str | None:
+    replies = {
+        "greeting": "Xin chào! Tôi có thể giúp gì cho bạn?",
+        "thanks": "Không có gì. Tôi rất vui được hỗ trợ bạn!",
+        "goodbye": "Tạm biệt! Chúc bạn nhiều sức khỏe.",
+    }
+    return replies.get(field)
+
+
 # Sinh câu hỏi bằng mT5
 def _generated_follow_up_question(
     field: str,
@@ -155,7 +164,7 @@ def _generated_follow_up_question(
 ) -> str | None:
     """Use T5 when available; never let a failed generation block the API."""
 
-    fallback = _follow_up_question(field)
+    fallback = _follow_up_question(field) or _conversation_reply_fallback(field)
 
     if question_generator_bundle is None:
         logger.info("followup source=TEMPLATE field=%s reason=no_model_loaded", field)
@@ -284,7 +293,11 @@ def _analyze_history(
         analysis["intent"] = latest_intent
         analysis["action"] = "REPLY"
         analysis["readyForRecommendation"] = False
-        analysis["followUpQuestion"] = None
+        analysis["followUpQuestion"] = _generated_follow_up_question(
+            str(latest_intent).lower(),
+            analysis,
+            history,
+        )
         return {
             **analysis,
             "nextAction": "REPLY",

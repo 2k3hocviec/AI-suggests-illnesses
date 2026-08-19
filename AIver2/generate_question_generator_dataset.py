@@ -199,38 +199,189 @@ def _build_examples(
                 }
             )
 
-    # Thêm dữ liệu synthetic chào hỏi/cảm ơn/tạm biệt để model T5 tự học
+    # Thêm dữ liệu synthetic chào hỏi/cảm ơn/tạm biệt để model T5 tự học.
+    # Mỗi input chỉ xuất hiện một lần với một target cố định; lặp cùng một
+    # input với nhiều target khác nhau sẽ tạo nhãn mâu thuẫn khi fine-tune.
     if augment:
-        synthetic_dialogues = [
-            ("greeting", ["Xin chào", "Chào bạn", "chào", "hello", "hi", "chào trợ lý ảo", "alo"]),
-            ("thanks", ["Cảm ơn bạn", "cảm ơn", "thank you", "mình cảm ơn nhé", "cám ơn", "ok cảm ơn"]),
-            ("goodbye", ["Tạm biệt", "chào tạm biệt", "tạm biệt nhé", "hẹn gặp lại", "bye bye", "bye"]),
-        ]
+        synthetic_dialogues = {
+            "greeting": [
+                "Xin chào",
+                "Chào bạn",
+                "Chào trợ lý ảo",
+                "Alo, cho mình hỏi",
+                "Hello",
+                "Hi",
+                "Chào buổi sáng",
+                "Chào buổi tối",
+                "Mình muốn được tư vấn",
+                "Bạn có thể giúp mình không",
+                "Tôi cần hỗ trợ về sức khỏe",
+                "Cho tôi hỏi một chút",
+                "Xin chào bác sĩ",
+                "Chào bạn nhé",
+                "Mình mới vào, xin chào",
+                "Có ai hỗ trợ mình không",
+                "Tôi muốn tìm bác sĩ",
+                "Mình cần hỏi về triệu chứng",
+                "Bạn ơi",
+                "Chào hệ thống",
+                "Xin được tư vấn",
+                "Mình có chuyện muốn hỏi",
+                "Bác sĩ ơi",
+                "Chào bạn, bạn khỏe không",
+                "Tôi muốn bắt đầu tư vấn",
+                "Mình cần trợ giúp",
+                "Xin chào, hỗ trợ mình với",
+                "Chào nhé, mình muốn hỏi",
+                "Có thể tư vấn cho tôi không",
+                "Tôi muốn hỏi về sức khỏe",
+                "Chào, tôi muốn nhờ bạn tư vấn",
+                "Xin chào, tôi có một câu hỏi",
+                "Mình cần được hỗ trợ hôm nay",
+                "Chào bạn, giúp mình với nhé",
+                "Tôi muốn hỏi về tình trạng sức khỏe",
+                "Xin chào, bạn có thể tư vấn không",
+                "Mình muốn trao đổi về sức khỏe",
+                "Chào bạn, tôi cần tìm bác sĩ",
+                "Có thể hỗ trợ tôi một chút không",
+                "Tôi cần hỏi thông tin y tế",
+                "Chào, mình đang cần trợ giúp",
+                "Xin chào, hãy giúp tôi với",
+                "Tôi có một vấn đề muốn hỏi",
+                "Mình muốn bắt đầu hỏi đáp",
+                "Chào bạn, tôi muốn được hướng dẫn",
+                "Bạn hãy tư vấn giúp tôi nhé",
+                "Tôi muốn nói chuyện với trợ lý",
+                "Xin chào, tôi cần hỗ trợ ngay",
+                "Mình có câu hỏi về việc khám bệnh",
+                "Chào, tôi muốn được tư vấn",
+            ],
+            "thanks": [
+                "Cảm ơn bạn",
+                "Cảm ơn",
+                "Mình cảm ơn nhé",
+                "Cám ơn bạn nhiều",
+                "Thank you",
+                "Ok, cảm ơn",
+                "Cảm ơn bạn đã tư vấn",
+                "Cảm ơn trợ lý",
+                "Nhờ bạn mà tôi hiểu hơn rồi",
+                "Thông tin rất hữu ích, cảm ơn bạn",
+                "Tôi biết rồi, cảm ơn",
+                "Cảm ơn bạn đã hỗ trợ",
+                "Mình rất cảm kích",
+                "Cảm ơn bác sĩ",
+                "Được rồi, cảm ơn nhé",
+                "Cảm ơn bạn nhiều lắm",
+                "Tôi cảm ơn sự giúp đỡ này",
+                "Cảm ơn vì đã giải đáp",
+                "Bạn tư vấn rất hữu ích, cảm ơn",
+                "Cảm ơn bạn nha",
+                "Vâng, cảm ơn bạn",
+                "Tôi hiểu rồi, xin cảm ơn",
+                "Cảm ơn đã dành thời gian",
+                "Cảm ơn bạn, vậy là đủ rồi",
+                "Mình cảm ơn sự hỗ trợ",
+                "Cảm ơn nhé",
+                "Xin cảm ơn",
+                "Cảm ơn bạn đã trả lời",
+                "Rất cảm ơn bạn",
+                "Cảm ơn, tôi sẽ lưu ý",
+                "Bạn giúp tôi nhiều quá, cảm ơn",
+                "Cảm ơn vì đã hướng dẫn",
+                "Rất cảm ơn sự tư vấn của bạn",
+                "Đã rõ, xin cảm ơn",
+                "May quá, cảm ơn bạn nhé",
+                "Tôi rất biết ơn bạn",
+                "Cảm ơn bạn đã giải thích",
+                "Cảm ơn, tôi đã hiểu vấn đề rồi",
+                "Thật sự cảm ơn bạn",
+                "Cảm ơn bạn đã giúp đỡ tôi",
+                "Tôi xin cảm ơn lời khuyên",
+                "Cảm ơn, thông tin này rất cần thiết",
+                "Bạn hỗ trợ tôi rất tốt, cảm ơn",
+                "Cảm ơn bạn, tôi yên tâm hơn rồi",
+                "Xin cảm ơn vì sự nhiệt tình",
+                "Cảm ơn bạn, tôi sẽ làm theo hướng dẫn",
+                "Tôi cảm ơn bạn rất nhiều",
+                "Cảm ơn bạn, vậy tôi hiểu rồi",
+                "Cảm ơn vì đã trả lời nhanh",
+                "Cảm ơn bạn đã hỗ trợ rất nhiều",
+            ],
+            "goodbye": [
+                "Tạm biệt",
+                "Chào tạm biệt",
+                "Tạm biệt nhé",
+                "Hẹn gặp lại",
+                "Bye bye",
+                "Bye",
+                "Tôi xin phép kết thúc",
+                "Mình đi nhé",
+                "Tôi không cần hỏi thêm nữa",
+                "Hẹn bạn lần sau",
+                "Chào bạn, hẹn gặp lại",
+                "Tạm biệt và cảm ơn bạn",
+                "Mình dừng cuộc trò chuyện ở đây nhé",
+                "Tôi phải đi rồi",
+                "Khi khác tôi sẽ hỏi tiếp",
+                "Chúc bạn một ngày tốt lành",
+                "Mình xin chào tạm biệt",
+                "Tôi kết thúc tư vấn nhé",
+                "Hẹn gặp lại khi cần hỗ trợ",
+                "Tạm biệt bạn nha",
+                "Chào nhé",
+                "Mình về đây",
+                "Tôi đi trước nhé",
+                "Không còn gì, tạm biệt",
+                "Cảm ơn, tạm biệt bạn",
+                "Tạm biệt trợ lý",
+                "Hẹn gặp lại bạn sau",
+                "Mình sẽ quay lại sau",
+                "Tạm biệt, chúc bạn khỏe",
+                "Xin chào tạm biệt",
+                "Tôi xin dừng ở đây, tạm biệt",
+                "Chúc bạn khỏe, hẹn gặp lại",
+                "Mình chào bạn, lần sau gặp lại",
+                "Đến đây thôi nhé, tạm biệt",
+                "Bye, cảm ơn bạn nhé",
+                "Tôi phải đi, chào bạn nhé",
+                "Hẹn gặp lại trong lần tư vấn sau",
+                "Mình tạm biệt bạn ở đây",
+                "Chúc bạn một ngày vui, tạm biệt",
+                "Tôi xin phép chào bạn",
+                "Khi cần tôi sẽ quay lại, tạm biệt",
+                "Cảm ơn bạn, mình xin phép đi nhé",
+                "Tạm biệt, mong bạn luôn mạnh khỏe",
+                "Tôi kết thúc cuộc trò chuyện nhé",
+                "Hẹn gặp lại, chúc bạn bình an",
+                "Mình chào tạm biệt và hẹn gặp lại",
+                "Tạm biệt, tôi không hỏi thêm nữa",
+                "Xin phép kết thúc, chào bạn",
+                "Tạm biệt, hẹn bạn lần tới",
+                "Chào bạn, tôi xin phép kết thúc",
+            ],
+        }
         synthetic_count = 0
-        for field, user_inputs in synthetic_dialogues:
+        for field, user_inputs in synthetic_dialogues.items():
             for variant_idx, user_input in enumerate(user_inputs):
-                for template_idx in range(10):  # Tạo 10 template target khác nhau cho mỗi đầu vào
-                    record_id = f"synth_{field}_{synthetic_count}"
-                    synthetic_count += 1
-                    
-                    analysis = {
-                        "symptoms": [],
-                        "slots": {f: None for f in QUESTION_FIELDS}
+                analysis = {
+                    "symptoms": [],
+                    "slots": {f: None for f in QUESTION_FIELDS},
+                }
+                variant_history = [{"role": "USER", "content": user_input}]
+                input_text = serialize_question_input(field, analysis, variant_history)
+                target = TEMPLATES[field][variant_idx % len(TEMPLATES[field])]
+                record_id = f"synth_{field}_{synthetic_count:03d}"
+                synthetic_count += 1
+
+                examples.append(
+                    {
+                        "id": record_id,
+                        "field": field,
+                        "input": input_text,
+                        "target": target,
                     }
-                    variant_history = [{"role": "USER", "content": user_input}]
-                    input_text = serialize_question_input(field, analysis, variant_history)
-                    
-                    target_templates = TEMPLATES[field]
-                    target = target_templates[template_idx]
-                    
-                    examples.append(
-                        {
-                            "id": record_id,
-                            "field": field,
-                            "input": input_text,
-                            "target": target,
-                        }
-                    )
+                )
     return examples
 
 

@@ -132,7 +132,10 @@ def load_question_generator(path: str | Path) -> QuestionGeneratorBundle | None:
         return None
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    tokenizer = AutoTokenizer.from_pretrained(str(model_dir), use_fast=False)
+    tokenizer = AutoTokenizer.from_pretrained(
+        str(model_dir),
+        use_fast=False,
+    )
     model = AutoModelForSeq2SeqLM.from_pretrained(str(model_dir))
     model.to(device)
     model.eval()
@@ -166,7 +169,7 @@ def _is_safe_question(question: str, field: str) -> bool:
         ),
         "age": ("bao nhiêu tuổi", "mấy tuổi", "tuổi"),
         "greeting": ("chào", "hỗ trợ", "giúp", "triệu chứng", "sức khỏe"),
-        "thanks": ("không có gì", "vui", "hỗ trợ", "giúp", "khỏe", "ơn"),
+        "thanks": ("không có gì", "có gì đâu", "vui", "hỗ trợ", "giúp", "khỏe", "ơn"),
         "goodbye": ("tạm biệt", "hẹn", "chúc", "khỏe", "chào"),
     }
     return any(term in question.lower() for term in expected_terms[field])

@@ -3,205 +3,205 @@
     "id": "policy_ask_follow_up_0184",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"ợ chua, suy nhược cơ thể\"}\nLỊCH SỬ:\nUSER: Cho tôi hỏi, Tôi vừa bị ợ chua vừa bị suy nhược cơ thể không rõ nguyên nhân.",
-    "target": "Bạn bắt đầu gặp ợ chua từ lúc nào?"
+    "target": "ợ chua đã diễn ra được bao lâu rồi?"
   },
   {
     "id": "policy_ask_follow_up_1088",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ hôm qua\", \"field_to_ask\": \"age\", \"severity\": \"nhẹ\", \"symptoms\": \"tức ngực, vã mồ hôi\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ hôm qua\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: nhẹ",
-    "target": "Người bệnh hiện bao nhiêu tuổi?"
+    "target": "Cho mình biết bạn bao nhiêu tuổi?"
   },
   {
     "id": "policy_ask_follow_up_0166",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"mỏi gối, sốt sình sịch\"}\nLỊCH SỬ:\nUSER: Bác sĩ ơi, Hiện tại tôi đang bị mỏi gối cộng thêm việc sốt sình sịch mấy tuần nay.",
-    "target": "Mỏi gối đã kéo dài được bao lâu?"
+    "target": "mỏi gối bắt đầu cách đây bao lâu?"
   },
   {
     "id": "policy_ask_follow_up_0221",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"phồng rộp, khó thở\"}\nLỊCH SỬ:\nUSER: Bác sĩ ơi, Dạo gần đây tôi thường xuyên phồng rộp đôi khi thấy khó thở.",
-    "target": "Phồng rộp xuất hiện từ khi nào?"
+    "target": "Bạn bị phồng rộp từ khi nào vậy?"
   },
   {
     "id": "policy_ask_follow_up_0877",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"2 ngày nay\", \"field_to_ask\": \"age\", \"severity\": \"vừa phải\", \"symptoms\": \"đau bụng kinh, ngứa ngáy\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: 2 ngày nay\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: vừa phải",
-    "target": "Người đang có triệu chứng này mấy tuổi?"
+    "target": "Năm nay người bệnh bao nhiêu tuổi rồi?"
   },
   {
     "id": "policy_ask_follow_up_0884",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ hôm qua\", \"field_to_ask\": \"age\", \"severity\": \"nhẹ\", \"symptoms\": \"chuột rút, mỏi gối\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ hôm qua\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: nhẹ",
-    "target": "Người đang có triệu chứng này mấy tuổi?"
+    "target": "Người bệnh năm nay mấy tuổi?"
   },
   {
     "id": "policy_ask_follow_up_0834",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ sáng nay\", \"field_to_ask\": \"age\", \"severity\": \"khá nặng\", \"symptoms\": \"căng thẳng tột độ, hoa mắt\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ sáng nay\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: khá nặng",
-    "target": "Người đang có triệu chứng này mấy tuổi?"
+    "target": "Cho mình hỏi bạn bao nhiêu tuổi?"
   },
   {
     "id": "policy_ask_follow_up_1055",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng một tuần\", \"field_to_ask\": \"age\", \"severity\": \"dữ dội\", \"symptoms\": \"tưa lưỡi trắng, da khô ráp\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: khoảng một tuần\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: dữ dội",
-    "target": "Bạn có thể cho biết người bệnh bao nhiêu tuổi không?"
+    "target": "Mình cần biết tuổi của bạn, bạn bao nhiêu tuổi?"
   },
   {
     "id": "policy_ask_follow_up_0157",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"chóng mặt, chậm tăng cân\"}\nLỊCH SỬ:\nUSER: Gần đây, Mấy ngày nay em cứ bị chóng mặt và lại còn chậm tăng cân nữa.",
-    "target": "Chóng mặt đã kéo dài được bao lâu?"
+    "target": "chóng mặt này bắt đầu từ khi nào?"
   },
   {
     "id": "policy_ask_follow_up_0527",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng một tuần\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"trống ngực liên hồi, mất thăng bằng\"}\nLỊCH SỬ:\nUSER: Gần đây, Người bệnh có triệu chứng trống ngực liên hồi dẫn đến tình trạng mất thăng bằng.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: khoảng một tuần",
-    "target": "Bạn cảm thấy trống ngực liên hồi nhẹ, vừa hay nặng?"
+    "target": "Cho mình biết mức độ trống ngực liên hồi của bạn?"
   },
   {
     "id": "policy_ask_follow_up_0020",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"run tay, ho khan\"}\nLỊCH SỬ:\nUSER: Hiện tại tôi đang bị run tay cộng thêm việc ho khan mấy tuần nay.",
-    "target": "Bạn bắt đầu gặp run tay từ lúc nào?"
+    "target": "run tay đã kéo dài được bao lâu?"
   },
   {
     "id": "policy_ask_follow_up_1006",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ sáng nay\", \"field_to_ask\": \"age\", \"severity\": \"khá nặng\", \"symptoms\": \"táo bón, tê bì chân tay\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ sáng nay\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: khá nặng",
-    "target": "Người đang có triệu chứng này mấy tuổi?"
+    "target": "Mình cần biết tuổi của bạn, bạn bao nhiêu tuổi?"
   },
   {
     "id": "policy_ask_follow_up_1026",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ sáng nay\", \"field_to_ask\": \"age\", \"severity\": \"khá nặng\", \"symptoms\": \"đau nhói vùng tim, quấy khóc\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ sáng nay\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: khá nặng",
-    "target": "Bạn có thể cho biết người bệnh bao nhiêu tuổi không?"
+    "target": "Cho mình biết bạn bao nhiêu tuổi?"
   },
   {
     "id": "policy_ask_follow_up_0455",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"5 ngày nay\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"đau răng\"}\nLỊCH SỬ:\nUSER: Tôi bị đau răng 5 ngày nay.",
-    "target": "Mức độ đau răng hiện tại như thế nào?"
+    "target": "đau răng ở mức nhẹ, vừa hay nặng?"
   },
   {
     "id": "policy_ask_follow_up_0173",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"khí hư màu xanh, thở khò khè\"}\nLỊCH SỬ:\nUSER: Tôi muốn hỏi là Tôi vừa bị khí hư màu xanh vừa bị thở khò khè không rõ nguyên nhân.",
-    "target": "Khí hư màu xanh đã kéo dài được bao lâu?"
+    "target": "Cho hỏi bạn bị khí hư màu xanh từ khi nào?"
   },
   {
     "id": "policy_ask_follow_up_0645",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"2 ngày nay\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"người uể oải, hoa mắt\"}\nLỊCH SỬ:\nUSER: Em cảm thấy mình bị người uể oải song song đó là hoa mắt rất khó chịu.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: 2 ngày nay",
-    "target": "Mức độ người uể oải hiện tại như thế nào?"
+    "target": "Tình trạng người uể oải bạn đang gặp ở mức nào?"
   },
   {
     "id": "policy_ask_follow_up_0022",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"ho sặc sụa, vết thương lâu lành\"}\nLỊCH SỬ:\nUSER: Gần đây, Cứ đến tối là tôi lại ho sặc sụa và bị vết thương lâu lành dữ dội.",
-    "target": "Bạn bắt đầu gặp ho sặc sụa từ lúc nào?"
+    "target": "ho sặc sụa này bắt đầu từ khi nào?"
   },
   {
     "id": "policy_ask_follow_up_0783",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng một tuần\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"đau dạ dày, chậm tăng cân\"}\nLỊCH SỬ:\nUSER: Tôi muốn hỏi là Tôi vừa bị đau dạ dày vừa bị chậm tăng cân không rõ nguyên nhân.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: khoảng một tuần",
-    "target": "Bạn cảm thấy đau dạ dày nhẹ, vừa hay nặng?"
+    "target": "đau dạ dày có dữ dội không hay chỉ nhẹ thôi?"
   },
   {
     "id": "policy_ask_follow_up_0731",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng một tuần\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"đau nhức xương, mệt mỏi\"}\nLỊCH SỬ:\nUSER: Bác sĩ ơi, Cứ đến tối là tôi lại đau nhức xương và bị mệt mỏi dữ dội.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: khoảng một tuần",
-    "target": "Bạn cảm thấy đau nhức xương nhẹ, vừa hay nặng?"
+    "target": "Bạn có thể mô tả mức độ đau nhức xương không?"
   },
   {
     "id": "policy_ask_follow_up_0987",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng một tuần\", \"field_to_ask\": \"age\", \"severity\": \"dữ dội\", \"symptoms\": \"bong tróc da, khạc đờm vàng\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: khoảng một tuần\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: dữ dội",
-    "target": "Bạn có thể cho biết người bệnh bao nhiêu tuổi không?"
+    "target": "Người bệnh hiện bao nhiêu tuổi?"
   },
   {
     "id": "policy_ask_follow_up_1138",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ sáng nay\", \"field_to_ask\": \"age\", \"severity\": \"khá nặng\", \"symptoms\": \"chuột rút, ho kéo dài\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ sáng nay\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: khá nặng",
-    "target": "Người bệnh hiện bao nhiêu tuổi?"
+    "target": "Bạn có thể cho biết người bệnh bao nhiêu tuổi không?"
   },
   {
     "id": "policy_ask_follow_up_0414",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ sáng nay\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"táo bón, da khô ráp\"}\nLỊCH SỬ:\nUSER: Cho tôi hỏi, Cứ đến tối là tôi lại táo bón và bị da khô ráp dữ dội.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ sáng nay",
-    "target": "Mức độ táo bón hiện tại như thế nào?"
+    "target": "Bạn có thể mô tả mức độ táo bón không?"
   },
   {
     "id": "policy_ask_follow_up_0195",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"đau nửa đầu, thở khò khè\"}\nLỊCH SỬ:\nUSER: Tôi bị đau nửa đầu kèm theo thở khò khè từ hôm qua.",
-    "target": "Bạn bắt đầu gặp đau nửa đầu từ lúc nào?"
+    "target": "Triệu chứng đau nửa đầu xuất hiện từ lúc nào?"
   },
   {
     "id": "policy_ask_follow_up_0532",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ hôm qua\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"khó thở, khí hư màu xanh\"}\nLỊCH SỬ:\nUSER: Gần đây, Dạo gần đây tôi thường xuyên khó thở đôi khi thấy khí hư màu xanh.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ hôm qua",
-    "target": "Bạn cảm thấy khó thở nhẹ, vừa hay nặng?"
+    "target": "khó thở có dữ dội lắm không?"
   },
   {
     "id": "policy_ask_follow_up_1109",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"1 tháng nay\", \"field_to_ask\": \"age\", \"severity\": \"đau dữ dội\", \"symptoms\": \"đau ngực\"}\nLỊCH SỬ:\nUSER: Cho tôi hỏi, Tôi bị đau ngực đau dữ dội 1 tháng nay.",
-    "target": "Bạn có thể cho biết người bệnh bao nhiêu tuổi không?"
+    "target": "Năm nay bạn mấy tuổi?"
   },
   {
     "id": "policy_ask_follow_up_0227",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"rụng nhiều, da khô\"}\nLỊCH SỬ:\nUSER: Gần đây, Tóc tôi rụng nhiều, da khô và hay mệt mỏi",
-    "target": "Rụng nhiều đã kéo dài được bao lâu?"
+    "target": "Bạn gặp tình trạng rụng nhiều từ bao giờ?"
   },
   {
     "id": "policy_ask_follow_up_0344",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"đập nhanh, hồi hộp\"}\nLỊCH SỬ:\nUSER: Cho tôi hỏi, Tim tôi đập nhanh hồi hộp run tay và rất sợ nóng dù trời mát",
-    "target": "Bạn bắt đầu gặp đập nhanh từ lúc nào?"
+    "target": "Bạn gặp đập nhanh từ khi nào?"
   },
   {
     "id": "policy_ask_follow_up_0991",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng một tuần\", \"field_to_ask\": \"age\", \"severity\": \"dữ dội\", \"symptoms\": \"nôn trớ, ho sặc sụa\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: khoảng một tuần\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: dữ dội",
-    "target": "Bạn có thể cho biết người bệnh bao nhiêu tuổi không?"
+    "target": "Mình cần biết tuổi của bạn, bạn bao nhiêu tuổi?"
   },
   {
     "id": "policy_ask_follow_up_1052",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ hôm qua\", \"field_to_ask\": \"age\", \"severity\": \"nhẹ\", \"symptoms\": \"đau dạ dày, chậm tăng cân\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ hôm qua\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: nhẹ",
-    "target": "Người bệnh hiện bao nhiêu tuổi?"
+    "target": "Bạn có thể cho biết người bệnh bao nhiêu tuổi không?"
   },
   {
     "id": "policy_ask_follow_up_0686",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ sáng nay\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"mỏi gối, đau đầu\"}\nLỊCH SỬ:\nUSER: Bác sĩ ơi, Em cảm thấy mình bị mỏi gối song song đó là đau đầu rất khó chịu.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ sáng nay",
-    "target": "Bạn cảm thấy mỏi gối nhẹ, vừa hay nặng?"
+    "target": "Mức độ mỏi gối ra sao?"
   },
   {
     "id": "policy_ask_follow_up_1133",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"2 ngày nay\", \"field_to_ask\": \"age\", \"severity\": \"vừa phải\", \"symptoms\": \"ợ chua, đau nhức xương\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: 2 ngày nay\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: vừa phải",
-    "target": "Người đang có triệu chứng này mấy tuổi?"
+    "target": "Người bệnh hiện bao nhiêu tuổi?"
   },
   {
     "id": "policy_ask_follow_up_0885",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"2 ngày nay\", \"field_to_ask\": \"age\", \"severity\": \"vừa phải\", \"symptoms\": \"kinh nguyệt không đều, đau nhói vùng tim\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: 2 ngày nay\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: vừa phải",
-    "target": "Người bệnh hiện bao nhiêu tuổi?"
+    "target": "Bạn có thể cho biết người bệnh bao nhiêu tuổi không?"
   },
   {
     "id": "policy_ask_follow_up_0320",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"cứng khớp, nổi mẩn đỏ\"}\nLỊCH SỬ:\nUSER: Tôi vừa bị cứng khớp vừa bị nổi mẩn đỏ không rõ nguyên nhân.",
-    "target": "Cứng khớp xuất hiện từ khi nào?"
+    "target": "Bạn gặp tình trạng cứng khớp từ bao giờ?"
   },
   {
     "id": "policy_ask_follow_up_1127",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng một tuần\", \"field_to_ask\": \"age\", \"severity\": \"dữ dội\", \"symptoms\": \"ho kéo dài, nổi mụn sữa\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: khoảng một tuần\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: dữ dội",
-    "target": "Bạn có thể cho biết người bệnh bao nhiêu tuổi không?"
+    "target": "Người bệnh năm nay mấy tuổi?"
   },
   {
     "id": "policy_ask_follow_up_0464",
@@ -213,61 +213,61 @@
     "id": "policy_ask_follow_up_0719",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng một tuần\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"bong tróc da, đi ngoài ra máu\"}\nLỊCH SỬ:\nUSER: Cho tôi hỏi, Dạo gần đây tôi thường xuyên bong tróc da đôi khi thấy đi ngoài ra máu.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: khoảng một tuần",
-    "target": "Bạn cảm thấy bong tróc da nhẹ, vừa hay nặng?"
+    "target": "Mức độ bong tróc da bạn đang gặp nghiêm trọng không?"
   },
   {
     "id": "policy_ask_follow_up_0839",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng một tuần\", \"field_to_ask\": \"age\", \"severity\": \"dữ dội\", \"symptoms\": \"chán ăn, hụt hơi\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: khoảng một tuần\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: dữ dội",
-    "target": "Người đang có triệu chứng này mấy tuổi?"
+    "target": "Cho mình biết bạn bao nhiêu tuổi?"
   },
   {
     "id": "policy_ask_follow_up_0708",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ hôm qua\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"đầy hơi, đau đầu kinh niên\"}\nLỊCH SỬ:\nUSER: Tôi muốn hỏi là Người bệnh có triệu chứng đầy hơi dẫn đến tình trạng đau đầu kinh niên.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ hôm qua",
-    "target": "Mức độ đầy hơi hiện tại như thế nào?"
+    "target": "Bạn cảm thấy đầy hơi nhẹ, vừa hay nặng?"
   },
   {
     "id": "policy_ask_follow_up_1009",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"2 ngày nay\", \"field_to_ask\": \"age\", \"severity\": \"vừa phải\", \"symptoms\": \"quấy khóc, kinh nguyệt không đều\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: 2 ngày nay\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: vừa phải",
-    "target": "Bạn có thể cho biết người bệnh bao nhiêu tuổi không?"
+    "target": "Người bệnh hiện bao nhiêu tuổi?"
   },
   {
     "id": "policy_ask_follow_up_0073",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"giật mình thon thót, đầy hơi\"}\nLỊCH SỬ:\nUSER: Tôi muốn hỏi là Cơ thể lúc nào cũng giật mình thon thót kèm theo hiện tượng đầy hơi.",
-    "target": "Giật mình thon thót xuất hiện từ khi nào?"
+    "target": "Tình trạng giật mình thon thót kéo dài được bao lâu rồi?"
   },
   {
     "id": "policy_ask_follow_up_0283",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"kinh nguyệt không đều, hoa mắt\"}\nLỊCH SỬ:\nUSER: Tôi muốn hỏi là Tôi bị kinh nguyệt không đều kèm theo hoa mắt từ hôm qua.",
-    "target": "Bạn bắt đầu gặp kinh nguyệt không đều từ lúc nào?"
+    "target": "Cho mình hỏi kinh nguyệt không đều xuất hiện từ bao giờ?"
   },
   {
     "id": "policy_ask_follow_up_0211",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"đau đầu, lười ăn\"}\nLỊCH SỬ:\nUSER: Bác sĩ ơi, Tôi vừa bị đau đầu vừa bị lười ăn không rõ nguyên nhân.",
-    "target": "Đau đầu xuất hiện từ khi nào?"
+    "target": "đau đầu đã kéo dài được bao lâu?"
   },
   {
     "id": "policy_ask_follow_up_0547",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng một tuần\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"đau nhức xương, nổi mụn sữa\"}\nLỊCH SỬ:\nUSER: Gần đây, Hiện tại tôi đang bị đau nhức xương cộng thêm việc nổi mụn sữa mấy tuần nay.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: khoảng một tuần",
-    "target": "Bạn cảm thấy đau nhức xương nhẹ, vừa hay nặng?"
+    "target": "Cho mình biết mức độ đau nhức xương của bạn?"
   },
   {
     "id": "policy_ask_follow_up_0179",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"cáu gắt, ngứa ngáy\"}\nLỊCH SỬ:\nUSER: Cho tôi hỏi, Cơ thể lúc nào cũng cáu gắt kèm theo hiện tượng ngứa ngáy.",
-    "target": "Cáu gắt đã kéo dài được bao lâu?"
+    "target": "Triệu chứng cáu gắt xuất hiện từ lúc nào?"
   },
   {
     "id": "policy_ask_follow_up_0705",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"2 ngày nay\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"vết thương lâu lành, hồi hộp\"}\nLỊCH SỬ:\nUSER: Em cảm thấy mình bị vết thương lâu lành song song đó là hồi hộp rất khó chịu.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: 2 ngày nay",
-    "target": "Hiện tại vết thương lâu lành ở mức độ nào?"
+    "target": "Bạn cảm nhận vết thương lâu lành ở mức độ thế nào?"
   },
   {
     "id": "policy_ask_follow_up_0828",
@@ -279,49 +279,49 @@
     "id": "policy_ask_follow_up_0569",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"2 ngày nay\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"tức ngực, vặn mình\"}\nLỊCH SỬ:\nUSER: Cho tôi hỏi, Cơ thể lúc nào cũng tức ngực kèm theo hiện tượng vặn mình.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: 2 ngày nay",
-    "target": "Hiện tại tức ngực ở mức độ nào?"
+    "target": "tức ngực có dữ dội lắm không?"
   },
   {
     "id": "policy_ask_follow_up_0959",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng một tuần\", \"field_to_ask\": \"age\", \"severity\": \"dữ dội\", \"symptoms\": \"phồng rộp, cứng khớp\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: khoảng một tuần\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: dữ dội",
-    "target": "Người bệnh hiện bao nhiêu tuổi?"
+    "target": "Xin cho biết bạn bao nhiêu tuổi?"
   },
   {
     "id": "policy_ask_follow_up_0900",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng 1 tuần\", \"field_to_ask\": \"age\", \"severity\": \"đau nhẹ\", \"symptoms\": \"đau bụng\"}\nLỊCH SỬ:\nUSER: Tôi bị đau bụng đau nhẹ khoảng 1 tuần.",
-    "target": "Người bệnh hiện bao nhiêu tuổi?"
+    "target": "Bạn cho biết tuổi của bạn nhé?"
   },
   {
     "id": "policy_ask_follow_up_0140",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"tức ngực, vặn mình\"}\nLỊCH SỬ:\nUSER: Cơ thể lúc nào cũng tức ngực kèm theo hiện tượng vặn mình.",
-    "target": "Bạn bắt đầu gặp tức ngực từ lúc nào?"
+    "target": "Bạn bị tức ngực bao lâu rồi?"
   },
   {
     "id": "policy_ask_follow_up_0636",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ hôm qua\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"chán ăn, hụt hơi\"}\nLỊCH SỬ:\nUSER: Bác sĩ ơi, Tôi vừa bị chán ăn vừa bị hụt hơi không rõ nguyên nhân.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ hôm qua",
-    "target": "Hiện tại chán ăn ở mức độ nào?"
+    "target": "Cho mình hỏi mức độ chán ăn bạn đang gặp?"
   },
   {
     "id": "policy_ask_follow_up_0503",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng một tuần\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"chán ăn, chuột rút\"}\nLỊCH SỬ:\nUSER: Tôi muốn hỏi là Cơ thể lúc nào cũng chán ăn kèm theo hiện tượng chuột rút.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: khoảng một tuần",
-    "target": "Hiện tại chán ăn ở mức độ nào?"
+    "target": "Hiện tại bạn thấy chán ăn nhẹ hay nặng?"
   },
   {
     "id": "policy_ask_follow_up_0245",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"chậm kinh, chóng mặt\"}\nLỊCH SỬ:\nUSER: Dạo gần đây tôi thường xuyên chậm kinh đôi khi thấy chóng mặt.",
-    "target": "Chậm kinh đã kéo dài được bao lâu?"
+    "target": "Bạn bị chậm kinh từ khi nào vậy?"
   },
   {
     "id": "policy_ask_follow_up_0588",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ hôm qua\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"đau lưng dưới, đi ngoài ra máu\"}\nLỊCH SỬ:\nUSER: Tôi muốn hỏi là Mấy ngày nay em cứ bị đau lưng dưới và lại còn đi ngoài ra máu nữa.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ hôm qua",
-    "target": "Mức độ đau lưng dưới hiện tại như thế nào?"
+    "target": "Tình trạng đau lưng dưới nặng hay nhẹ?"
   },
   {
     "id": "policy_ask_follow_up_0995",
@@ -333,288 +333,288 @@
     "id": "policy_ask_follow_up_0540",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ hôm qua\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"mất thăng bằng, stress\"}\nLỊCH SỬ:\nUSER: Người bệnh có triệu chứng mất thăng bằng dẫn đến tình trạng stress.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ hôm qua",
-    "target": "Mức độ mất thăng bằng hiện tại như thế nào?"
+    "target": "Bạn cảm nhận mất thăng bằng ở mức độ thế nào?"
   },
   {
     "id": "policy_ask_follow_up_0472",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ hôm qua\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"mề đay, tức ngực\"}\nLỊCH SỬ:\nUSER: Gần đây, Em cảm thấy mình bị mề đay song song đó là tức ngực rất khó chịu.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ hôm qua",
-    "target": "Hiện tại mề đay ở mức độ nào?"
+    "target": "Bạn cảm nhận mề đay ở mức độ thế nào?"
   },
   {
     "id": "policy_ask_follow_up_0985",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"2 ngày nay\", \"field_to_ask\": \"age\", \"severity\": \"vừa phải\", \"symptoms\": \"phồng rộp, khó thở\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: 2 ngày nay\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: vừa phải",
-    "target": "Người đang có triệu chứng này mấy tuổi?"
+    "target": "Mình cần biết tuổi của bạn, bạn bao nhiêu tuổi?"
   },
   {
     "id": "policy_ask_follow_up_0384",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"nôn trớ, tưa lưỡi trắng\"}\nLỊCH SỬ:\nUSER: Cho tôi hỏi, Bác sĩ ơi, cháu nhà em bị nôn trớ rồi cứ tưa lưỡi trắng suốt đêm.",
-    "target": "Nôn trớ đã kéo dài được bao lâu?"
+    "target": "nôn trớ đã xảy ra từ khi nào?"
   },
   {
     "id": "policy_ask_follow_up_0204",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"chậm tăng cân, phồng rộp\"}\nLỊCH SỬ:\nUSER: Cho tôi hỏi, Hiện tại tôi đang bị chậm tăng cân cộng thêm việc phồng rộp mấy tuần nay.",
-    "target": "Chậm tăng cân xuất hiện từ khi nào?"
+    "target": "Bạn gặp tình trạng chậm tăng cân từ bao giờ?"
   },
   {
     "id": "policy_ask_follow_up_0147",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"kinh nguyệt không đều, hoa mắt\"}\nLỊCH SỬ:\nUSER: Gần đây, Tôi vừa bị kinh nguyệt không đều vừa bị hoa mắt không rõ nguyên nhân.",
-    "target": "Kinh nguyệt không đều xuất hiện từ khi nào?"
+    "target": "Bạn gặp tình trạng kinh nguyệt không đều từ bao giờ?"
   },
   {
     "id": "policy_ask_follow_up_0230",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"thở khò khè, ho khan\"}\nLỊCH SỬ:\nUSER: Cơ thể lúc nào cũng thở khò khè kèm theo hiện tượng ho khan.",
-    "target": "Bạn bắt đầu gặp thở khò khè từ lúc nào?"
+    "target": "Bạn có thở khò khè từ bao giờ?"
   },
   {
     "id": "policy_ask_follow_up_1098",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ sáng nay\", \"field_to_ask\": \"age\", \"severity\": \"khá nặng\", \"symptoms\": \"mọc mụn nước, mỏi gối\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ sáng nay\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: khá nặng",
-    "target": "Người đang có triệu chứng này mấy tuổi?"
+    "target": "Tuổi của người bệnh là bao nhiêu?"
   },
   {
     "id": "policy_ask_follow_up_1199",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng một tuần\", \"field_to_ask\": \"age\", \"severity\": \"dữ dội\", \"symptoms\": \"mệt mỏi, mề đay\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: khoảng một tuần\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: dữ dội",
-    "target": "Bạn có thể cho biết người bệnh bao nhiêu tuổi không?"
+    "target": "Bạn cho mình biết tuổi của người bệnh được không?"
   },
   {
     "id": "policy_ask_follow_up_0561",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"2 ngày nay\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"quấy khóc, đau dạ dày\"}\nLỊCH SỬ:\nUSER: Bác sĩ ơi, Mấy ngày nay em cứ bị quấy khóc và lại còn đau dạ dày nữa.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: 2 ngày nay",
-    "target": "Bạn cảm thấy quấy khóc nhẹ, vừa hay nặng?"
+    "target": "Bạn thấy quấy khóc ở mức độ nào?"
   },
   {
     "id": "policy_ask_follow_up_0392",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"đờm đặc, co giật cơ\"}\nLỊCH SỬ:\nUSER: Gần đây, Dạo gần đây tôi thường xuyên đờm đặc đôi khi thấy co giật cơ.",
-    "target": "Đờm đặc xuất hiện từ khi nào?"
+    "target": "Triệu chứng đờm đặc xuất hiện từ lúc nào?"
   },
   {
     "id": "policy_ask_follow_up_0624",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ hôm qua\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"đau răng\"}\nLỊCH SỬ:\nUSER: Cho tôi hỏi, Chào bạn, hiện tôi đang bị đau răng\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ hôm qua",
-    "target": "Hiện tại đau răng ở mức độ nào?"
+    "target": "đau răng có dữ dội lắm không?"
   },
   {
     "id": "policy_ask_follow_up_0200",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"đau khi đi tiểu\"}\nLỊCH SỬ:\nUSER: Tôi muốn chào bạn, nhưng hiện đang bị đau khi đi tiểu",
-    "target": "Bạn bắt đầu gặp đau khi đi tiểu từ lúc nào?"
+    "target": "đau khi đi tiểu đã xảy ra từ khi nào?"
   },
   {
     "id": "policy_ask_follow_up_0078",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"phồng rộp, cứng khớp\"}\nLỊCH SỬ:\nUSER: Tôi muốn hỏi là Mấy ngày nay em cứ bị phồng rộp và lại còn cứng khớp nữa.",
-    "target": "Bạn bắt đầu gặp phồng rộp từ lúc nào?"
+    "target": "Tình trạng phồng rộp bắt đầu từ lúc nào vậy?"
   },
   {
     "id": "policy_ask_follow_up_0372",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"cáu gắt, ho khan\"}\nLỊCH SỬ:\nUSER: Gần đây, Dạo gần đây tôi thường xuyên cáu gắt đôi khi thấy ho khan.",
-    "target": "Cáu gắt xuất hiện từ khi nào?"
+    "target": "Bạn có cáu gắt từ bao giờ?"
   },
   {
     "id": "policy_ask_follow_up_0407",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng một tuần\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"chướng bụng, đau nhức xương\"}\nLỊCH SỬ:\nUSER: Gần đây, Bác sĩ ơi, cháu nhà em bị chướng bụng rồi cứ đau nhức xương suốt đêm.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: khoảng một tuần",
-    "target": "Mức độ chướng bụng hiện tại như thế nào?"
+    "target": "chướng bụng có dữ dội không hay chỉ nhẹ thôi?"
   },
   {
     "id": "policy_ask_follow_up_0297",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"chán ăn, đầy hơi\"}\nLỊCH SỬ:\nUSER: Gần đây, Tôi vừa bị chán ăn vừa bị đầy hơi không rõ nguyên nhân.",
-    "target": "Bạn bắt đầu gặp chán ăn từ lúc nào?"
+    "target": "chán ăn xuất hiện từ khi nào?"
   },
   {
     "id": "policy_ask_follow_up_0272",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"tức ngực, vã mồ hôi\"}\nLỊCH SỬ:\nUSER: Gần đây, Tôi vừa bị tức ngực vừa bị vã mồ hôi không rõ nguyên nhân.",
-    "target": "Tức ngực xuất hiện từ khi nào?"
+    "target": "tức ngực đã xảy ra từ khi nào?"
   },
   {
     "id": "policy_ask_follow_up_0165",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"ho khục khọc, ngứa vùng kín\"}\nLỊCH SỬ:\nUSER: Dạo gần đây tôi thường xuyên ho khục khọc đôi khi thấy ngứa vùng kín.",
-    "target": "Bạn bắt đầu gặp ho khục khọc từ lúc nào?"
+    "target": "Bạn bị ho khục khọc từ khi nào vậy?"
   },
   {
     "id": "policy_ask_follow_up_0475",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng một tuần\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"ho kéo dài, mất hứng thú\"}\nLỊCH SỬ:\nUSER: Bác sĩ ơi, cháu nhà em bị ho kéo dài rồi cứ mất hứng thú suốt đêm.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: khoảng một tuần",
-    "target": "Mức độ ho kéo dài hiện tại như thế nào?"
+    "target": "Bạn cảm thấy ho kéo dài nhẹ, vừa hay nặng?"
   },
   {
     "id": "policy_ask_follow_up_0761",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"1 tháng nay\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"đau họng\"}\nLỊCH SỬ:\nUSER: Bác sĩ ơi, Tôi bị đau họng 1 tháng nay.",
-    "target": "Bạn cảm thấy đau họng nhẹ, vừa hay nặng?"
+    "target": "đau họng có nặng không?"
   },
   {
     "id": "policy_ask_follow_up_0890",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ sáng nay\", \"field_to_ask\": \"age\", \"severity\": \"khá nặng\", \"symptoms\": \"da khô ráp, bong tróc da\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ sáng nay\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: khá nặng",
-    "target": "Bạn có thể cho biết người bệnh bao nhiêu tuổi không?"
+    "target": "Người bệnh hiện tại mấy tuổi?"
   },
   {
     "id": "policy_ask_follow_up_0183",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"cứng khớp, chướng bụng\"}\nLỊCH SỬ:\nUSER: Tôi muốn hỏi là Hiện tại tôi đang bị cứng khớp cộng thêm việc chướng bụng mấy tuần nay.",
-    "target": "Cứng khớp xuất hiện từ khi nào?"
+    "target": "Bạn bị cứng khớp bao lâu rồi?"
   },
   {
     "id": "policy_ask_follow_up_1156",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"2 tuần nay\", \"field_to_ask\": \"age\", \"severity\": \"khó chịu vừa\", \"symptoms\": \"đau khớp\"}\nLỊCH SỬ:\nUSER: Bác sĩ ơi, Tôi bị đau khớp khó chịu vừa 2 tuần nay.",
-    "target": "Bạn có thể cho biết người bệnh bao nhiêu tuổi không?"
+    "target": "Năm nay người bệnh bao nhiêu tuổi rồi?"
   },
   {
     "id": "policy_ask_follow_up_0711",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng một tuần\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"đau nửa đầu, vết thương lâu lành\"}\nLỊCH SỬ:\nUSER: Bác sĩ ơi, Dạo gần đây tôi thường xuyên đau nửa đầu đôi khi thấy vết thương lâu lành.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: khoảng một tuần",
-    "target": "Mức độ đau nửa đầu hiện tại như thế nào?"
+    "target": "Hiện tại bạn thấy đau nửa đầu nhẹ hay nặng?"
   },
   {
     "id": "policy_ask_follow_up_0421",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"2 ngày nay\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"nôn trớ, sốt sình sịch\"}\nLỊCH SỬ:\nUSER: Bác sĩ ơi, Người bệnh có triệu chứng nôn trớ dẫn đến tình trạng sốt sình sịch.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: 2 ngày nay",
-    "target": "Hiện tại nôn trớ ở mức độ nào?"
+    "target": "nôn trớ có dữ dội không hay chỉ nhẹ thôi?"
   },
   {
     "id": "policy_ask_follow_up_0593",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"2 ngày nay\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"khí hư màu xanh, đau lưng dưới\"}\nLỊCH SỬ:\nUSER: Tôi muốn hỏi là Bác sĩ ơi, cháu nhà em bị khí hư màu xanh rồi cứ đau lưng dưới suốt đêm.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: 2 ngày nay",
-    "target": "Bạn cảm thấy khí hư màu xanh nhẹ, vừa hay nặng?"
+    "target": "Mức độ khí hư màu xanh ra sao?"
   },
   {
     "id": "policy_ask_follow_up_0174",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"tưa lưỡi trắng, chướng bụng\"}\nLỊCH SỬ:\nUSER: Cho tôi hỏi, Cơ thể lúc nào cũng tưa lưỡi trắng kèm theo hiện tượng chướng bụng.",
-    "target": "Tưa lưỡi trắng xuất hiện từ khi nào?"
+    "target": "Bạn gặp tưa lưỡi trắng từ khi nào?"
   },
   {
     "id": "policy_ask_follow_up_0896",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ hôm qua\", \"field_to_ask\": \"age\", \"severity\": \"nhẹ\", \"symptoms\": \"ho khan, đau nhói vùng tim\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ hôm qua\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: nhẹ",
-    "target": "Người bệnh hiện bao nhiêu tuổi?"
+    "target": "Năm nay bạn mấy tuổi?"
   },
   {
     "id": "policy_ask_follow_up_0462",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ sáng nay\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"ớn lạnh, chuột rút\"}\nLỊCH SỬ:\nUSER: Gần đây, Dạo gần đây tôi thường xuyên ớn lạnh đôi khi thấy chuột rút.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ sáng nay",
-    "target": "Mức độ ớn lạnh hiện tại như thế nào?"
+    "target": "Bạn có thể mô tả mức độ ớn lạnh không?"
   },
   {
     "id": "policy_ask_follow_up_0263",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"gầy sút, buồn nôn\"}\nLỊCH SỬ:\nUSER: Tôi muốn hỏi là Dạo gần đây tôi thường xuyên gầy sút đôi khi thấy buồn nôn.",
-    "target": "Gầy sút xuất hiện từ khi nào?"
+    "target": "gầy sút đã xảy ra từ khi nào?"
   },
   {
     "id": "policy_ask_follow_up_0780",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ hôm qua\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"ho khục khọc, tưa lưỡi trắng\"}\nLỊCH SỬ:\nUSER: Dạo gần đây tôi thường xuyên ho khục khọc đôi khi thấy tưa lưỡi trắng.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ hôm qua",
-    "target": "Hiện tại ho khục khọc ở mức độ nào?"
+    "target": "Bạn cảm nhận ho khục khọc ở mức độ thế nào?"
   },
   {
     "id": "policy_ask_follow_up_0898",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ sáng nay\", \"field_to_ask\": \"age\", \"severity\": \"khá nặng\", \"symptoms\": \"mỏi cơ, nôn trớ\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ sáng nay\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: khá nặng",
-    "target": "Người đang có triệu chứng này mấy tuổi?"
+    "target": "Bệnh nhân năm nay bao nhiêu tuổi?"
   },
   {
     "id": "policy_ask_follow_up_0576",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ hôm qua\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"hoa mắt, mề đay\"}\nLỊCH SỬ:\nUSER: Bác sĩ ơi, Mấy ngày nay em cứ bị hoa mắt và lại còn mề đay nữa.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ hôm qua",
-    "target": "Hiện tại hoa mắt ở mức độ nào?"
+    "target": "Bạn đánh giá mức độ hoa mắt hiện tại thế nào?"
   },
   {
     "id": "policy_ask_follow_up_1030",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ sáng nay\", \"field_to_ask\": \"age\", \"severity\": \"khá nặng\", \"symptoms\": \"mệt mỏi, suy nhược cơ thể\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ sáng nay\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: khá nặng",
-    "target": "Bạn có thể cho biết người bệnh bao nhiêu tuổi không?"
+    "target": "Người bệnh năm nay mấy tuổi?"
   },
   {
     "id": "policy_ask_follow_up_0361",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"cáu gắt, kinh nguyệt không đều\"}\nLỊCH SỬ:\nUSER: Bác sĩ ơi, Cơ thể lúc nào cũng cáu gắt kèm theo hiện tượng kinh nguyệt không đều.",
-    "target": "Cáu gắt đã kéo dài được bao lâu?"
+    "target": "Bạn gặp tình trạng cáu gắt từ bao giờ?"
   },
   {
     "id": "policy_ask_follow_up_0912",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ hôm qua\", \"field_to_ask\": \"age\", \"severity\": \"nhẹ\", \"symptoms\": \"đau đầu, lười ăn\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ hôm qua\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: nhẹ",
-    "target": "Bạn có thể cho biết người bệnh bao nhiêu tuổi không?"
+    "target": "Tuổi của người bệnh là bao nhiêu?"
   },
   {
     "id": "policy_ask_follow_up_0469",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"2 ngày nay\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"chướng bụng, đau nhức xương\"}\nLỊCH SỬ:\nUSER: Cho tôi hỏi, Mấy ngày nay em cứ bị chướng bụng và lại còn đau nhức xương nữa.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: 2 ngày nay",
-    "target": "Bạn cảm thấy chướng bụng nhẹ, vừa hay nặng?"
+    "target": "Bạn thấy chướng bụng ở mức độ nào?"
   },
   {
     "id": "policy_ask_follow_up_0457",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"2 ngày nay\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"ho khan không có đờm, hắt hơi liên tục\"}\nLỊCH SỬ:\nUSER: Gần đây, Tôi ho khan không có đờm, hắt hơi liên tục\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: 2 ngày nay",
-    "target": "Mức độ ho khan không có đờm hiện tại như thế nào?"
+    "target": "Cho mình biết mức độ ho khan không có đờm của bạn?"
   },
   {
     "id": "policy_ask_follow_up_0304",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"đầy hơi, đau đầu kinh niên\"}\nLỊCH SỬ:\nUSER: Cho tôi hỏi, Người bệnh có triệu chứng đầy hơi dẫn đến tình trạng đau đầu kinh niên.",
-    "target": "Đầy hơi xuất hiện từ khi nào?"
+    "target": "Cho hỏi bạn bị đầy hơi từ khi nào?"
   },
   {
     "id": "policy_ask_follow_up_0401",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"2 ngày nay\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"cáu gắt, tê bì chân tay\"}\nLỊCH SỬ:\nUSER: Bác sĩ ơi, Hiện tại tôi đang bị cáu gắt cộng thêm việc tê bì chân tay mấy tuần nay.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: 2 ngày nay",
-    "target": "Bạn cảm thấy cáu gắt nhẹ, vừa hay nặng?"
+    "target": "cáu gắt có dữ dội không hay chỉ nhẹ thôi?"
   },
   {
     "id": "policy_ask_follow_up_0563",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng một tuần\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"khó thở, mỏi cơ\"}\nLỊCH SỬ:\nUSER: Tôi muốn hỏi là Cơ thể lúc nào cũng khó thở kèm theo hiện tượng mỏi cơ.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: khoảng một tuần",
-    "target": "Mức độ khó thở hiện tại như thế nào?"
+    "target": "Hiện tại bạn thấy khó thở nhẹ hay nặng?"
   },
   {
     "id": "policy_ask_follow_up_0226",
     "field": "duration",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"\", \"field_to_ask\": \"duration\", \"severity\": \"\", \"symptoms\": \"chướng bụng, kiệt sức\"}\nLỊCH SỬ:\nUSER: Bác sĩ ơi, Em cảm thấy mình bị chướng bụng song song đó là kiệt sức rất khó chịu.",
-    "target": "Chướng bụng xuất hiện từ khi nào?"
+    "target": "chướng bụng đã diễn ra được bao lâu rồi?"
   },
   {
     "id": "policy_ask_follow_up_0663",
     "field": "severity",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"khoảng một tuần\", \"field_to_ask\": \"severity\", \"severity\": \"\", \"symptoms\": \"kinh nguyệt không đều, đau nhói vùng tim\"}\nLỊCH SỬ:\nUSER: Tôi muốn hỏi là Tôi bị kinh nguyệt không đều kèm theo đau nhói vùng tim từ hôm qua.\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: khoảng một tuần",
-    "target": "Bạn cảm thấy kinh nguyệt không đều nhẹ, vừa hay nặng?"
+    "target": "kinh nguyệt không đều ở mức nhẹ, vừa hay nặng?"
   },
   {
     "id": "policy_ask_follow_up_0804",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ hôm qua\", \"field_to_ask\": \"age\", \"severity\": \"nhẹ\", \"symptoms\": \"chuột rút, khí hư ra nhiều\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ hôm qua\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: nhẹ",
-    "target": "Bạn có thể cho biết người bệnh bao nhiêu tuổi không?"
+    "target": "Bệnh nhân năm nay bao nhiêu tuổi?"
   },
   {
     "id": "policy_ask_follow_up_0938",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"1 tháng nay\", \"field_to_ask\": \"age\", \"severity\": \"đau dữ dội\", \"symptoms\": \"đau ngực\"}\nLỊCH SỬ:\nUSER: Tôi muốn hỏi là Tôi bị đau ngực đau dữ dội 1 tháng nay.",
-    "target": "Người đang có triệu chứng này mấy tuổi?"
+    "target": "Năm nay người bệnh bao nhiêu tuổi rồi?"
   },
   {
     "id": "policy_ask_follow_up_0965",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"2 ngày nay\", \"field_to_ask\": \"age\", \"severity\": \"vừa phải\", \"symptoms\": \"nổi gân xanh, ho liên tục\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: 2 ngày nay\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: vừa phải",
-    "target": "Người đang có triệu chứng này mấy tuổi?"
+    "target": "Bạn cho mình biết tuổi của người bệnh được không?"
   },
   {
     "id": "policy_ask_follow_up_1148",
     "field": "age",
     "input": "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.\nChỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.\nTHÔNG TIN: {\"age\": \"\", \"duration\": \"từ hôm qua\", \"field_to_ask\": \"age\", \"severity\": \"nhẹ\", \"symptoms\": \"lười ăn, sưng đau khớp\"}\nLỊCH SỬ:\nASSISTANT: Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước.\nUSER: từ hôm qua\nASSISTANT: Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội.\nUSER: nhẹ",
-    "target": "Người đang có triệu chứng này mấy tuổi?"
+    "target": "Người bệnh hiện tại mấy tuổi?"
   }
 ]

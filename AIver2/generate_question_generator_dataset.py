@@ -361,6 +361,243 @@ def _build_examples(
                 "Chào bạn, tôi xin phép kết thúc",
             ],
         }
+
+        # Add 450 new conversational inputs per intent. The Cartesian products
+        # below are deterministic, unique variants and keep the train split
+        # reproducible without hand-maintaining hundreds of near-duplicates.
+        synthetic_dialogues["greeting"].extend(
+            [
+                f"{prefix}, {suffix}"
+                for prefix in (
+                    "Xin chào",
+                    "Chào bạn",
+                    "Chào trợ lý",
+                    "Alo",
+                    "Xin chào trợ lý",
+                    "Chào bác sĩ",
+                    "Chào hệ thống",
+                    "Xin chào bạn",
+                    "Chào bạn nhé",
+                    "Dạ chào bạn",
+                    "Mình chào bạn",
+                    "Xin được chào bạn",
+                    "Chào bạn trợ lý ơi",
+                    "Xin chào bác sĩ ơi",
+                    "Alo bạn ơi",
+                    "Chào buổi sáng",
+                    "Chào buổi tối",
+                    "Mình mới vào xin chào",
+                    "Xin chào tôi cần hỗ trợ",
+                    "Chào bạn tôi muốn hỏi",
+                    "Chào bạn thân mến",
+                    "Xin chào mọi người",
+                    "Chào trợ lý sức khỏe",
+                    "Xin chào đội ngũ hỗ trợ",
+                    "Chào bạn mình cần hỏi",
+                    "Xin chào tôi muốn tư vấn",
+                    "Chào buổi trưa",
+                    "Chào buổi chiều",
+                    "Chào ngày mới",
+                    "Chào bạn giúp mình với",
+                    "Bạn ơi xin chào",
+                    "Trợ lý ơi xin chào",
+                    "Bác sĩ ơi xin chào",
+                    "Mình muốn chào hỏi",
+                    "Xin gửi lời chào",
+                    "Chào bạn từ hôm nay",
+                    "Xin chào và chúc bạn khỏe",
+                    "Tôi xin chào bạn",
+                    "Mình xin chào trợ lý",
+                    "Xin chào mình có việc muốn hỏi",
+                    "Chào bạn tôi cần lời khuyên",
+                    "Alo trợ lý ơi",
+                    "Alo bác sĩ ơi",
+                    "Xin phép chào bạn",
+                    "Mình ghé qua xin chào",
+                )
+                for suffix in (
+                    "mình muốn được hỗ trợ",
+                    "tôi cần tư vấn sức khỏe",
+                    "bạn có thể giúp tôi không",
+                    "tôi muốn hỏi một vấn đề",
+                    "tôi cần hỏi về sức khỏe",
+                    "mình muốn bắt đầu tư vấn",
+                    "hãy hỗ trợ mình nhé",
+                    "mình có một câu hỏi",
+                    "tôi muốn tìm hiểu thêm",
+                    "bạn đang ở đó chứ",
+                )
+            ]
+        )
+        synthetic_dialogues["thanks"].extend(
+            [
+                f"{prefix}, {suffix}"
+                for prefix in (
+                    "Cảm ơn",
+                    "Cảm ơn bạn",
+                    "Cám ơn bạn",
+                    "Xin cảm ơn",
+                    "Rất cảm ơn",
+                    "Mình cảm ơn",
+                    "Tôi cảm ơn",
+                    "Cảm ơn trợ lý",
+                    "Cảm ơn bác sĩ",
+                    "Cảm ơn nhiều",
+                    "Cảm ơn bạn nhé",
+                    "Cảm ơn bạn nha",
+                    "Xin chân thành cảm ơn",
+                    "Rất biết ơn bạn",
+                    "Tôi biết ơn bạn",
+                    "Cảm ơn vì đã giúp",
+                    "Cảm ơn vì đã giải thích",
+                    "Cảm ơn sự hỗ trợ",
+                    "Cảm ơn phần tư vấn",
+                    "Cảm ơn bạn rất nhiều",
+                    "Xin gửi lời cảm ơn",
+                    "Cảm ơn rất nhiều",
+                    "Cảm ơn bạn đã giúp tôi",
+                    "Cảm ơn bạn đã tư vấn",
+                    "Cảm ơn bạn đã giải đáp",
+                    "Cảm ơn bạn đã hỗ trợ",
+                    "Cảm ơn bác sĩ rất nhiều",
+                    "Cảm ơn trợ lý nhiều nhé",
+                    "Tôi xin gửi lời cảm ơn",
+                    "Mình xin cảm ơn",
+                    "Tôi thật sự cảm ơn",
+                    "Mình rất cảm ơn bạn",
+                    "Tôi rất cảm ơn bạn",
+                    "Cảm ơn vì thông tin này",
+                    "Cảm ơn vì lời giải thích",
+                    "Cảm ơn sự tư vấn",
+                    "Cảm ơn sự giúp đỡ",
+                    "Cảm ơn bạn đã dành thời gian",
+                    "Cảm ơn bạn đã trả lời",
+                    "Cảm ơn vì đã lắng nghe",
+                    "Mình biết ơn sự hỗ trợ",
+                    "Tôi biết ơn sự giúp đỡ",
+                    "Thật lòng cảm ơn bạn",
+                    "Xin cảm kích bạn",
+                    "Cảm ơn bạn trợ lý",
+                )
+                for suffix in (
+                    "nhé",
+                    "nhiều lắm",
+                    "rất nhiều",
+                    "vì đã hỗ trợ",
+                    "vì đã giải đáp",
+                    "vì đã tư vấn",
+                    "tôi hiểu rồi",
+                    "mình đã rõ rồi",
+                    "thông tin rất hữu ích",
+                    "sự giúp đỡ của bạn",
+                )
+            ]
+        )
+        synthetic_dialogues["goodbye"].extend(
+            [
+                f"{prefix}, {suffix}"
+                for prefix in (
+                    "Tạm biệt",
+                    "Chào tạm biệt",
+                    "Tạm biệt nhé",
+                    "Hẹn gặp lại",
+                    "Bye bye",
+                    "Bye",
+                    "Tôi xin phép kết thúc",
+                    "Mình đi nhé",
+                    "Tôi không cần hỏi thêm nữa",
+                    "Hẹn bạn lần sau",
+                    "Chào bạn hẹn gặp lại",
+                    "Tạm biệt và cảm ơn bạn",
+                    "Mình dừng cuộc trò chuyện ở đây",
+                    "Tôi phải đi rồi",
+                    "Khi khác tôi sẽ hỏi tiếp",
+                    "Chúc bạn một ngày tốt lành",
+                    "Mình xin chào tạm biệt",
+                    "Tôi kết thúc tư vấn nhé",
+                    "Hẹn gặp lại khi cần hỗ trợ",
+                    "Tạm biệt bạn nha",
+                    "Xin phép tạm biệt",
+                    "Mình xin phép chào bạn",
+                    "Tôi xin chào tạm biệt",
+                    "Hẹn gặp bạn nhé",
+                    "Hẹn gặp lại trợ lý",
+                    "Hẹn gặp lại bác sĩ",
+                    "Tôi chào bạn nhé",
+                    "Mình chào bạn nhé",
+                    "Chào bạn tôi đi đây",
+                    "Tôi xin dừng cuộc trò chuyện",
+                    "Mình xin kết thúc ở đây",
+                    "Tôi xin kết thúc tại đây",
+                    "Tạm dừng cuộc trò chuyện nhé",
+                    "Mình không hỏi thêm nữa",
+                    "Tôi sẽ quay lại khi cần",
+                    "Mình sẽ liên hệ lại sau",
+                    "Chúc bạn luôn khỏe mạnh",
+                    "Chúc bạn nhiều sức khỏe",
+                    "Chúc bạn bình an nhé",
+                    "Cảm ơn và hẹn gặp lại",
+                    "Xin chào và hẹn gặp lại",
+                    "Tôi đi đây tạm biệt",
+                    "Mình rời đi nhé",
+                    "Tạm biệt trợ lý nhé",
+                    "Tạm biệt bác sĩ nhé",
+                )
+                for suffix in (
+                    "chúc bạn luôn khỏe",
+                    "chúc bạn một ngày vui",
+                    "hẹn gặp lại bạn",
+                    "mình sẽ quay lại sau",
+                    "cảm ơn bạn nhé",
+                    "mình xin phép đi trước",
+                    "chúc bạn bình an",
+                    "khi cần mình sẽ liên hệ lại",
+                    "mong bạn luôn mạnh khỏe",
+                    "tôi kết thúc tại đây nhé",
+                )
+            ]
+        )
+
+        # Keep the conversational training inputs unique while preserving the
+        # requested size of 500 examples per intent.
+        conversation_sizes = {
+            "greeting": 500,
+            "thanks": 500,
+            "goodbye": 500,
+        }
+        conversation_supplements = {
+            "greeting": (
+                "Xin chào, mình cần được tư vấn thêm",
+                "Chào bạn, mình muốn nhận hỗ trợ thêm",
+                "Alo, tôi muốn trao đổi thêm",
+            ),
+            "thanks": (
+                "Cảm ơn bạn vì đã đồng hành",
+                "Mình cảm ơn bạn vì sự tận tình",
+                "Xin cảm ơn bạn vì đã hỗ trợ",
+            ),
+            "goodbye": (
+                "Tạm biệt, hẹn gặp bạn trong lần tới",
+                "Xin chào, mình xin phép rời đi",
+                "Chào bạn, mình kết thúc nhé",
+                "Tạm biệt, mong gặp lại bạn",
+                "Hẹn bạn vào lần tư vấn tiếp theo",
+            ),
+        }
+        for field, target_size in conversation_sizes.items():
+            unique_inputs = list(dict.fromkeys(synthetic_dialogues[field]))
+            for user_input in conversation_supplements[field]:
+                if len(unique_inputs) >= target_size:
+                    break
+                if user_input not in unique_inputs:
+                    unique_inputs.append(user_input)
+            if len(unique_inputs) != target_size:
+                raise ValueError(
+                    f"Expected {target_size} unique {field} inputs, "
+                    f"got {len(unique_inputs)}"
+                )
+            synthetic_dialogues[field] = unique_inputs
+
         synthetic_count = 0
         for field, user_inputs in synthetic_dialogues.items():
             for variant_idx, user_input in enumerate(user_inputs):

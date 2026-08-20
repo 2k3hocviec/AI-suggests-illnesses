@@ -11,7 +11,6 @@ import torch # type: ignore
 from torch.utils.data import Dataset # type: ignore
 from transformers import (  # type: ignore
     AutoModelForSeq2SeqLM,
-    AutoTokenizer,
     DataCollatorForSeq2Seq,
     Seq2SeqTrainer,
     Seq2SeqTrainingArguments,
@@ -26,6 +25,7 @@ TRAIN_PATH = Path(os.getenv("QUESTION_TRAIN_PATH", str(ROOT / "data" / "train_qu
 VAL_PATH = Path(os.getenv("QUESTION_VAL_PATH", str(ROOT / "data" / "val_question_generation.json")))
 TEST_PATH = Path(os.getenv("QUESTION_TEST_PATH", str(ROOT / "data" / "test_question_generation.json")))
 OUTPUT_DIR = Path(os.getenv("QUESTION_GENERATOR_OUTPUT", str(ROOT / "output" / "question-generator")))
+SPIECE_PATH = Path(os.getenv("QUESTION_GENERATOR_SPIECE", str(ROOT / "spiece.model")))
 EPOCHS = float(os.getenv("QUESTION_EPOCHS", "15"))
 MAX_STEPS = int(os.getenv("QUESTION_MAX_STEPS", "-1"))
 
@@ -55,6 +55,32 @@ class QuestionDataset(Dataset):
         return encoded
 
 
+def load_training_tokenizer(path: Path):
+    """Load ViT5 SentencePiece across old and new Transformers versions."""
+
+    if not path.exists():
+        raise FileNotFoundError(
+            f"Missing SentencePiece vocabulary: {path}. "
+            "Upload spiece.model with the training files."
+        )
+
+    import inspect
+    from sentencepiece import SentencePieceProcessor
+    from transformers import T5Tokenizer
+
+    # Transformers 5.x expects the vocabulary as (piece, score) pairs.
+    if "vocab" in inspect.signature(T5Tokenizer).parameters:
+        processor = SentencePieceProcessor(model_file=str(path))
+        vocabulary = [
+            (processor.id_to_piece(index), processor.get_score(index))
+            for index in range(processor.get_piece_size())
+        ]
+        return T5Tokenizer(vocab=vocabulary)
+
+    # Transformers 4.x still accepts the SentencePiece path directly.
+    return T5Tokenizer(vocab_file=str(path))
+
+
 def main() -> None:
     for path in (TRAIN_PATH, VAL_PATH):
         if not path.exists():
@@ -62,14 +88,7 @@ def main() -> None:
                 f"Missing {path}. Run generate_question_generator_dataset.py first."
             )
 
-    import urllib.request
-    spiece_path = ROOT / "spiece.model"
-    if not spiece_path.exists():
-        print("Downloading spiece.model to bypass transformers config bug...")
-        urllib.request.urlretrieve("https://huggingface.co/VietAI/vit5-base/resolve/main/spiece.model", str(spiece_path))
-
-    from transformers import T5Tokenizer
-    tokenizer = T5Tokenizer(vocab_file=str(spiece_path))
+    tokenizer = load_training_tokenizer(SPIECE_PATH)
     # Tải model.
     model = AutoModelForSeq2SeqLM.from_pretrained(MODEL_NAME)
     train_dataset = QuestionDataset(TRAIN_PATH, tokenizer)

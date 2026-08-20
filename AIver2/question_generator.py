@@ -112,11 +112,32 @@ def serialize_question_input(
         "severity": _slot_text(slots.get("severity")),
         "age": _slot_text(slots.get("age")),
     }
-    lines = [
-        "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.",
-        "Chỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.",
-        "THÔNG TIN: " + json.dumps(facts, ensure_ascii=False, sort_keys=True),
-    ]
+    conversation_instructions = {
+        "greeting": (
+            "NHIỆM VỤ: tạo một lời chào ngắn, thân thiện bằng tiếng Việt.",
+            "Có thể mời người dùng mô tả vấn đề sức khỏe; không hỏi tuổi, thời gian "
+            "hoặc mức độ triệu chứng.",
+        ),
+        "thanks": (
+            "NHIỆM VỤ: tạo một câu đáp lại lời cảm ơn ngắn, lịch sự bằng tiếng Việt.",
+            "Không hỏi thêm thông tin y tế và không chẩn đoán, điều trị hoặc kê đơn.",
+        ),
+        "goodbye": (
+            "NHIỆM VỤ: tạo một câu tạm biệt ngắn, lịch sự bằng tiếng Việt.",
+            "Không hỏi thêm thông tin y tế và không chẩn đoán, điều trị hoặc kê đơn.",
+        ),
+    }
+    if field in conversation_instructions:
+        lines = [
+            *conversation_instructions[field],
+            "THÔNG TIN: " + json.dumps(facts, ensure_ascii=False, sort_keys=True),
+        ]
+    else:
+        lines = [
+            "NHIỆM VỤ: tạo đúng một câu hỏi ngắn bằng tiếng Việt.",
+            "Chỉ hỏi trường field_to_ask. Không chẩn đoán, điều trị hoặc kê đơn.",
+            "THÔNG TIN: " + json.dumps(facts, ensure_ascii=False, sort_keys=True),
+        ]
     if history_lines:
         lines.append("LỊCH SỬ:")
         lines.extend(history_lines)

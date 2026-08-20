@@ -22,6 +22,11 @@ MAX_LEN = 128
 
 # Generate qualitative forms during preparation so the slot head sees the
 # vocabulary users naturally use in conversation.
+
+# Một mức độ có thể được người dùng diễn đạt bằng nhiều cách khác nhau.
+# Model cần tạo các cách diễn đạt định tính ngya trong bước chuẩn bị dữ liệu, để model có thể nhận diện được đa dạng lời nói mà người dùng hỏi.
+
+
 QUALITATIVE_SEVERITY_VARIANTS = (
     "một chút",
     "một ít",
@@ -42,6 +47,7 @@ QUALITATIVE_SEVERITY_VARIANTS = (
 )
 
 
+# Dùng ghép lại câu mô tả mức độ soa cho tự nhiên dựa theo cụm ban đầu.
 def _severity_variant_text(original: str, level_text: str) -> str:
     lowered = original.strip().lower()
     if lowered.startswith("mức độ"):
@@ -53,6 +59,7 @@ def _severity_variant_text(original: str, level_text: str) -> str:
     return level_text
 
 
+# Tạo một biến thể của mẫu dữ liệu bằng cách đổi giá trị cả một slot ("nhẹ -> nặng"), dữ nguyên tọa độ của toàn bộ entity/slot trong câu.
 def _replace_slot_span(sample: dict, slot_index: int, replacement: str) -> dict:
     source_slot = sample["slots"][slot_index]
     source_start = int(source_slot["start"])
@@ -81,6 +88,9 @@ def _replace_slot_span(sample: dict, slot_index: int, replacement: str) -> dict:
     return variant
 
 
+# Mở rộng dữ liệu mẫu theo các mức độ severity khác nhau, công việc cụ thể:
+#   - Duyệt từng sample, tìm slot có nhãn "SERVERITY".
+#   - Nếu mỗi câu chỉ có đúng một slot SEVERITY, hàm sẽ tạo thêm nhiều câu mới bằng các mức trong QUALITATIVE_SEVERITY_VARIANTS.
 def _expand_qualitative_severity_samples(samples: list[dict]) -> list[dict]:
     expanded = list(samples)
     for sample in samples:
@@ -103,6 +113,7 @@ def _expand_qualitative_severity_samples(samples: list[dict]) -> list[dict]:
     return expanded
 
 
+# DÙng để chuyển các entity trong câu thành nhãn BIO cho từng ký tự.
 def _char_bio_labels(text: str, entities: list[dict], label_validator) -> list[str]:
     char_labels = ["O"] * len(text)
     for entity in entities:
@@ -118,6 +129,7 @@ def _char_bio_labels(text: str, entities: list[dict], label_validator) -> list[s
     return char_labels
 
 
+# Chuyển nhãn mức kí tự sang mức từ.
 def _word_labels(text: str, char_labels: list[str]) -> list[tuple[str, str]]:
     words_with_spans = [
         (match.group(), match.start()) for match in re.finditer(r"\S+", text)
@@ -128,6 +140,14 @@ def _word_labels(text: str, char_labels: list[str]) -> list[tuple[str, str]]:
     ]
 
 
+# Chuyển một sample dạng text sang dữ liệu số để đưa vào mô hình học.
+#   - Cụ thể tạo ra:
+#       + input_ids: mã số token cảu câu, do tokenizer chuyển đổi.
+#       + labels: nhãn entity/ chuyên khoa cho từng token.
+#       + slot_labels: nhãn slot như SEVERITY, ... cho từng token.
+#       + attention_mask: đánh đấu token thật (1) và phần đệm (0).
+#       + risk_labels: các nhãn red flag dạng 0/1.
+#       + intent_labels: mã số của intent.
 def tokenize_and_label(sample: dict, tokenizer) -> dict:
     text = sample["text"]
     entities = sample.get("entities", [])
@@ -142,13 +162,18 @@ def tokenize_and_label(sample: dict, tokenizer) -> dict:
                 "Dataset van dung label SYMPTOM. Hay chuyen entity sang ma chuyen khoa."
             )
         validate_specialty_code(label)
+        
+        # Kiểm tra label có phải mã chuyên khoa hợp lệ không.
         if text[start:end] != entity["text"]:
             raise ValueError(
                 f"Offset sai cho '{entity['text']}': text[{start}:{end}] = '{text[start:end]}'"
             )
+            
+        # Kiểm tra vị trí strat:end có trỏ đúng vào text của entity không.
         for index in range(start, min(end, len(text))):
             char_labels[index] = f"B-{label}" if index == start else f"I-{label}"
 
+    # Gán nhãn BIO.
     slot_entities = sample.get("slots", []) or []
     slot_char_labels = _char_bio_labels(text, slot_entities, validate_slot_label)
     words_with_spans = _word_labels(text, char_labels)
@@ -208,6 +233,7 @@ def tokenize_and_label(sample: dict, tokenizer) -> dict:
         validate_red_flag_code(code)
         risk_labels[RED_FLAG2ID[code]] = 1.0
 
+    # Trả về một từ điển chứa dữ liệu đã được chuyển sang dạng số để đưa vào mô hình AI.
     return {
         "input_ids": input_ids,
         "attention_mask": attention_mask,

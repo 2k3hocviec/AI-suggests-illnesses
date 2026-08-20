@@ -1,0 +1,7077 @@
+[
+  {
+    "id": "policy_reply_2066",
+    "sourceId": "3149",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Tôi muốn nói: tôi xin cảm ơn bạn"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0184",
+    "sourceId": "1484",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Tôi vừa bị ợ chua vừa bị suy nhược cơ thể không rõ nguyên nhân."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "ợ chua",
+        "suy nhược cơ thể"
+      ],
+      "specialties": [
+        "GASTROENTEROLOGY",
+        "GENERAL_MEDICINE"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_ask_follow_up_1088",
+    "sourceId": "840",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Tôi vừa bị tức ngực vừa bị vã mồ hôi không rõ nguyên nhân."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "tức ngực",
+        "vã mồ hôi"
+      ],
+      "specialties": [
+        "CARDIOLOGY",
+        "GENERAL_MEDICINE"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_reply_2006",
+    "sourceId": "2925",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Cho tôi nói alo bạn ơi"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0166",
+    "sourceId": "2461",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Hiện tại tôi đang bị mỏi gối cộng thêm việc sốt sình sịch mấy tuần nay."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "mỏi gối",
+        "sốt sình sịch"
+      ],
+      "specialties": [
+        "ORTHOPEDICS",
+        "GENERAL_MEDICINE"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_find_doctors_1480",
+    "sourceId": "82",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi bị đau âm ỉ bụng dưới và có cảm giác đau rát khi quan hệ vợ chồng"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "18 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau âm ỉ bụng dưới",
+        "đau rát"
+      ],
+      "specialties": [
+        "OB_GYN"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": "18 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0221",
+    "sourceId": "2328",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Dạo gần đây tôi thường xuyên phồng rộp đôi khi thấy khó thở."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "phồng rộp",
+        "khó thở"
+      ],
+      "specialties": [
+        "DERMATOLOGY",
+        "CARDIOLOGY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0877",
+    "sourceId": "812",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Hiện tại tôi đang bị đau bụng kinh cộng thêm việc ngứa ngáy mấy tuần nay."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "vừa phải"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau bụng kinh",
+        "ngứa ngáy"
+      ],
+      "specialties": [
+        "OB_GYN",
+        "DERMATOLOGY"
+      ],
+      "duration": "2 ngày nay",
+      "severity": "vừa phải",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_reply_2053",
+    "sourceId": "3155",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Cho tôi nói cho tôi gửi lời cảm ơn"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_emergency_1865",
+    "sourceId": "3842",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi bị phát ban mức độ nhẹ kèm chảy máu nhiều bất thường."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "phát ban"
+      ],
+      "specialties": [
+        "DERMATOLOGY"
+      ],
+      "duration": null,
+      "severity": "mức độ nhẹ",
+      "age": null,
+      "redFlags": [
+        "ABNORMAL_BLEEDING"
+      ]
+    },
+    "nextAction": "EMERGENCY",
+    "field": "NONE",
+    "replyTemplate": "EMERGENCY"
+  },
+  {
+    "id": "policy_find_doctors_1484",
+    "sourceId": "552",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Cơ thể lúc nào cũng thở khò khè kèm theo hiện tượng ho khan."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "18 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "thở khò khè",
+        "ho khan"
+      ],
+      "specialties": [
+        "PEDIATRICS",
+        "RESPIRATORY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": "18 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_find_doctors_1547",
+    "sourceId": "1019",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Cứ đến tối là tôi lại ngứa vùng kín và bị chậm tăng cân dữ dội."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "dữ dội"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "8 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "ngứa vùng kín",
+        "chậm tăng cân"
+      ],
+      "specialties": [
+        "OB_GYN",
+        "PEDIATRICS"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": "dữ dội",
+      "age": "8 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0884",
+    "sourceId": "174",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Em cảm thấy mình bị chuột rút song song đó là mỏi gối rất khó chịu."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "chuột rút",
+        "mỏi gối"
+      ],
+      "specialties": [
+        "ORTHOPEDICS"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_ask_follow_up_0834",
+    "sourceId": "1081",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Người bệnh có triệu chứng căng thẳng tột độ dẫn đến tình trạng hoa mắt."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ sáng nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "khá nặng"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "căng thẳng tột độ",
+        "hoa mắt"
+      ],
+      "specialties": [
+        "PSYCHIATRY",
+        "NEUROLOGY"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "khá nặng",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_find_doctors_1564",
+    "sourceId": "2361",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Người bệnh có triệu chứng ho kéo dài dẫn đến tình trạng tiêu chảy."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "18 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "ho kéo dài",
+        "tiêu chảy"
+      ],
+      "specialties": [
+        "RESPIRATORY",
+        "GASTROENTEROLOGY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": "18 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_emergency_1864",
+    "sourceId": "3720",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Tôi bị tiểu buốt mức độ vừa từ sáng nay kèm chảy máu nhiều bất thường."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "tiểu buốt"
+      ],
+      "specialties": [
+        "UROLOGY"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "mức độ vừa",
+      "age": null,
+      "redFlags": [
+        "ABNORMAL_BLEEDING"
+      ]
+    },
+    "nextAction": "EMERGENCY",
+    "field": "NONE",
+    "replyTemplate": "EMERGENCY"
+  },
+  {
+    "id": "policy_ask_follow_up_1055",
+    "sourceId": "2388",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Em cảm thấy mình bị tưa lưỡi trắng song song đó là da khô ráp rất khó chịu."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "dữ dội"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "tưa lưỡi trắng",
+        "da khô ráp"
+      ],
+      "specialties": [
+        "PEDIATRICS",
+        "DERMATOLOGY"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": "dữ dội",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_find_doctors_1260",
+    "sourceId": "2042",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Em cảm thấy mình bị mỏi gối song song đó là đau đầu rất khó chịu."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "18 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "mỏi gối",
+        "đau đầu"
+      ],
+      "specialties": [
+        "ORTHOPEDICS",
+        "NEUROLOGY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": "18 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0157",
+    "sourceId": "2025",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Mấy ngày nay em cứ bị chóng mặt và lại còn chậm tăng cân nữa."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "chóng mặt",
+        "chậm tăng cân"
+      ],
+      "specialties": [
+        "NEUROLOGY",
+        "PEDIATRICS"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_emergency_1768",
+    "sourceId": "3720",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Tôi bị tiểu buốt mức độ vừa từ sáng nay kèm chảy máu nhiều bất thường."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "tiểu buốt"
+      ],
+      "specialties": [
+        "UROLOGY"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "mức độ vừa",
+      "age": null,
+      "redFlags": [
+        "ABNORMAL_BLEEDING"
+      ]
+    },
+    "nextAction": "EMERGENCY",
+    "field": "NONE",
+    "replyTemplate": "EMERGENCY"
+  },
+  {
+    "id": "policy_find_doctors_1460",
+    "sourceId": "2554",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Em cảm thấy mình bị người uể oải song song đó là ho khan rất khó chịu."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "18 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "người uể oải",
+        "ho khan"
+      ],
+      "specialties": [
+        "GENERAL_MEDICINE",
+        "RESPIRATORY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": "18 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_find_doctors_1340",
+    "sourceId": "3644",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi bị đau bụng đau nhẹ khoảng 1 tuần."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "18 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau bụng"
+      ],
+      "specialties": [
+        "GASTROENTEROLOGY"
+      ],
+      "duration": "khoảng 1 tuần",
+      "severity": "đau nhẹ",
+      "age": "18 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0527",
+    "sourceId": "787",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Người bệnh có triệu chứng trống ngực liên hồi dẫn đến tình trạng mất thăng bằng."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "trống ngực liên hồi",
+        "mất thăng bằng"
+      ],
+      "specialties": [
+        "CARDIOLOGY",
+        "NEUROLOGY"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_find_doctors_1503",
+    "sourceId": "1958",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Cơ thể lúc nào cũng nôn trớ kèm theo hiện tượng ho sặc sụa."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "dữ dội"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "8 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "nôn trớ",
+        "ho sặc sụa"
+      ],
+      "specialties": [
+        "PEDIATRICS",
+        "RESPIRATORY"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": "dữ dội",
+      "age": "8 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0020",
+    "sourceId": "1364",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Hiện tại tôi đang bị run tay cộng thêm việc ho khan mấy tuần nay."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "run tay",
+        "ho khan"
+      ],
+      "specialties": [
+        "NEUROLOGY",
+        "RESPIRATORY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_clarify_2208",
+    "sourceId": "3527",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là bây giờ là mấy giờ"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_emergency_1624",
+    "sourceId": "3720",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Tôi bị tiểu buốt mức độ vừa từ sáng nay kèm chảy máu nhiều bất thường."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "tiểu buốt"
+      ],
+      "specialties": [
+        "UROLOGY"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "mức độ vừa",
+      "age": null,
+      "redFlags": [
+        "ABNORMAL_BLEEDING"
+      ]
+    },
+    "nextAction": "EMERGENCY",
+    "field": "NONE",
+    "replyTemplate": "EMERGENCY"
+  },
+  {
+    "id": "policy_find_doctors_1573",
+    "sourceId": "2261",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Mấy ngày nay em cứ bị đau đầu và lại còn ho liên tục nữa."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "vừa phải"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "32 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau đầu",
+        "ho liên tục"
+      ],
+      "specialties": [
+        "NEUROLOGY",
+        "RESPIRATORY"
+      ],
+      "duration": "2 ngày nay",
+      "severity": "vừa phải",
+      "age": "32 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_reply_2124",
+    "sourceId": "3186",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Một lần nữa, tạm biệt"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_ask_follow_up_1006",
+    "sourceId": "2319",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Cơ thể lúc nào cũng táo bón kèm theo hiện tượng tê bì chân tay."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ sáng nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "khá nặng"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "táo bón",
+        "tê bì chân tay"
+      ],
+      "specialties": [
+        "GASTROENTEROLOGY",
+        "NEUROLOGY"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "khá nặng",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_find_doctors_1242",
+    "sourceId": "218",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Tôi vừa bị lo âu vừa bị đau bụng kinh không rõ nguyên nhân."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ sáng nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "khá nặng"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "55 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "lo âu",
+        "đau bụng kinh"
+      ],
+      "specialties": [
+        "PSYCHIATRY",
+        "OB_GYN"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "khá nặng",
+      "age": "55 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_clarify_2334",
+    "sourceId": "3449",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Tôi muốn nói: giúp tôi làm bài tập toán"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_emergency_1625",
+    "sourceId": "3842",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi bị phát ban mức độ nhẹ kèm chảy máu nhiều bất thường."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "phát ban"
+      ],
+      "specialties": [
+        "DERMATOLOGY"
+      ],
+      "duration": null,
+      "severity": "mức độ nhẹ",
+      "age": null,
+      "redFlags": [
+        "ABNORMAL_BLEEDING"
+      ]
+    },
+    "nextAction": "EMERGENCY",
+    "field": "NONE",
+    "replyTemplate": "EMERGENCY"
+  },
+  {
+    "id": "policy_find_doctors_1281",
+    "sourceId": "1523",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Mấy ngày nay em cứ bị vã mồ hôi và lại còn chán ăn nữa."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "vừa phải"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "32 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "vã mồ hôi",
+        "chán ăn"
+      ],
+      "specialties": [
+        "GENERAL_MEDICINE",
+        "PSYCHIATRY"
+      ],
+      "duration": "2 ngày nay",
+      "severity": "vừa phải",
+      "age": "32 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_reply_2199",
+    "sourceId": "3113",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, cảm ơn vì đã lắng nghe nhé"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_ask_follow_up_1026",
+    "sourceId": "752",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Bác sĩ ơi, cháu nhà em bị đau nhói vùng tim rồi cứ quấy khóc suốt đêm."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ sáng nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "khá nặng"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau nhói vùng tim",
+        "quấy khóc"
+      ],
+      "specialties": [
+        "CARDIOLOGY",
+        "PEDIATRICS"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "khá nặng",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_ask_follow_up_0455",
+    "sourceId": "3805",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi bị đau răng 5 ngày nay."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau răng"
+      ],
+      "specialties": [
+        "DENTISTRY"
+      ],
+      "duration": "5 ngày nay",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_0173",
+    "sourceId": "2609",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Tôi vừa bị khí hư màu xanh vừa bị thở khò khè không rõ nguyên nhân."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "khí hư màu xanh",
+        "thở khò khè"
+      ],
+      "specialties": [
+        "OB_GYN",
+        "PEDIATRICS"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_clarify_2254",
+    "sourceId": "3980",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, khá nặng"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": "khá nặng",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_ask_follow_up_0645",
+    "sourceId": "500",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Em cảm thấy mình bị người uể oải song song đó là hoa mắt rất khó chịu."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "người uể oải",
+        "hoa mắt"
+      ],
+      "specialties": [
+        "GENERAL_MEDICINE",
+        "NEUROLOGY"
+      ],
+      "duration": "2 ngày nay",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_find_doctors_1445",
+    "sourceId": "259",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, cháu nhà em bị người uể oải rồi cứ buồn nôn suốt đêm."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "vừa phải"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "32 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "người uể oải",
+        "buồn nôn"
+      ],
+      "specialties": [
+        "GENERAL_MEDICINE",
+        "GASTROENTEROLOGY"
+      ],
+      "duration": "2 ngày nay",
+      "severity": "vừa phải",
+      "age": "32 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0022",
+    "sourceId": "1870",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Cứ đến tối là tôi lại ho sặc sụa và bị vết thương lâu lành dữ dội."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "ho sặc sụa",
+        "vết thương lâu lành"
+      ],
+      "specialties": [
+        "RESPIRATORY",
+        "DERMATOLOGY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0783",
+    "sourceId": "2101",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Tôi vừa bị đau dạ dày vừa bị chậm tăng cân không rõ nguyên nhân."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau dạ dày",
+        "chậm tăng cân"
+      ],
+      "specialties": [
+        "GASTROENTEROLOGY",
+        "PEDIATRICS"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_find_doctors_1232",
+    "sourceId": "843",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Cứ đến tối là tôi lại co giật cơ và bị chán ăn dữ dội."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "18 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "co giật cơ",
+        "chán ăn"
+      ],
+      "specialties": [
+        "NEUROLOGY",
+        "PSYCHIATRY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": "18 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0731",
+    "sourceId": "2467",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Cứ đến tối là tôi lại đau nhức xương và bị mệt mỏi dữ dội."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau nhức xương",
+        "mệt mỏi"
+      ],
+      "specialties": [
+        "ORTHOPEDICS",
+        "GENERAL_MEDICINE"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_find_doctors_1220",
+    "sourceId": "2517",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi vừa bị gầy sút vừa bị đau hậu môn không rõ nguyên nhân."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "18 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "gầy sút",
+        "đau hậu môn"
+      ],
+      "specialties": [
+        "GENERAL_MEDICINE",
+        "GASTROENTEROLOGY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": "18 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0987",
+    "sourceId": "611",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Cứ đến tối là tôi lại bong tróc da và bị khạc đờm vàng dữ dội."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "dữ dội"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "bong tróc da",
+        "khạc đờm vàng"
+      ],
+      "specialties": [
+        "DERMATOLOGY",
+        "RESPIRATORY"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": "dữ dội",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_find_doctors_1404",
+    "sourceId": "3825",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Tôi bị đau ngực đau dữ dội 1 tháng nay."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "18 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau ngực"
+      ],
+      "specialties": [
+        "CARDIOLOGY"
+      ],
+      "duration": "1 tháng nay",
+      "severity": "đau dữ dội",
+      "age": "18 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_1138",
+    "sourceId": "255",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Cơ thể lúc nào cũng chuột rút kèm theo hiện tượng ho kéo dài."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ sáng nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "khá nặng"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "chuột rút",
+        "ho kéo dài"
+      ],
+      "specialties": [
+        "ORTHOPEDICS",
+        "RESPIRATORY"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "khá nặng",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_find_doctors_1403",
+    "sourceId": "1502",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Hiện tại tôi đang bị ho khan cộng thêm việc đau nhói vùng tim mấy tuần nay."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "dữ dội"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "8 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "ho khan",
+        "đau nhói vùng tim"
+      ],
+      "specialties": [
+        "RESPIRATORY",
+        "CARDIOLOGY"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": "dữ dội",
+      "age": "8 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_emergency_1816",
+    "sourceId": "3720",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Tôi bị tiểu buốt mức độ vừa từ sáng nay kèm chảy máu nhiều bất thường."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "tiểu buốt"
+      ],
+      "specialties": [
+        "UROLOGY"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "mức độ vừa",
+      "age": null,
+      "redFlags": [
+        "ABNORMAL_BLEEDING"
+      ]
+    },
+    "nextAction": "EMERGENCY",
+    "field": "NONE",
+    "replyTemplate": "EMERGENCY"
+  },
+  {
+    "id": "policy_clarify_2331",
+    "sourceId": "3443",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, tôi muốn học tiếng Anh nhé"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_ask_follow_up_0414",
+    "sourceId": "745",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Cứ đến tối là tôi lại táo bón và bị da khô ráp dữ dội."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ sáng nay"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "táo bón",
+        "da khô ráp"
+      ],
+      "specialties": [
+        "GASTROENTEROLOGY",
+        "DERMATOLOGY"
+      ],
+      "duration": "từ sáng nay",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_0195",
+    "sourceId": "496",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi bị đau nửa đầu kèm theo thở khò khè từ hôm qua."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau nửa đầu",
+        "thở khò khè"
+      ],
+      "specialties": [
+        "NEUROLOGY",
+        "PEDIATRICS"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_find_doctors_1417",
+    "sourceId": "2325",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Hiện tại tôi đang bị stress cộng thêm việc tim đập nhanh mấy tuần nay."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "vừa phải"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "32 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "stress",
+        "tim đập nhanh"
+      ],
+      "specialties": [
+        "PSYCHIATRY",
+        "CARDIOLOGY"
+      ],
+      "duration": "2 ngày nay",
+      "severity": "vừa phải",
+      "age": "32 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_clarify_2347",
+    "sourceId": "3432",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, ai phát minh ra điện thoại"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_ask_follow_up_0532",
+    "sourceId": "1285",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Dạo gần đây tôi thường xuyên khó thở đôi khi thấy khí hư màu xanh."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "khó thở",
+        "khí hư màu xanh"
+      ],
+      "specialties": [
+        "CARDIOLOGY",
+        "OB_GYN"
+      ],
+      "duration": "từ hôm qua",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_find_doctors_1492",
+    "sourceId": "994",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Mấy ngày nay em cứ bị khó thở và lại còn kiệt sức nữa."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "18 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "khó thở",
+        "kiệt sức"
+      ],
+      "specialties": [
+        "CARDIOLOGY",
+        "GENERAL_MEDICINE"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": "18 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_emergency_1913",
+    "sourceId": "3842",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Tôi bị phát ban mức độ nhẹ kèm chảy máu nhiều bất thường."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "phát ban"
+      ],
+      "specialties": [
+        "DERMATOLOGY"
+      ],
+      "duration": null,
+      "severity": "mức độ nhẹ",
+      "age": null,
+      "redFlags": [
+        "ABNORMAL_BLEEDING"
+      ]
+    },
+    "nextAction": "EMERGENCY",
+    "field": "NONE",
+    "replyTemplate": "EMERGENCY"
+  },
+  {
+    "id": "policy_reply_2108",
+    "sourceId": "3326",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Một lần nữa, hẹn lần tư vấn tiếp theo"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_ask_follow_up_1109",
+    "sourceId": "3711",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Tôi bị đau ngực đau dữ dội 1 tháng nay."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau ngực"
+      ],
+      "specialties": [
+        "CARDIOLOGY"
+      ],
+      "duration": "1 tháng nay",
+      "severity": "đau dữ dội",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_clarify_2276",
+    "sourceId": "3393",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, thời tiết hôm nay thế nào nhé"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_clarify_2245",
+    "sourceId": "3399",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn nói: hôm nay là thứ mấy"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_reply_2023",
+    "sourceId": "3224",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Tôi muốn nói: hẹn bạn lần sau"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_find_doctors_1446",
+    "sourceId": "1799",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Bác sĩ ơi, cháu nhà em bị đau bụng rồi cứ lo âu suốt đêm."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ sáng nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "khá nặng"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "55 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau bụng",
+        "lo âu"
+      ],
+      "specialties": [
+        "GASTROENTEROLOGY",
+        "PSYCHIATRY"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "khá nặng",
+      "age": "55 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0227",
+    "sourceId": "34",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Tóc tôi rụng nhiều, da khô và hay mệt mỏi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "rụng nhiều",
+        "da khô",
+        "mệt mỏi"
+      ],
+      "specialties": [
+        "ENDOCRINOLOGY",
+        "GENERAL_MEDICINE"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0344",
+    "sourceId": "55",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Tim tôi đập nhanh hồi hộp run tay và rất sợ nóng dù trời mát"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đập nhanh",
+        "hồi hộp",
+        "run tay",
+        "sợ nóng"
+      ],
+      "specialties": [
+        "CARDIOLOGY",
+        "NEUROLOGY",
+        "ENDOCRINOLOGY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0991",
+    "sourceId": "1958",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Cơ thể lúc nào cũng nôn trớ kèm theo hiện tượng ho sặc sụa."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "dữ dội"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "nôn trớ",
+        "ho sặc sụa"
+      ],
+      "specialties": [
+        "PEDIATRICS",
+        "RESPIRATORY"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": "dữ dội",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_ask_follow_up_1052",
+    "sourceId": "2101",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Tôi vừa bị đau dạ dày vừa bị chậm tăng cân không rõ nguyên nhân."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau dạ dày",
+        "chậm tăng cân"
+      ],
+      "specialties": [
+        "GASTROENTEROLOGY",
+        "PEDIATRICS"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_ask_follow_up_0686",
+    "sourceId": "2042",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Em cảm thấy mình bị mỏi gối song song đó là đau đầu rất khó chịu."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ sáng nay"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "mỏi gối",
+        "đau đầu"
+      ],
+      "specialties": [
+        "ORTHOPEDICS",
+        "NEUROLOGY"
+      ],
+      "duration": "từ sáng nay",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_clarify_2395",
+    "sourceId": "3491",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Một lần nữa, tôi cần thông tin du lịch"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_ask_follow_up_1133",
+    "sourceId": "329",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Dạo gần đây tôi thường xuyên ợ chua đôi khi thấy đau nhức xương."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "vừa phải"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "ợ chua",
+        "đau nhức xương"
+      ],
+      "specialties": [
+        "GASTROENTEROLOGY",
+        "ORTHOPEDICS"
+      ],
+      "duration": "2 ngày nay",
+      "severity": "vừa phải",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_ask_follow_up_0885",
+    "sourceId": "536",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi bị kinh nguyệt không đều kèm theo đau nhói vùng tim từ hôm qua."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "vừa phải"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "kinh nguyệt không đều",
+        "đau nhói vùng tim"
+      ],
+      "specialties": [
+        "OB_GYN",
+        "CARDIOLOGY"
+      ],
+      "duration": "2 ngày nay",
+      "severity": "vừa phải",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_ask_follow_up_0320",
+    "sourceId": "2575",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi vừa bị cứng khớp vừa bị nổi mẩn đỏ không rõ nguyên nhân."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "cứng khớp",
+        "nổi mẩn đỏ"
+      ],
+      "specialties": [
+        "ORTHOPEDICS",
+        "DERMATOLOGY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_reply_2110",
+    "sourceId": "2880",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi nói xin chào nhé"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_find_doctors_1426",
+    "sourceId": "1471",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Hiện tại tôi đang bị trống ngực liên hồi cộng thêm việc chậm tăng cân mấy tuần nay."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ sáng nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "khá nặng"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "55 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "trống ngực liên hồi",
+        "chậm tăng cân"
+      ],
+      "specialties": [
+        "CARDIOLOGY",
+        "PEDIATRICS"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "khá nặng",
+      "age": "55 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_find_doctors_1369",
+    "sourceId": "3895",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Tôi bị đau ngực đau nhẹ khoảng 1 tuần."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "32 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau ngực"
+      ],
+      "specialties": [
+        "CARDIOLOGY"
+      ],
+      "duration": "khoảng 1 tuần",
+      "severity": "đau nhẹ",
+      "age": "32 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_clarify_2311",
+    "sourceId": "3412",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, tôi muốn đặt đồ ăn"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_ask_follow_up_1127",
+    "sourceId": "1245",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Hiện tại tôi đang bị ho kéo dài cộng thêm việc nổi mụn sữa mấy tuần nay."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "dữ dội"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "ho kéo dài",
+        "nổi mụn sữa"
+      ],
+      "specialties": [
+        "RESPIRATORY",
+        "PEDIATRICS"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": "dữ dội",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_ask_follow_up_0464",
+    "sourceId": "255",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Cơ thể lúc nào cũng chuột rút kèm theo hiện tượng ho kéo dài."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "chuột rút",
+        "ho kéo dài"
+      ],
+      "specialties": [
+        "ORTHOPEDICS",
+        "RESPIRATORY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_0719",
+    "sourceId": "1181",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Dạo gần đây tôi thường xuyên bong tróc da đôi khi thấy đi ngoài ra máu."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "bong tróc da",
+        "đi ngoài ra máu"
+      ],
+      "specialties": [
+        "DERMATOLOGY",
+        "GASTROENTEROLOGY"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_0839",
+    "sourceId": "464",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Tôi vừa bị chán ăn vừa bị hụt hơi không rõ nguyên nhân."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "dữ dội"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "chán ăn",
+        "hụt hơi"
+      ],
+      "specialties": [
+        "PSYCHIATRY",
+        "CARDIOLOGY"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": "dữ dội",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_emergency_1961",
+    "sourceId": "3842",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Tôi bị phát ban mức độ nhẹ kèm chảy máu nhiều bất thường."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "phát ban"
+      ],
+      "specialties": [
+        "DERMATOLOGY"
+      ],
+      "duration": null,
+      "severity": "mức độ nhẹ",
+      "age": null,
+      "redFlags": [
+        "ABNORMAL_BLEEDING"
+      ]
+    },
+    "nextAction": "EMERGENCY",
+    "field": "NONE",
+    "replyTemplate": "EMERGENCY"
+  },
+  {
+    "id": "policy_ask_follow_up_0708",
+    "sourceId": "2523",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Người bệnh có triệu chứng đầy hơi dẫn đến tình trạng đau đầu kinh niên."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đầy hơi",
+        "đau đầu kinh niên"
+      ],
+      "specialties": [
+        "GASTROENTEROLOGY",
+        "NEUROLOGY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_1009",
+    "sourceId": "448",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Bác sĩ ơi, cháu nhà em bị quấy khóc rồi cứ kinh nguyệt không đều suốt đêm."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "vừa phải"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "quấy khóc",
+        "kinh nguyệt không đều"
+      ],
+      "specialties": [
+        "PEDIATRICS",
+        "OB_GYN"
+      ],
+      "duration": "2 ngày nay",
+      "severity": "vừa phải",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_find_doctors_1439",
+    "sourceId": "481",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Bác sĩ ơi, cháu nhà em bị khí hư màu xanh rồi cứ đau lưng dưới suốt đêm."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "dữ dội"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "8 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "khí hư màu xanh",
+        "đau lưng dưới"
+      ],
+      "specialties": [
+        "OB_GYN",
+        "ORTHOPEDICS"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": "dữ dội",
+      "age": "8 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_find_doctors_1400",
+    "sourceId": "1415",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Người bệnh có triệu chứng nổi mẩn đỏ dẫn đến tình trạng ho khan."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "18 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "nổi mẩn đỏ",
+        "ho khan"
+      ],
+      "specialties": [
+        "DERMATOLOGY",
+        "RESPIRATORY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": "18 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_find_doctors_1424",
+    "sourceId": "654",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Cứ đến tối là tôi lại mọc mụn nước và bị khí hư ra nhiều dữ dội."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "18 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "mọc mụn nước",
+        "khí hư ra nhiều"
+      ],
+      "specialties": [
+        "DERMATOLOGY",
+        "OB_GYN"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": "18 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0073",
+    "sourceId": "2279",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Cơ thể lúc nào cũng giật mình thon thót kèm theo hiện tượng đầy hơi."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "giật mình thon thót",
+        "đầy hơi"
+      ],
+      "specialties": [
+        "PSYCHIATRY",
+        "GASTROENTEROLOGY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_clarify_2338",
+    "sourceId": "3567",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là giúp tôi viết một bài thơ"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_clarify_2200",
+    "sourceId": "3405",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi nói kể cho tôi một câu chuyện"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_find_doctors_1231",
+    "sourceId": "2728",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Chào bạn, hiện tôi đang bị đau răng"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "dữ dội"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "8 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau răng"
+      ],
+      "specialties": [
+        "DENTISTRY"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": "dữ dội",
+      "age": "8 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_reply_2145",
+    "sourceId": "3322",
+    "history": [
+      {
+        "role": "USER",
+        "content": "hẹn lần tư vấn tiếp theo"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_find_doctors_1222",
+    "sourceId": "3775",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Tôi bị đau khớp khó chịu vừa 2 tuần nay."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "55 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau khớp"
+      ],
+      "specialties": [
+        "ORTHOPEDICS"
+      ],
+      "duration": "2 tuần nay",
+      "severity": "khó chịu vừa",
+      "age": "55 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0283",
+    "sourceId": "1367",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Tôi bị kinh nguyệt không đều kèm theo hoa mắt từ hôm qua."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "kinh nguyệt không đều",
+        "hoa mắt"
+      ],
+      "specialties": [
+        "OB_GYN",
+        "NEUROLOGY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_reply_2176",
+    "sourceId": "3203",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, chào tạm biệt nhé"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0211",
+    "sourceId": "2346",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Tôi vừa bị đau đầu vừa bị lười ăn không rõ nguyên nhân."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau đầu",
+        "lười ăn"
+      ],
+      "specialties": [
+        "NEUROLOGY",
+        "PEDIATRICS"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0547",
+    "sourceId": "1922",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Hiện tại tôi đang bị đau nhức xương cộng thêm việc nổi mụn sữa mấy tuần nay."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau nhức xương",
+        "nổi mụn sữa"
+      ],
+      "specialties": [
+        "ORTHOPEDICS",
+        "PEDIATRICS"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_emergency_1912",
+    "sourceId": "3720",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Tôi bị tiểu buốt mức độ vừa từ sáng nay kèm chảy máu nhiều bất thường."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "tiểu buốt"
+      ],
+      "specialties": [
+        "UROLOGY"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "mức độ vừa",
+      "age": null,
+      "redFlags": [
+        "ABNORMAL_BLEEDING"
+      ]
+    },
+    "nextAction": "EMERGENCY",
+    "field": "NONE",
+    "replyTemplate": "EMERGENCY"
+  },
+  {
+    "id": "policy_ask_follow_up_0179",
+    "sourceId": "832",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Cơ thể lúc nào cũng cáu gắt kèm theo hiện tượng ngứa ngáy."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "cáu gắt",
+        "ngứa ngáy"
+      ],
+      "specialties": [
+        "PSYCHIATRY",
+        "DERMATOLOGY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_emergency_1960",
+    "sourceId": "3720",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi bị tiểu buốt mức độ vừa từ sáng nay kèm chảy máu nhiều bất thường."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "tiểu buốt"
+      ],
+      "specialties": [
+        "UROLOGY"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "mức độ vừa",
+      "age": null,
+      "redFlags": [
+        "ABNORMAL_BLEEDING"
+      ]
+    },
+    "nextAction": "EMERGENCY",
+    "field": "NONE",
+    "replyTemplate": "EMERGENCY"
+  },
+  {
+    "id": "policy_ask_follow_up_0705",
+    "sourceId": "1778",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Em cảm thấy mình bị vết thương lâu lành song song đó là hồi hộp rất khó chịu."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "vết thương lâu lành",
+        "hồi hộp"
+      ],
+      "specialties": [
+        "DERMATOLOGY",
+        "CARDIOLOGY"
+      ],
+      "duration": "2 ngày nay",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_0828",
+    "sourceId": "3594",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Tôi bị đau bụng đau dữ dội 1 tháng nay."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau bụng"
+      ],
+      "specialties": [
+        "GASTROENTEROLOGY"
+      ],
+      "duration": "1 tháng nay",
+      "severity": "đau dữ dội",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_ask_follow_up_0569",
+    "sourceId": "1776",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Cơ thể lúc nào cũng tức ngực kèm theo hiện tượng vặn mình."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "tức ngực",
+        "vặn mình"
+      ],
+      "specialties": [
+        "CARDIOLOGY",
+        "PEDIATRICS"
+      ],
+      "duration": "2 ngày nay",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_find_doctors_1429",
+    "sourceId": "1047",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Bác sĩ ơi, cháu nhà em bị phồng rộp rồi cứ trĩ suốt đêm."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "vừa phải"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "32 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "phồng rộp",
+        "trĩ"
+      ],
+      "specialties": [
+        "DERMATOLOGY",
+        "GASTROENTEROLOGY"
+      ],
+      "duration": "2 ngày nay",
+      "severity": "vừa phải",
+      "age": "32 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_reply_2047",
+    "sourceId": "3283",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, tôi sẽ liên hệ lại nhé"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0959",
+    "sourceId": "398",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Mấy ngày nay em cứ bị phồng rộp và lại còn cứng khớp nữa."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "dữ dội"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "phồng rộp",
+        "cứng khớp"
+      ],
+      "specialties": [
+        "DERMATOLOGY",
+        "ORTHOPEDICS"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": "dữ dội",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_find_doctors_1472",
+    "sourceId": "1181",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Dạo gần đây tôi thường xuyên bong tróc da đôi khi thấy đi ngoài ra máu."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "18 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "bong tróc da",
+        "đi ngoài ra máu"
+      ],
+      "specialties": [
+        "DERMATOLOGY",
+        "GASTROENTEROLOGY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": "18 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_find_doctors_1443",
+    "sourceId": "700",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Cứ đến tối là tôi lại chuột rút và bị da khô ráp dữ dội."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "dữ dội"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "8 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "chuột rút",
+        "da khô ráp"
+      ],
+      "specialties": [
+        "ORTHOPEDICS",
+        "DERMATOLOGY"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": "dữ dội",
+      "age": "8 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0900",
+    "sourceId": "3627",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi bị đau bụng đau nhẹ khoảng 1 tuần."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau bụng"
+      ],
+      "specialties": [
+        "GASTROENTEROLOGY"
+      ],
+      "duration": "khoảng 1 tuần",
+      "severity": "đau nhẹ",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_reply_2156",
+    "sourceId": "3040",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Cho tôi nói cảm ơn bác sĩ"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0140",
+    "sourceId": "1776",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cơ thể lúc nào cũng tức ngực kèm theo hiện tượng vặn mình."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "tức ngực",
+        "vặn mình"
+      ],
+      "specialties": [
+        "CARDIOLOGY",
+        "PEDIATRICS"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_find_doctors_1515",
+    "sourceId": "425",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi vừa bị chướng bụng vừa bị mất hứng thú không rõ nguyên nhân."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "dữ dội"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "8 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "chướng bụng",
+        "mất hứng thú"
+      ],
+      "specialties": [
+        "GASTROENTEROLOGY",
+        "PSYCHIATRY"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": "dữ dội",
+      "age": "8 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_reply_2185",
+    "sourceId": "2785",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi nói xin chào"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0636",
+    "sourceId": "464",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Tôi vừa bị chán ăn vừa bị hụt hơi không rõ nguyên nhân."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "chán ăn",
+        "hụt hơi"
+      ],
+      "specialties": [
+        "PSYCHIATRY",
+        "CARDIOLOGY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_reply_2018",
+    "sourceId": "3307",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là tạm biệt và cảm ơn"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_emergency_1721",
+    "sourceId": "3842",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Tôi bị phát ban mức độ nhẹ kèm chảy máu nhiều bất thường."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "phát ban"
+      ],
+      "specialties": [
+        "DERMATOLOGY"
+      ],
+      "duration": null,
+      "severity": "mức độ nhẹ",
+      "age": null,
+      "redFlags": [
+        "ABNORMAL_BLEEDING"
+      ]
+    },
+    "nextAction": "EMERGENCY",
+    "field": "NONE",
+    "replyTemplate": "EMERGENCY"
+  },
+  {
+    "id": "policy_find_doctors_1482",
+    "sourceId": "2507",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Cơ thể lúc nào cũng sốt sình sịch kèm theo hiện tượng đau bụng kinh."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ sáng nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "khá nặng"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "55 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "sốt sình sịch",
+        "đau bụng kinh"
+      ],
+      "specialties": [
+        "GENERAL_MEDICINE",
+        "OB_GYN"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "khá nặng",
+      "age": "55 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_find_doctors_1356",
+    "sourceId": "1205",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Cơ thể lúc nào cũng ngứa ngáy kèm theo hiện tượng khó thở."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "18 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "ngứa ngáy",
+        "khó thở"
+      ],
+      "specialties": [
+        "DERMATOLOGY",
+        "CARDIOLOGY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": "18 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_clarify_2251",
+    "sourceId": "3480",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Cho tôi nói đặt lịch xem phim giúp tôi"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_ask_follow_up_0503",
+    "sourceId": "2398",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Cơ thể lúc nào cũng chán ăn kèm theo hiện tượng chuột rút."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "chán ăn",
+        "chuột rút"
+      ],
+      "specialties": [
+        "PSYCHIATRY",
+        "ORTHOPEDICS"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_0245",
+    "sourceId": "1758",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Dạo gần đây tôi thường xuyên chậm kinh đôi khi thấy chóng mặt."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "chậm kinh",
+        "chóng mặt"
+      ],
+      "specialties": [
+        "OB_GYN",
+        "NEUROLOGY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0588",
+    "sourceId": "506",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Mấy ngày nay em cứ bị đau lưng dưới và lại còn đi ngoài ra máu nữa."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau lưng dưới",
+        "đi ngoài ra máu"
+      ],
+      "specialties": [
+        "ORTHOPEDICS",
+        "GASTROENTEROLOGY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_0995",
+    "sourceId": "1364",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Hiện tại tôi đang bị run tay cộng thêm việc ho khan mấy tuần nay."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "dữ dội"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "run tay",
+        "ho khan"
+      ],
+      "specialties": [
+        "NEUROLOGY",
+        "RESPIRATORY"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": "dữ dội",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_ask_follow_up_0540",
+    "sourceId": "664",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Người bệnh có triệu chứng mất thăng bằng dẫn đến tình trạng stress."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "mất thăng bằng",
+        "stress"
+      ],
+      "specialties": [
+        "NEUROLOGY",
+        "PSYCHIATRY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_emergency_1673",
+    "sourceId": "3842",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Tôi bị phát ban mức độ nhẹ kèm chảy máu nhiều bất thường."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "phát ban"
+      ],
+      "specialties": [
+        "DERMATOLOGY"
+      ],
+      "duration": null,
+      "severity": "mức độ nhẹ",
+      "age": null,
+      "redFlags": [
+        "ABNORMAL_BLEEDING"
+      ]
+    },
+    "nextAction": "EMERGENCY",
+    "field": "NONE",
+    "replyTemplate": "EMERGENCY"
+  },
+  {
+    "id": "policy_emergency_1817",
+    "sourceId": "3842",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Tôi bị phát ban mức độ nhẹ kèm chảy máu nhiều bất thường."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "phát ban"
+      ],
+      "specialties": [
+        "DERMATOLOGY"
+      ],
+      "duration": null,
+      "severity": "mức độ nhẹ",
+      "age": null,
+      "redFlags": [
+        "ABNORMAL_BLEEDING"
+      ]
+    },
+    "nextAction": "EMERGENCY",
+    "field": "NONE",
+    "replyTemplate": "EMERGENCY"
+  },
+  {
+    "id": "policy_reply_2022",
+    "sourceId": "3093",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, cảm ơn bạn rất nhiều nhé"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_find_doctors_1257",
+    "sourceId": "256",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Tôi bị mất ngủ kèm theo đầy hơi từ hôm qua."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "vừa phải"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "32 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "mất ngủ",
+        "đầy hơi"
+      ],
+      "specialties": [
+        "PSYCHIATRY",
+        "GASTROENTEROLOGY"
+      ],
+      "duration": "2 ngày nay",
+      "severity": "vừa phải",
+      "age": "32 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0472",
+    "sourceId": "594",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Em cảm thấy mình bị mề đay song song đó là tức ngực rất khó chịu."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "mề đay",
+        "tức ngực"
+      ],
+      "specialties": [
+        "DERMATOLOGY",
+        "CARDIOLOGY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_reply_2007",
+    "sourceId": "3183",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, tạm biệt nhé"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_reply_2109",
+    "sourceId": "3006",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Một lần nữa, cảm ơn nhiều"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_reply_2078",
+    "sourceId": "2951",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Một lần nữa, tôi muốn gửi lời chào"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_emergency_1720",
+    "sourceId": "3720",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi bị tiểu buốt mức độ vừa từ sáng nay kèm chảy máu nhiều bất thường."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "tiểu buốt"
+      ],
+      "specialties": [
+        "UROLOGY"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "mức độ vừa",
+      "age": null,
+      "redFlags": [
+        "ABNORMAL_BLEEDING"
+      ]
+    },
+    "nextAction": "EMERGENCY",
+    "field": "NONE",
+    "replyTemplate": "EMERGENCY"
+  },
+  {
+    "id": "policy_ask_follow_up_0985",
+    "sourceId": "2328",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Dạo gần đây tôi thường xuyên phồng rộp đôi khi thấy khó thở."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "vừa phải"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "phồng rộp",
+        "khó thở"
+      ],
+      "specialties": [
+        "DERMATOLOGY",
+        "CARDIOLOGY"
+      ],
+      "duration": "2 ngày nay",
+      "severity": "vừa phải",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_reply_2040",
+    "sourceId": "3323",
+    "history": [
+      {
+        "role": "USER",
+        "content": "hẹn lần tư vấn tiếp theo nhé"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0384",
+    "sourceId": "152",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Bác sĩ ơi, cháu nhà em bị nôn trớ rồi cứ tưa lưỡi trắng suốt đêm."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "nôn trớ",
+        "tưa lưỡi trắng"
+      ],
+      "specialties": [
+        "PEDIATRICS"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_find_doctors_1333",
+    "sourceId": "906",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Cứ đến tối là tôi lại chậm kinh và bị tiêu chảy dữ dội."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "vừa phải"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "32 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "chậm kinh",
+        "tiêu chảy"
+      ],
+      "specialties": [
+        "OB_GYN",
+        "GASTROENTEROLOGY"
+      ],
+      "duration": "2 ngày nay",
+      "severity": "vừa phải",
+      "age": "32 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_find_doctors_1587",
+    "sourceId": "69",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Bé nhà em được 5 tháng tuổi mấy hôm nay cứ bú vào là bị nôn trớ ra hết"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "dữ dội"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "8 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "nôn trớ"
+      ],
+      "specialties": [
+        "PEDIATRICS"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": "dữ dội",
+      "age": "8 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0204",
+    "sourceId": "889",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Hiện tại tôi đang bị chậm tăng cân cộng thêm việc phồng rộp mấy tuần nay."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "chậm tăng cân",
+        "phồng rộp"
+      ],
+      "specialties": [
+        "PEDIATRICS",
+        "DERMATOLOGY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0147",
+    "sourceId": "727",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Tôi vừa bị kinh nguyệt không đều vừa bị hoa mắt không rõ nguyên nhân."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "kinh nguyệt không đều",
+        "hoa mắt"
+      ],
+      "specialties": [
+        "OB_GYN",
+        "NEUROLOGY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_clarify_2332",
+    "sourceId": "3488",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, tôi cần thông tin du lịch nhé"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_reply_2002",
+    "sourceId": "3359",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Tôi muốn nói: hẹn gặp lại trong lần tới"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0230",
+    "sourceId": "552",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cơ thể lúc nào cũng thở khò khè kèm theo hiện tượng ho khan."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "thở khò khè",
+        "ho khan"
+      ],
+      "specialties": [
+        "PEDIATRICS",
+        "RESPIRATORY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_ask_follow_up_1098",
+    "sourceId": "1287",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Người bệnh có triệu chứng mọc mụn nước dẫn đến tình trạng mỏi gối."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ sáng nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "khá nặng"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "mọc mụn nước",
+        "mỏi gối"
+      ],
+      "specialties": [
+        "DERMATOLOGY",
+        "ORTHOPEDICS"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "khá nặng",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_ask_follow_up_1199",
+    "sourceId": "1722",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Người bệnh có triệu chứng mệt mỏi dẫn đến tình trạng mề đay."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "dữ dội"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "mệt mỏi",
+        "mề đay"
+      ],
+      "specialties": [
+        "GENERAL_MEDICINE",
+        "DERMATOLOGY"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": "dữ dội",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_ask_follow_up_0561",
+    "sourceId": "1542",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Mấy ngày nay em cứ bị quấy khóc và lại còn đau dạ dày nữa."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "quấy khóc",
+        "đau dạ dày"
+      ],
+      "specialties": [
+        "PEDIATRICS",
+        "GASTROENTEROLOGY"
+      ],
+      "duration": "2 ngày nay",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_0392",
+    "sourceId": "1192",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Dạo gần đây tôi thường xuyên đờm đặc đôi khi thấy co giật cơ."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đờm đặc",
+        "co giật cơ"
+      ],
+      "specialties": [
+        "RESPIRATORY",
+        "NEUROLOGY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0624",
+    "sourceId": "2728",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Chào bạn, hiện tôi đang bị đau răng"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau răng"
+      ],
+      "specialties": [
+        "DENTISTRY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_0200",
+    "sourceId": "2736",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn chào bạn, nhưng hiện đang bị đau khi đi tiểu"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau khi đi tiểu"
+      ],
+      "specialties": [
+        "UROLOGY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0078",
+    "sourceId": "398",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Mấy ngày nay em cứ bị phồng rộp và lại còn cứng khớp nữa."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "phồng rộp",
+        "cứng khớp"
+      ],
+      "specialties": [
+        "DERMATOLOGY",
+        "ORTHOPEDICS"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0372",
+    "sourceId": "2000",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Dạo gần đây tôi thường xuyên cáu gắt đôi khi thấy ho khan."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "cáu gắt",
+        "ho khan"
+      ],
+      "specialties": [
+        "PSYCHIATRY",
+        "RESPIRATORY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0407",
+    "sourceId": "1512",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Bác sĩ ơi, cháu nhà em bị chướng bụng rồi cứ đau nhức xương suốt đêm."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "chướng bụng",
+        "đau nhức xương"
+      ],
+      "specialties": [
+        "GASTROENTEROLOGY",
+        "ORTHOPEDICS"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_0297",
+    "sourceId": "2154",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Tôi vừa bị chán ăn vừa bị đầy hơi không rõ nguyên nhân."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "chán ăn",
+        "đầy hơi"
+      ],
+      "specialties": [
+        "PSYCHIATRY",
+        "GASTROENTEROLOGY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_reply_2151",
+    "sourceId": "3005",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Cho tôi nói cảm ơn nhiều"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0272",
+    "sourceId": "840",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Tôi vừa bị tức ngực vừa bị vã mồ hôi không rõ nguyên nhân."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "tức ngực",
+        "vã mồ hôi"
+      ],
+      "specialties": [
+        "CARDIOLOGY",
+        "GENERAL_MEDICINE"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_reply_2028",
+    "sourceId": "3066",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Một lần nữa, cảm ơn bạn đã giúp đỡ tôi"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_find_doctors_1512",
+    "sourceId": "3603",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Tôi bị tiểu buốt đau dữ dội 1 tháng nay."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "18 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "tiểu buốt"
+      ],
+      "specialties": [
+        "UROLOGY"
+      ],
+      "duration": "1 tháng nay",
+      "severity": "đau dữ dội",
+      "age": "18 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_find_doctors_1522",
+    "sourceId": "3863",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Tôi bị đau đầu khó chịu vừa 2 tuần nay Người bệnh 6 tuổi."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau đầu"
+      ],
+      "specialties": [
+        "NEUROLOGY"
+      ],
+      "duration": "2 tuần nay",
+      "severity": "khó chịu vừa",
+      "age": "6 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_reply_2163",
+    "sourceId": "3293",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là xin chào tạm biệt nhé"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_find_doctors_1206",
+    "sourceId": "1686",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Tôi bị đau đầu kinh niên kèm theo ho liên tục từ hôm qua."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ sáng nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "khá nặng"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "55 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau đầu kinh niên",
+        "ho liên tục"
+      ],
+      "specialties": [
+        "NEUROLOGY",
+        "RESPIRATORY"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "khá nặng",
+      "age": "55 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0165",
+    "sourceId": "2386",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Dạo gần đây tôi thường xuyên ho khục khọc đôi khi thấy ngứa vùng kín."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "ho khục khọc",
+        "ngứa vùng kín"
+      ],
+      "specialties": [
+        "RESPIRATORY",
+        "OB_GYN"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0475",
+    "sourceId": "2401",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, cháu nhà em bị ho kéo dài rồi cứ mất hứng thú suốt đêm."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "ho kéo dài",
+        "mất hứng thú"
+      ],
+      "specialties": [
+        "RESPIRATORY",
+        "PSYCHIATRY"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_0761",
+    "sourceId": "3818",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Tôi bị đau họng 1 tháng nay."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau họng"
+      ],
+      "specialties": [
+        "ENT"
+      ],
+      "duration": "1 tháng nay",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_0890",
+    "sourceId": "126",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cứ đến tối là tôi lại da khô ráp và bị bong tróc da dữ dội."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ sáng nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "khá nặng"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "da khô ráp",
+        "bong tróc da"
+      ],
+      "specialties": [
+        "DERMATOLOGY"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "khá nặng",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_ask_follow_up_0183",
+    "sourceId": "1818",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Hiện tại tôi đang bị cứng khớp cộng thêm việc chướng bụng mấy tuần nay."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "cứng khớp",
+        "chướng bụng"
+      ],
+      "specialties": [
+        "ORTHOPEDICS",
+        "GASTROENTEROLOGY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_find_doctors_1459",
+    "sourceId": "1722",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Người bệnh có triệu chứng mệt mỏi dẫn đến tình trạng mề đay."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "dữ dội"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "8 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "mệt mỏi",
+        "mề đay"
+      ],
+      "specialties": [
+        "GENERAL_MEDICINE",
+        "DERMATOLOGY"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": "dữ dội",
+      "age": "8 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_1156",
+    "sourceId": "3661",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Tôi bị đau khớp khó chịu vừa 2 tuần nay."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau khớp"
+      ],
+      "specialties": [
+        "ORTHOPEDICS"
+      ],
+      "duration": "2 tuần nay",
+      "severity": "khó chịu vừa",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_reply_2184",
+    "sourceId": "3002",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, cảm ơn nhiều"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0711",
+    "sourceId": "380",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Dạo gần đây tôi thường xuyên đau nửa đầu đôi khi thấy vết thương lâu lành."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau nửa đầu",
+        "vết thương lâu lành"
+      ],
+      "specialties": [
+        "NEUROLOGY",
+        "DERMATOLOGY"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_clarify_2392",
+    "sourceId": "3411",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Một lần nữa, mở nhạc giúp tôi"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_ask_follow_up_0421",
+    "sourceId": "2164",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Người bệnh có triệu chứng nôn trớ dẫn đến tình trạng sốt sình sịch."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "nôn trớ",
+        "sốt sình sịch"
+      ],
+      "specialties": [
+        "PEDIATRICS",
+        "GENERAL_MEDICINE"
+      ],
+      "duration": "2 ngày nay",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_clarify_2383",
+    "sourceId": "3578",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là tạo một mật khẩu mạnh nhé"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_ask_follow_up_0593",
+    "sourceId": "481",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Bác sĩ ơi, cháu nhà em bị khí hư màu xanh rồi cứ đau lưng dưới suốt đêm."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "khí hư màu xanh",
+        "đau lưng dưới"
+      ],
+      "specialties": [
+        "OB_GYN",
+        "ORTHOPEDICS"
+      ],
+      "duration": "2 ngày nay",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_0174",
+    "sourceId": "748",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Cơ thể lúc nào cũng tưa lưỡi trắng kèm theo hiện tượng chướng bụng."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "tưa lưỡi trắng",
+        "chướng bụng"
+      ],
+      "specialties": [
+        "PEDIATRICS",
+        "GASTROENTEROLOGY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_emergency_1769",
+    "sourceId": "3842",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Tôi bị phát ban mức độ nhẹ kèm chảy máu nhiều bất thường."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "phát ban"
+      ],
+      "specialties": [
+        "DERMATOLOGY"
+      ],
+      "duration": null,
+      "severity": "mức độ nhẹ",
+      "age": null,
+      "redFlags": [
+        "ABNORMAL_BLEEDING"
+      ]
+    },
+    "nextAction": "EMERGENCY",
+    "field": "NONE",
+    "replyTemplate": "EMERGENCY"
+  },
+  {
+    "id": "policy_ask_follow_up_0896",
+    "sourceId": "1502",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Hiện tại tôi đang bị ho khan cộng thêm việc đau nhói vùng tim mấy tuần nay."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "ho khan",
+        "đau nhói vùng tim"
+      ],
+      "specialties": [
+        "RESPIRATORY",
+        "CARDIOLOGY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_reply_2086",
+    "sourceId": "3250",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Cho tôi nói chúc bạn buổi sáng tốt lành"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0462",
+    "sourceId": "823",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Dạo gần đây tôi thường xuyên ớn lạnh đôi khi thấy chuột rút."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ sáng nay"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "ớn lạnh",
+        "chuột rút"
+      ],
+      "specialties": [
+        "GENERAL_MEDICINE",
+        "ORTHOPEDICS"
+      ],
+      "duration": "từ sáng nay",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_0263",
+    "sourceId": "1082",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Dạo gần đây tôi thường xuyên gầy sút đôi khi thấy buồn nôn."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "gầy sút",
+        "buồn nôn"
+      ],
+      "specialties": [
+        "GENERAL_MEDICINE",
+        "GASTROENTEROLOGY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_clarify_2384",
+    "sourceId": "3423",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, tìm giúp tôi một bộ phim nhé"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_ask_follow_up_0780",
+    "sourceId": "1020",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Dạo gần đây tôi thường xuyên ho khục khọc đôi khi thấy tưa lưỡi trắng."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "ho khục khọc",
+        "tưa lưỡi trắng"
+      ],
+      "specialties": [
+        "RESPIRATORY",
+        "PEDIATRICS"
+      ],
+      "duration": "từ hôm qua",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_find_doctors_1370",
+    "sourceId": "2132",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Em cảm thấy mình bị chướng bụng song song đó là sốt cao rất khó chịu."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ sáng nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "khá nặng"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "55 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "chướng bụng",
+        "sốt cao"
+      ],
+      "specialties": [
+        "GASTROENTEROLOGY",
+        "GENERAL_MEDICINE"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "khá nặng",
+      "age": "55 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0898",
+    "sourceId": "1638",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Cơ thể lúc nào cũng mỏi cơ kèm theo hiện tượng nôn trớ."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ sáng nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "khá nặng"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "mỏi cơ",
+        "nôn trớ"
+      ],
+      "specialties": [
+        "ORTHOPEDICS",
+        "PEDIATRICS"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "khá nặng",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_clarify_2243",
+    "sourceId": "3391",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Một lần nữa, bạn tên gì"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_ask_follow_up_0576",
+    "sourceId": "587",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Mấy ngày nay em cứ bị hoa mắt và lại còn mề đay nữa."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "hoa mắt",
+        "mề đay"
+      ],
+      "specialties": [
+        "NEUROLOGY",
+        "DERMATOLOGY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_1030",
+    "sourceId": "169",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi bị mệt mỏi kèm theo suy nhược cơ thể từ hôm qua."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ sáng nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "khá nặng"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "mệt mỏi",
+        "suy nhược cơ thể"
+      ],
+      "specialties": [
+        "GENERAL_MEDICINE"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "khá nặng",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_find_doctors_1490",
+    "sourceId": "2319",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cơ thể lúc nào cũng táo bón kèm theo hiện tượng tê bì chân tay."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ sáng nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "khá nặng"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "55 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "táo bón",
+        "tê bì chân tay"
+      ],
+      "specialties": [
+        "GASTROENTEROLOGY",
+        "NEUROLOGY"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "khá nặng",
+      "age": "55 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0361",
+    "sourceId": "1641",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Cơ thể lúc nào cũng cáu gắt kèm theo hiện tượng kinh nguyệt không đều."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "cáu gắt",
+        "kinh nguyệt không đều"
+      ],
+      "specialties": [
+        "PSYCHIATRY",
+        "OB_GYN"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_find_doctors_1216",
+    "sourceId": "1757",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Hiện tại tôi đang bị khí hư ra nhiều cộng thêm việc khạc đờm vàng mấy tuần nay."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "18 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "khí hư ra nhiều",
+        "khạc đờm vàng"
+      ],
+      "specialties": [
+        "OB_GYN",
+        "RESPIRATORY"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": "18 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0912",
+    "sourceId": "2346",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Tôi vừa bị đau đầu vừa bị lười ăn không rõ nguyên nhân."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau đầu",
+        "lười ăn"
+      ],
+      "specialties": [
+        "NEUROLOGY",
+        "PEDIATRICS"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_find_doctors_1379",
+    "sourceId": "1082",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Dạo gần đây tôi thường xuyên gầy sút đôi khi thấy buồn nôn."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "dữ dội"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "8 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "gầy sút",
+        "buồn nôn"
+      ],
+      "specialties": [
+        "GENERAL_MEDICINE",
+        "GASTROENTEROLOGY"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": "dữ dội",
+      "age": "8 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_clarify_2396",
+    "sourceId": "3520",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Cho tôi nói tạo một danh sách mua sắm"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_ask_follow_up_0469",
+    "sourceId": "1390",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Mấy ngày nay em cứ bị chướng bụng và lại còn đau nhức xương nữa."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "chướng bụng",
+        "đau nhức xương"
+      ],
+      "specialties": [
+        "GASTROENTEROLOGY",
+        "ORTHOPEDICS"
+      ],
+      "duration": "2 ngày nay",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_clarify_2274",
+    "sourceId": "3508",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, tài khoản của tôi bị khóa nhé"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_ask_follow_up_0457",
+    "sourceId": "16",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Tôi ho khan không có đờm, hắt hơi liên tục"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "ho khan không có đờm",
+        "hắt hơi liên tục"
+      ],
+      "specialties": [
+        "RESPIRATORY",
+        "ENT"
+      ],
+      "duration": "2 ngày nay",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_0304",
+    "sourceId": "2523",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Người bệnh có triệu chứng đầy hơi dẫn đến tình trạng đau đầu kinh niên."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đầy hơi",
+        "đau đầu kinh niên"
+      ],
+      "specialties": [
+        "GASTROENTEROLOGY",
+        "NEUROLOGY"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_emergency_1672",
+    "sourceId": "3720",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Tôi bị tiểu buốt mức độ vừa từ sáng nay kèm chảy máu nhiều bất thường."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "tiểu buốt"
+      ],
+      "specialties": [
+        "UROLOGY"
+      ],
+      "duration": "từ sáng nay",
+      "severity": "mức độ vừa",
+      "age": null,
+      "redFlags": [
+        "ABNORMAL_BLEEDING"
+      ]
+    },
+    "nextAction": "EMERGENCY",
+    "field": "NONE",
+    "replyTemplate": "EMERGENCY"
+  },
+  {
+    "id": "policy_clarify_2275",
+    "sourceId": "3572",
+    "history": [
+      {
+        "role": "USER",
+        "content": "dịch câu này sang tiếng Anh"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_clarify_2287",
+    "sourceId": "3446",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, Một lần nữa, tôi muốn học tiếng Anh"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  },
+  {
+    "id": "policy_ask_follow_up_0401",
+    "sourceId": "1042",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Hiện tại tôi đang bị cáu gắt cộng thêm việc tê bì chân tay mấy tuần nay."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "cáu gắt",
+        "tê bì chân tay"
+      ],
+      "specialties": [
+        "PSYCHIATRY",
+        "NEUROLOGY"
+      ],
+      "duration": "2 ngày nay",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_0563",
+    "sourceId": "2522",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Cơ thể lúc nào cũng khó thở kèm theo hiện tượng mỏi cơ."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "khó thở",
+        "mỏi cơ"
+      ],
+      "specialties": [
+        "CARDIOLOGY",
+        "ORTHOPEDICS"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_0226",
+    "sourceId": "341",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Bác sĩ ơi, Em cảm thấy mình bị chướng bụng song song đó là kiệt sức rất khó chịu."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "chướng bụng",
+        "kiệt sức"
+      ],
+      "specialties": [
+        "GASTROENTEROLOGY",
+        "GENERAL_MEDICINE"
+      ],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "duration",
+    "replyTemplate": "DURATION"
+  },
+  {
+    "id": "policy_ask_follow_up_0663",
+    "sourceId": "536",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Tôi bị kinh nguyệt không đều kèm theo đau nhói vùng tim từ hôm qua."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "khoảng một tuần"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "kinh nguyệt không đều",
+        "đau nhói vùng tim"
+      ],
+      "specialties": [
+        "OB_GYN",
+        "CARDIOLOGY"
+      ],
+      "duration": "khoảng một tuần",
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "severity",
+    "replyTemplate": "SEVERITY"
+  },
+  {
+    "id": "policy_ask_follow_up_0804",
+    "sourceId": "1499",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi hỏi, Dạo gần đây tôi thường xuyên chuột rút đôi khi thấy khí hư ra nhiều."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "chuột rút",
+        "khí hư ra nhiều"
+      ],
+      "specialties": [
+        "ORTHOPEDICS",
+        "OB_GYN"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_find_doctors_1353",
+    "sourceId": "2214",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Người bệnh có triệu chứng đau lưng dưới dẫn đến tình trạng chậm kinh."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "vừa phải"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Người bệnh bao nhiêu tuổi?"
+      },
+      {
+        "role": "USER",
+        "content": "32 tuổi"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau lưng dưới",
+        "chậm kinh"
+      ],
+      "specialties": [
+        "ORTHOPEDICS",
+        "OB_GYN"
+      ],
+      "duration": "2 ngày nay",
+      "severity": "vừa phải",
+      "age": "32 tuổi",
+      "redFlags": []
+    },
+    "nextAction": "FIND_DOCTORS",
+    "field": "NONE",
+    "replyTemplate": "FIND_DOCTORS"
+  },
+  {
+    "id": "policy_ask_follow_up_0938",
+    "sourceId": "3825",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Tôi bị đau ngực đau dữ dội 1 tháng nay."
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "đau ngực"
+      ],
+      "specialties": [
+        "CARDIOLOGY"
+      ],
+      "duration": "1 tháng nay",
+      "severity": "đau dữ dội",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_ask_follow_up_0965",
+    "sourceId": "1435",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cứ đến tối là tôi lại nổi gân xanh và bị ho liên tục dữ dội."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "2 ngày nay"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "vừa phải"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "nổi gân xanh",
+        "ho liên tục"
+      ],
+      "specialties": [
+        "ORTHOPEDICS",
+        "RESPIRATORY"
+      ],
+      "duration": "2 ngày nay",
+      "severity": "vừa phải",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_reply_2190",
+    "sourceId": "3135",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Cho tôi nói cảm ơn bạn đã phản hồi"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_reply_2120",
+    "sourceId": "3177",
+    "history": [
+      {
+        "role": "USER",
+        "content": "thật lòng cảm ơn bạn"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "REPLY",
+    "field": "NONE",
+    "replyTemplate": "CONVERSATION"
+  },
+  {
+    "id": "policy_ask_follow_up_1148",
+    "sourceId": "932",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Tôi muốn hỏi là Dạo gần đây tôi thường xuyên lười ăn đôi khi thấy sưng đau khớp."
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Các triệu chứng xuất hiện từ khi nào? Ví dụ: sáng nay, hôm qua, 2 ngày trước."
+      },
+      {
+        "role": "USER",
+        "content": "từ hôm qua"
+      },
+      {
+        "role": "ASSISTANT",
+        "content": "Mức độ đau hoặc khó chịu hiện tại ra sao? Ví dụ: nhẹ, vừa phải, nặng hoặc dữ dội."
+      },
+      {
+        "role": "USER",
+        "content": "nhẹ"
+      }
+    ],
+    "facts": {
+      "symptoms": [
+        "lười ăn",
+        "sưng đau khớp"
+      ],
+      "specialties": [
+        "PEDIATRICS",
+        "ORTHOPEDICS"
+      ],
+      "duration": "từ hôm qua",
+      "severity": "nhẹ",
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "ASK_FOLLOW_UP",
+    "field": "age",
+    "replyTemplate": "AGE"
+  },
+  {
+    "id": "policy_clarify_2342",
+    "sourceId": "3547",
+    "history": [
+      {
+        "role": "USER",
+        "content": "Gần đây, cho tôi một câu đố"
+      }
+    ],
+    "facts": {
+      "symptoms": [],
+      "specialties": [],
+      "duration": null,
+      "severity": null,
+      "age": null,
+      "redFlags": []
+    },
+    "nextAction": "CLARIFY",
+    "field": "NONE",
+    "replyTemplate": "CLARIFY"
+  }
+]

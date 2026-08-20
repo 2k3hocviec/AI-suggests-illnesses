@@ -4,6 +4,16 @@ export default () => ({
   corsOrigins: process.env.CORS_ORIGINS,
   aiServiceUrl: process.env.AI_SERVICE_URL ?? "http://localhost:5678",
   aiServiceTimeoutMs: Number(process.env.AI_SERVICE_TIMEOUT_MS ?? 60000),
+  aiReasonerUrl:
+    process.env.AI_REASONER_URL ??
+    process.env.AI_SERVICE_URL ??
+    "http://localhost:5678",
+  aiReasonerEndpoint: process.env.AI_REASONER_ENDPOINT ?? "/api/decide-next",
+  aiReasonerTimeoutMs: Number(process.env.AI_REASONER_TIMEOUT_MS ?? 10000),
+  aiReasonerMinConfidence: Number(
+    process.env.AI_REASONER_MIN_CONFIDENCE ?? 0.25,
+  ),
+  enableGeminiFallback: process.env.ENABLE_GEMINI_FALLBACK !== "false",
   geminiApiKey: process.env.GEMINI_API_KEY,
   geminiModel: process.env.GEMINI_MODEL ?? "gemini-3.1-flash-lite",
   databaseUrl: process.env.DATABASE_URL,
@@ -11,7 +21,7 @@ export default () => ({
     cloudName: process.env.CLOUDINARY_CLOUD_NAME,
     apiKey: process.env.CLOUDINARY_API_KEY,
     apiSecret: process.env.CLOUDINARY_API_SECRET,
-    folder: process.env.CLOUDINARY_FOLDER ?? 'healthai/doctors',
+    folder: process.env.CLOUDINARY_FOLDER ?? "healthai/doctors",
   },
   jwtSecret: process.env.JWT_SECRET ?? "dev-secret-change-me",
   jwtExpiresIn: process.env.JWT_EXPIRES_IN ?? "15m",

@@ -15,12 +15,15 @@ import {
   ModelAnalyzeResponse,
   ModelRedFlag,
   ModelSymptom,
+  ChatHistoryMessage,
+  LocalReasoningResponse,
   RecommendedDoctor,
   RecommendedSpecialty,
   RecommendedSpecialtyWithDoctors,
   SpecialtyHint,
 } from "./chat.types";
 
+var count = 0;
 const SPECIALTY_HINTS: SpecialtyHint[] = [
   {
     code: "CARDIOLOGY",
@@ -118,11 +121,12 @@ interface RepeatedQuestionContext {
 @Injectable()
 export class ChatService {
   private readonly guestAnalyses = new Map<string, ModelAnalyzeResponse>();
+  private readonly guestHistories = new Map<string, ChatHistoryMessage[]>();
 
   constructor(
     private readonly prisma: PrismaService,
     private readonly config: ConfigService,
-  ) {}
+  ) { }
 
   /*
   Gửi một cho server một đoạn tin nhắn
@@ -147,6 +151,7 @@ export class ChatService {
         content,
       },
     });
+    const history = await this.getChatHistory(session.id);
 
     const prepared = await this.prepareChatResponse(
       content,
@@ -155,6 +160,7 @@ export class ChatService {
       repeatedQuestion?.assistantContent,
       Boolean(repeatedQuestion),
       previousAnalysis,
+      history,
     );
     const {
       analysis,
@@ -233,6 +239,9 @@ export class ChatService {
     const previousAnalysis = dto.guestSessionId
       ? this.guestAnalyses.get(dto.guestSessionId)
       : undefined;
+    const previousHistory = dto.guestSessionId
+      ? (this.guestHistories.get(dto.guestSessionId) ?? [])
+      : [];
     const prepared = await this.prepareChatResponse(
       content,
       undefined,
@@ -240,6 +249,7 @@ export class ChatService {
       undefined,
       false,
       previousAnalysis,
+      previousHistory,
     );
     const {
       analysis,
@@ -289,9 +299,16 @@ export class ChatService {
     };
 
     if (dto.guestSessionId) {
+      const nextHistory = [
+        ...previousHistory,
+        { role: "USER" as const, content },
+        { role: "ASSISTANT" as const, content: assistantContent },
+      ];
       if (analysis.readyForRecommendation) {
         this.guestAnalyses.delete(dto.guestSessionId);
+        this.guestHistories.delete(dto.guestSessionId);
       } else {
+        this.guestHistories.set(dto.guestSessionId, nextHistory);
         this.guestAnalyses.set(dto.guestSessionId, analysis);
       }
     }
@@ -315,12 +332,21 @@ export class ChatService {
     cachedAssistantContent?: string,
     isRepeatedQuestion = false,
     previousAnalysis?: ModelAnalyzeResponse,
+    history: ChatHistoryMessage[] = [],
   ): Promise<PreparedChatResponse> {
-    const rawAnalysis = cachedAnalysis ?? (await this.analyze(content));
-    const analysis = cachedAnalysis
+    const rawAnalysis = cachedAnalysis
       ? cachedAnalysis
-      : this.mergeAnalyses(previousAnalysis, rawAnalysis);
-    const isMedicalRequest = analysis.readyForRecommendation;
+      : await this.analyzeConversation(content, history);
+    let analysis = cachedAnalysis ? cachedAnalysis : rawAnalysis;
+
+    // Nếu người dùng chào hỏi, cảm ơn, tạm biệt thì không bao giờ gợi ý bác sĩ
+    // dù phân tích trước đó đã đủ trường.
+    const isConversationalIntent =
+      CONVERSATION_INTENTS.has(analysis.intent) ||
+      (analysis.intent === "UNKNOWN" && analysis.symptoms.length === 0);
+
+    const isMedicalRequest =
+      !isConversationalIntent && analysis.readyForRecommendation;
     const hasEmergencySpecialty =
       isMedicalRequest && this.hasEmergencySpecialty(analysis);
     const recommendedSpecialties = isMedicalRequest
@@ -333,9 +359,9 @@ export class ChatService {
         : isRepeatedQuestion
           ? this.withoutDoctorSuggestions(recommendedSpecialties)
           : await this.attachDoctorsToSpecialties(
-              userId,
-              recommendedSpecialties,
-            );
+            userId,
+            recommendedSpecialties,
+          );
     const assistantContent =
       isRepeatedQuestion && cachedAssistantContent
         ? cachedAssistantContent
@@ -358,6 +384,176 @@ export class ChatService {
     }
 
     return this.analyze(message);
+  }
+
+  /*
+  Lấy lích sử chat, lích sử phân tích để gửi cho model dialogue_policy
+  */
+  private async getChatHistory(
+    sessionId: number,
+  ): Promise<ChatHistoryMessage[]> {
+    const messages = await this.prisma.chatMessage.findMany({
+      where: { sessionId },
+      select: { role: true, content: true },
+      orderBy: { id: "asc" },
+    });
+
+    return messages.map((message) => ({
+      role: message.role as ChatHistoryMessage["role"],
+      content: message.content,
+    }));
+  }
+
+  private async decideNextLocally(
+    content: string,
+    history: ChatHistoryMessage[],
+    analysis: ModelAnalyzeResponse,
+  ): Promise<LocalReasoningResponse | null> {
+    const modelUrl = this.config.get<string>("aiReasonerUrl");
+    const endpoint = this.config.get<string>(
+      "aiReasonerEndpoint",
+      "/api/decide-next",
+    );
+    const timeoutMs = this.config.get<number>("aiReasonerTimeoutMs") ?? 10000;
+
+    if (!modelUrl || !endpoint) {
+      return null;
+    }
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      const requestPayload = {
+        message: content,
+        history,
+        analysis,
+      };
+      count++;
+      console.log(count);
+      console.log(
+        "[Backend -> AI] /api/decide-next:",
+        JSON.stringify(requestPayload, null, 2),
+      );
+
+      const response = await fetch(`${modelUrl}${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestPayload),
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        return null;
+      }
+
+      const payload = (await response.json()) as Record<string, unknown>;
+      count++;
+      console.log(count);
+      console.log(
+        "[AI -> Backend] /api/decide-next:",
+        JSON.stringify(payload, null, 2),
+      );
+      const nextAction = payload.nextAction;
+      const field = payload.field;
+      const confidence = Number(payload.confidence);
+      const source =
+        payload.source === "RULE" || payload.source === "MODEL"
+          ? payload.source
+          : undefined;
+      const rawQuestion =
+        typeof payload.question === "string" ? payload.question.trim() : "";
+      const question =
+        rawQuestion.length <= 240 &&
+          rawQuestion.includes("?") &&
+          ![
+            "chẩn đoán",
+            "chan doan",
+            "điều trị",
+            "dieu tri",
+            "uống thuốc",
+            "uong thuoc",
+            "kê đơn",
+            "ke don",
+            "diagnos",
+            "treatment",
+            "prescribe",
+          ].some((phrase) => rawQuestion.toLowerCase().includes(phrase))
+          ? rawQuestion
+          : undefined;
+      const validActions = new Set([
+        "ASK_FOLLOW_UP",
+        "FIND_DOCTORS",
+        "EMERGENCY",
+        "REPLY",
+        "CLARIFY",
+      ]);
+      const validFields = new Set(["NONE", "duration", "severity", "age"]);
+
+      if (
+        typeof nextAction !== "string" ||
+        !validActions.has(nextAction) ||
+        typeof field !== "string" ||
+        !validFields.has(field) ||
+        !Number.isFinite(confidence)
+      ) {
+        return null;
+      }
+
+      return {
+        nextAction: nextAction as LocalReasoningResponse["nextAction"],
+        field: field as LocalReasoningResponse["field"],
+        confidence: this.clampScore(confidence),
+        ...(source ? { source } : {}),
+        ...(question ? { question } : {}),
+      };
+    } catch {
+      return null;
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
+  private applyLocalReasoning(
+    analysis: ModelAnalyzeResponse,
+    decision: LocalReasoningResponse | null,
+  ): ModelAnalyzeResponse {
+    const minimumConfidence =
+      this.config.get<number>("aiReasonerMinConfidence") ?? 0.25;
+    if (!decision || decision.confidence < minimumConfidence) {
+      return analysis;
+    }
+
+    // Trường hợp mà gặp triệu chứng EMERGENCY sẽ được xử lý luồng an toàn riêng trả về đi đến cơ sở y tế không gợi ý bác sĩ nữa
+    if (analysis.redFlags.length > 0) {
+      return analysis;
+    }
+
+    if (
+      decision.nextAction === "ASK_FOLLOW_UP" &&
+      decision.field !== "NONE" &&
+      analysis.missingFields.includes(decision.field)
+    ) {
+      return {
+        ...analysis,
+        action: "CLARIFY",
+        readyForRecommendation: false,
+        followUpQuestion:
+          decision.question ??
+          this.buildClinicalFollowUpQuestion(decision.field),
+      };
+    }
+
+    if (decision.nextAction === "REPLY" && analysis.symptoms.length === 0) {
+      return {
+        ...analysis,
+        action: "REPLY",
+        followUpQuestion: decision.question || null,
+      };
+    }
+
+    // FIND_DOCTORS, EMERGENCY and CLARIFY cannot override the clinical
+    // readiness and emergency decisions computed by the backend.
+    return analysis;
   }
 
   async listSessions(userId: number) {
@@ -517,7 +713,6 @@ export class ChatService {
       orderBy: {
         id: "desc",
       },
-      take: 6,
     });
     const previousMessage = recentUserMessages.find(
       (message) =>
@@ -558,7 +753,7 @@ export class ChatService {
       );
       const analysisSource =
         rawMetadata.analysisSource === "NER" ||
-        rawMetadata.analysisSource === "Gemini"
+          rawMetadata.analysisSource === "Gemini"
           ? rawMetadata.analysisSource
           : undefined;
 
@@ -600,7 +795,7 @@ export class ChatService {
       );
       const analysisSource =
         rawMetadata.analysisSource === "NER" ||
-        rawMetadata.analysisSource === "Gemini"
+          rawMetadata.analysisSource === "Gemini"
           ? rawMetadata.analysisSource
           : undefined;
       return {
@@ -617,6 +812,59 @@ export class ChatService {
     - Có thể gọi đến GEMINI khi model chưa sẵn sàng.
     - Phát sinh bất cứ lỗi gì cũng sẽ gọi sang GEMINI.
   */
+  private async analyzeConversation(
+    content: string,
+    history: ChatHistoryMessage[],
+  ): Promise<ModelAnalyzeResponse> {
+    const modelUrl =
+      this.config.get<string>("aiServiceUrl") ??
+      this.config.get<string>("AI_SERVICE_URL") ??
+      "http://localhost:5678";
+    const endpoint = this.config.get<string>(
+      "PYTHON_POLICY_ENDPOINT",
+      "/api/decide-next",
+    );
+    const timeoutMs =
+      this.config.get<number>("aiServiceTimeoutMs") ??
+      Number(this.config.get<string>("AI_SERVICE_TIMEOUT_MS") ?? 60000);
+    const last = history[history.length - 1];
+    const conversationHistory =
+      last?.role === "USER" && last.content === content
+        ? history
+        : [...history, { role: "USER" as const, content }];
+    const requestPayload = { history: conversationHistory };
+
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      console.log(
+        "[Backend -> AI] /api/decide-next:",
+        JSON.stringify(requestPayload, null, 2),
+      );
+      const response = await fetch(`${modelUrl}${endpoint}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestPayload),
+        signal: controller.signal,
+      });
+
+      if (!response.ok) {
+        throw new ServiceUnavailableException(
+          "Model conversation chÆ°a sáºµn sÃ ng",
+        );
+      }
+
+      const payload = await response.json();
+      console.log(
+        "[AI -> Backend] /api/decide-next:",
+        JSON.stringify(payload, null, 2),
+      );
+      return this.normalizeConversationAnalysis(payload);
+    } finally {
+      clearTimeout(timeout);
+    }
+  }
+
   private async analyze(content: string): Promise<ModelAnalyzeResponse> {
     const modelUrl =
       this.config.get<string>("aiServiceUrl") ??
@@ -635,20 +883,35 @@ export class ChatService {
       const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
       try {
+        const requestPayload = { text: content };
+        count++;
+        console.log(count);
+        console.log(
+          "[Backend -> AI] /api/extract-symptoms:",
+          JSON.stringify(requestPayload),
+        );
+
         const response = await fetch(`${modelUrl}${endpoint}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ text: content }),
+          body: JSON.stringify(requestPayload),
           signal: controller.signal,
         });
 
         if (!response.ok) {
           throw new ServiceUnavailableException("Model chưa sẵn sàng");
         }
+        const payload = await response.json();
+        count++;
+        console.log(count);
+        console.log(
+          "[AI -> Backend] /api/extract-symptoms:",
+          JSON.stringify(payload, null, 2),
+        );
         const nerAnalysis: ModelAnalyzeResponse = {
-          ...this.normalizeModelAnalysis(await response.json()),
+          ...this.normalizeModelAnalysis(payload),
           analysisSource: "NER",
         };
 
@@ -657,7 +920,9 @@ export class ChatService {
         }
 
         if (!this.hasConfidentSymptoms(nerAnalysis)) {
-          return this.analyzeWithGemini(content);
+          return this.isGeminiFallbackEnabled()
+            ? this.analyzeWithGemini(content)
+            : nerAnalysis;
         }
 
         return nerAnalysis;
@@ -666,8 +931,34 @@ export class ChatService {
       }
     } catch (error) {
       console.error("Không gọi được model NER, chuyển sang Gemini:", error);
+      if (!this.isGeminiFallbackEnabled()) {
+        return this.buildUnknownAnalysis();
+      }
       return this.analyzeWithGemini(content);
     }
+  }
+
+  private isGeminiFallbackEnabled() {
+    return this.config.get<boolean>("enableGeminiFallback") ?? true;
+  }
+
+  private buildUnknownAnalysis(): ModelAnalyzeResponse {
+    return this.withClinicalFollowUp({
+      symptoms: [],
+      specialties: [],
+      intent: "UNKNOWN",
+      action: "CLARIFY",
+      slots: {
+        duration: null,
+        severity: null,
+        age: null,
+      },
+      redFlags: [],
+      missingFields: [],
+      followUpQuestion: null,
+      readyForRecommendation: false,
+      analysisSource: "NER",
+    });
   }
 
   private async analyzeWithGemini(
@@ -742,6 +1033,82 @@ export class ChatService {
     }
   }
 
+  private normalizeConversationAnalysis(value: unknown): ModelAnalyzeResponse {
+    const base = this.normalizeModelAnalysis(value);
+    if (!value || typeof value !== "object") {
+      return base;
+    }
+
+    const raw = value as Record<string, unknown>;
+    const validActions = new Set(["FIND_DOCTORS", "REPLY", "CLARIFY"]);
+    const rawIntent =
+      typeof raw.intent === "string" ? raw.intent.toUpperCase() : "UNKNOWN";
+    const rawAction =
+      typeof raw.action === "string" ? raw.action.toUpperCase() : "CLARIFY";
+    const conversationalIntent = CONVERSATION_INTENTS.has(rawIntent)
+      ? (rawIntent as ModelAnalyzeResponse["intent"])
+      : undefined;
+    const isConversationalReply =
+      rawAction === "REPLY" && Boolean(conversationalIntent);
+    const action =
+      typeof raw.action === "string" &&
+        validActions.has(raw.action.toUpperCase())
+        ? (raw.action.toUpperCase() as ModelAnalyzeResponse["action"])
+        : base.action;
+    const missingFields = Array.isArray(raw.missingFields)
+      ? raw.missingFields.filter(
+        (field): field is ClinicalField =>
+          field === "duration" || field === "severity" || field === "age",
+      )
+      : base.missingFields;
+    const followUpQuestion =
+      typeof raw.followUpQuestion === "string"
+        ? raw.followUpQuestion
+        : base.followUpQuestion;
+    const readyForRecommendation =
+      isConversationalReply
+        ? false
+        : typeof raw.readyForRecommendation === "boolean"
+          ? raw.readyForRecommendation
+          : base.readyForRecommendation;
+    const nextAction =
+      typeof raw.nextAction === "string" &&
+        [
+          "ASK_FOLLOW_UP",
+          "FIND_DOCTORS",
+          "EMERGENCY",
+          "REPLY",
+          "CLARIFY",
+        ].includes(raw.nextAction)
+        ? (raw.nextAction as ModelAnalyzeResponse["nextAction"])
+        : undefined;
+    const field =
+      typeof raw.field === "string" &&
+        ["NONE", "duration", "severity", "age"].includes(raw.field)
+        ? (raw.field as ModelAnalyzeResponse["field"])
+        : undefined;
+    const confidence = Number(raw.confidence);
+    const policySource =
+      raw.source === "MODEL" || raw.source === "RULE" ? raw.source : undefined;
+    const analysisSource = raw.analysisSource === "Gemini" ? "Gemini" : "NER";
+
+    return {
+      ...base,
+      analysisSource,
+      intent: conversationalIntent ?? base.intent,
+      action: isConversationalReply ? "REPLY" : action,
+      missingFields,
+      followUpQuestion,
+      readyForRecommendation,
+      ...(nextAction ? { nextAction } : {}),
+      ...(field ? { field } : {}),
+      ...(Number.isFinite(confidence)
+        ? { confidence: this.clampScore(confidence) }
+        : {}),
+      ...(policySource ? { policySource } : {}),
+    };
+  }
+
   private normalizeModelAnalysis(value: unknown): ModelAnalyzeResponse {
     if (!value || typeof value !== "object") {
       throw new ServiceUnavailableException("Model trả về JSON không hợp lệ");
@@ -771,37 +1138,37 @@ export class ChatService {
 
     const symptoms = Array.isArray(raw.symptoms)
       ? raw.symptoms
-          .map((symptom) => {
-            if (!symptom || typeof symptom !== "object") {
-              return null;
-            }
+        .map((symptom) => {
+          if (!symptom || typeof symptom !== "object") {
+            return null;
+          }
 
-            const item = symptom as {
-              name?: unknown;
-              confidence?: unknown;
-              specialty_code?: unknown;
-            };
-            const specialtyCode =
-              typeof item.specialty_code === "string"
-                ? item.specialty_code.toUpperCase()
-                : "";
-            const confidence = Number(item.confidence);
+          const item = symptom as {
+            name?: unknown;
+            confidence?: unknown;
+            specialty_code?: unknown;
+          };
+          const specialtyCode =
+            typeof item.specialty_code === "string"
+              ? item.specialty_code.toUpperCase()
+              : "";
+          const confidence = Number(item.confidence);
 
-            if (
-              typeof item.name !== "string" ||
-              !MEDICAL_SPECIALTY_CODES.has(specialtyCode) ||
-              !Number.isFinite(confidence)
-            ) {
-              return null;
-            }
+          if (
+            typeof item.name !== "string" ||
+            !MEDICAL_SPECIALTY_CODES.has(specialtyCode) ||
+            !Number.isFinite(confidence)
+          ) {
+            return null;
+          }
 
-            return {
-              name: item.name.trim(),
-              confidence: this.clampScore(confidence),
-              specialty_code: specialtyCode,
-            };
-          })
-          .filter((symptom): symptom is ModelSymptom => Boolean(symptom))
+          return {
+            name: item.name.trim(),
+            confidence: this.clampScore(confidence),
+            specialty_code: specialtyCode,
+          };
+        })
+        .filter((symptom): symptom is ModelSymptom => Boolean(symptom))
       : [];
 
     const slots = this.normalizeClinicalSlots(raw.slots);
@@ -914,18 +1281,29 @@ export class ChatService {
       return current;
     }
 
-    const symptoms = [...previous.symptoms, ...current.symptoms].filter(
-      (symptom, index, all) =>
-        all.findIndex(
-          (candidate) =>
-            candidate.name === symptom.name &&
-            candidate.specialty_code === symptom.specialty_code,
-        ) === index,
-    );
+    // A new medical description starts a new symptom snapshot. If the user is
+    // only answering a follow-up question (for example "từ hôm qua"), keep
+    // the previous snapshot so the conversation remains linked.
+    const symptoms = current.symptoms.length
+      ? current.symptoms.filter(
+        (symptom, index, all) =>
+          all.findIndex(
+            (candidate) =>
+              candidate.name === symptom.name &&
+              candidate.specialty_code === symptom.specialty_code,
+          ) === index,
+      )
+      : previous.symptoms;
+
+    // Preserve emergency evidence across follow-up answers. A later answer
+    // that does not repeat a red flag must not silently clear the warning.
     const redFlags = [...previous.redFlags, ...current.redFlags].filter(
       (flag, index, all) =>
         all.findIndex((candidate) => candidate.code === flag.code) === index,
     );
+    // Each clinical field is scalar by design: the current message replaces
+    // the previous value when it contains a newer answer. Never keep a list
+    // of historical duration/severity/age values.
     const slots = {
       duration: current.slots.duration ?? previous.slots.duration,
       severity: current.slots.severity ?? previous.slots.severity,
@@ -933,8 +1311,7 @@ export class ChatService {
     };
     const specialties = [
       ...new Set([
-        ...previous.specialties,
-        ...current.specialties,
+        ...symptoms.map((symptom) => symptom.specialty_code),
         ...(redFlags.length ? ["EMERGENCY"] : []),
       ]),
     ].filter((specialty) => MEDICAL_SPECIALTY_CODES.has(specialty));
@@ -978,8 +1355,8 @@ export class ChatService {
     const missingFields: ClinicalField[] = analysis.redFlags.length
       ? []
       : (["duration", "severity", "age"] as ClinicalField[]).filter(
-          (field) => analysis.slots[field] === null,
-        );
+        (field) => analysis.slots[field] === null,
+      );
     const readyForRecommendation = missingFields.length === 0;
     return {
       ...analysis,
@@ -1113,10 +1490,10 @@ ${content}`;
         const fallback = SPECIALTY_HINTS.find((hint) => hint.code === code);
         return fallback
           ? {
-              id: null,
-              code: fallback.code,
-              name: fallback.name,
-            }
+            id: null,
+            code: fallback.code,
+            name: fallback.name,
+          }
           : null;
       })
       .filter((item): item is RecommendedSpecialty => item !== null);
@@ -1337,9 +1714,9 @@ ${content}`;
   }) {
     return this.clampScore(
       scores.specialtyScore * 0.5 +
-        scores.experienceScore * 0.15 +
-        scores.ratingScore * 0.1 +
-        scores.locationScore * 0.25,
+      scores.experienceScore * 0.15 +
+      scores.ratingScore * 0.1 +
+      scores.locationScore * 0.25,
     );
   }
 
@@ -1525,7 +1902,11 @@ ${content}`;
     analysis: ModelAnalyzeResponse,
     recommendedSpecialties: RecommendedSpecialtyWithDoctors[],
   ) {
-    if (analysis.followUpQuestion && analysis.symptoms.length) {
+    if (
+      analysis.followUpQuestion &&
+      analysis.symptoms.length &&
+      !CONVERSATION_INTENTS.has(analysis.intent)
+    ) {
       const symptomText = [
         ...new Set(analysis.symptoms.map((symptom) => symptom.name)),
       ].join(", ");
@@ -1567,10 +1948,10 @@ ${content}`;
               : doctor.fullName;
             const consultationType = doctor.consultationType.length
               ? doctor.consultationType
-                  .map((type) =>
-                    type === "ONLINE" ? "Tư vấn online" : "Khám trực tiếp",
-                  )
-                  .join(", ")
+                .map((type) =>
+                  type === "ONLINE" ? "Tư vấn online" : "Khám trực tiếp",
+                )
+                .join(", ")
               : "chưa cập nhật";
             const distance = doctor.distanceText
               ? `\n• Khoảng cách khu vực: ${doctor.distanceText}`
@@ -1597,7 +1978,7 @@ ${content}`;
     }
 
     if (analysis.action === "REPLY") {
-      return this.buildConversationReply(analysis.intent);
+      return analysis.followUpQuestion || this.buildConversationReply(analysis.intent);
     }
 
     return this.buildClarificationReply();
@@ -1606,7 +1987,7 @@ ${content}`;
   private buildConversationReply(intent: ModelAnalyzeResponse["intent"]) {
     switch (intent) {
       case "GREETING":
-        return "Xin chào! Tôi có thể hỗ trợ bạn tìm bác sĩ phù hợp dựa trên các triệu chứng bạn nhập vào. Hãy mô tả vấn đề sức khỏe của bạn để bắt đầu.";
+        return "Xin chào! Tôi có thể giúp gì cho bạn?";
       case "THANKS":
         return "Không có gì. Tôi rất vui được hỗ trợ bạn!";
       case "GOODBYE":

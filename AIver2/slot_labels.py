@@ -1,4 +1,5 @@
 """Labels for clinical slot extraction and emergency-risk classification."""
+# Các nhãn dùng cho việc trích xuất thông tin lâm sàng và phân loại nguy cơ cấp cứu.
 
 from __future__ import annotations
 
@@ -16,11 +17,11 @@ SLOT2ID = {label: index for index, label in enumerate(SLOT_LABELS)}
 ID2SLOT = {index: label for label, index in SLOT2ID.items()}
 
 RED_FLAG_CODES = [
-    "BREATHING_DIFFICULTY",
-    "CHEST_PAIN",
-    "SYNCOPE",
-    "FOCAL_WEAKNESS",
-    "ABNORMAL_BLEEDING",
+    "BREATHING_DIFFICULTY", # Khó thở.
+    "CHEST_PAIN", # Đau ngực.
+    "SYNCOPE", # Ngất.
+    "FOCAL_WEAKNESS", # Yếu khu trú
+    "ABNORMAL_BLEEDING", # Chảy máu bất thường.
 ]
 
 RED_FLAG2ID = {code: index for index, code in enumerate(RED_FLAG_CODES)}

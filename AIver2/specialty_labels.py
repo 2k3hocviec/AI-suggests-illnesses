@@ -1,27 +1,31 @@
 """Shared specialty labels for the specialty-aware NER model."""
+# Nhãn chuyên biệt dùng cho mô hình NER có khả năng nhận diện các thực thể chuyên biệt.
 
 from __future__ import annotations
 
 SPECIALTY_CODES = (
-    "GENERAL_MEDICINE",
-    "CARDIOLOGY",
-    "RESPIRATORY",
-    "PEDIATRICS",
-    "DERMATOLOGY",
-    "NEUROLOGY",
-    "ENT",
-    "OB_GYN",
-    "ORTHOPEDICS",
-    "OPHTHALMOLOGY",
-    "GASTROENTEROLOGY",
-    "DENTISTRY",
-    "UROLOGY",
-    "ENDOCRINOLOGY",
-    "PSYCHIATRY",
-    "ONCOLOGY",
-    "EMERGENCY",
+    "GENERAL_MEDICINE", # Thổng quát.
+    "CARDIOLOGY", # Tim mạch.
+    "RESPIRATORY", # Hô hấp.
+    "PEDIATRICS", # Nhi khoa.
+    "DERMATOLOGY", # Da Liễu.
+    "NEUROLOGY", # Thần kinh.
+    "ENT", # Tai mũi họng.
+    "OB_GYN", # Sản phụ khoa.
+    "ORTHOPEDICS", # Chấn thương chỉnh hình.
+    "OPHTHALMOLOGY", # Nhãn khoa.
+    "GASTROENTEROLOGY", # Tiêu hóa.
+    "DENTISTRY", # Nha khoa.
+    "UROLOGY", # Tiết niệu.
+    "ENDOCRINOLOGY", # Nội tiết.
+    "PSYCHIATRY", # Tâm thần học.
+    "ONCOLOGY", # Ung bứu.
+    "EMERGENCY", # Triệu chứng cấp cứu.
 )
 
+# Dùng để tạp bảng chuyển đổi nhãn NER Chuyên khoa giữa text và số ID.
+#   - Trong đó B là bắt đầu, I là kết thức, O là không thuộc triệu chứng.
+#   - Dùng để chuyển text thành nhãn với số bắt đầu và kết thúc hỗ trợ model dữ đoán chuyên khoa.
 def build_label_maps() -> tuple[dict[str, int], dict[int, str]]:
     labels = ["O"]
     for code in SPECIALTY_CODES:
